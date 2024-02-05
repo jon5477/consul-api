@@ -1,75 +1,96 @@
 package com.ecwid.consul.v1.agent.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class NewCheck {
+	@JsonProperty("ID")
 	@SerializedName("ID")
 	private String id;
 
+	@JsonProperty("Name")
 	@SerializedName("Name")
 	private String name;
 
+	@JsonProperty("ServiceID")
 	@SerializedName("ServiceID")
 	private String serviceId;
 
+	@JsonProperty("Notes")
 	@SerializedName("Notes")
 	private String notes;
 
 	/**
 	 * @deprecated Please use Args parameter instead
 	 */
+	@JsonProperty("Script")
 	@SerializedName("Script")
 	@Deprecated
 	private String script;
 
+	@JsonProperty("Args")
 	@SerializedName("Args")
 	private List<String> args;
 
+	@JsonProperty("HTTP")
 	@SerializedName("HTTP")
 	private String http;
 
+	@JsonProperty("Method")
 	@SerializedName("Method")
 	private String method;
 
+	@JsonProperty("Header")
 	@SerializedName("Header")
 	private Map<String, List<String>> header;
 
+	@JsonProperty("TCP")
 	@SerializedName("TCP")
 	private String tcp;
 
+	@JsonProperty("DockerContainerID")
 	@SerializedName("DockerContainerID")
 	private String dockerContainerID;
 
+	@JsonProperty("Shell")
 	@SerializedName("Shell")
 	private String shell;
 
+	@JsonProperty("Interval")
 	@SerializedName("Interval")
 	private String interval;
 
+	@JsonProperty("Timeout")
 	@SerializedName("Timeout")
 	private String timeout;
 
+	@JsonProperty("TTL")
 	@SerializedName("TTL")
 	private String ttl;
 
+	@JsonProperty("DeregisterCriticalServiceAfter")
 	@SerializedName("DeregisterCriticalServiceAfter")
 	private String deregisterCriticalServiceAfter;
 
+	@JsonProperty("TLSSkipVerify")
 	@SerializedName("TLSSkipVerify")
 	private Boolean tlsSkipVerify;
 
+	@JsonProperty("Status")
 	@SerializedName("Status")
 	private String status;
 
+	@JsonProperty("GRPC")
 	@SerializedName("GRPC")
 	private String grpc;
 
+	@JsonProperty("GRPCUseTLS")
 	@SerializedName("GRPCUseTLS")
 	private Boolean grpcUseTLS;
 

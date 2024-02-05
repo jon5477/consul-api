@@ -166,7 +166,7 @@ public class ConsulRawClient {
 	public HttpResponse makeDeleteRequest(Request request) {
 		String url = prepareUrl(agentAddress + request.getEndpoint());
 		url = Utils.generateUrl(url, request.getUrlParameters());
-		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url)
+		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url).setContent(request.getContent())
 				.addHeaders(Utils.createTokenMap(request.getToken())).build();
 		return httpTransport.makeDeleteRequest(httpRequest);
 	}

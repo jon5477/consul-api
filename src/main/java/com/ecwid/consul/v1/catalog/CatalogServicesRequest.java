@@ -62,7 +62,6 @@ public final class CatalogServicesRequest implements ConsulRequest {
 			} else {
 				this.nodeMeta = Collections.unmodifiableMap(nodeMeta);
 			}
-
 			return this;
 		}
 
@@ -88,23 +87,15 @@ public final class CatalogServicesRequest implements ConsulRequest {
 	@Override
 	public List<UrlParameters> asUrlParameters() {
 		List<UrlParameters> params = new ArrayList<>();
-
 		if (datacenter != null) {
 			params.add(new SingleUrlParameters("dc", datacenter));
 		}
-
 		if (nodeMeta != null) {
 			params.add(new NodeMetaParameters(nodeMeta));
 		}
-
 		if (queryParams != null) {
 			params.add(queryParams);
 		}
-
-		if (token != null) {
-			params.add(new SingleUrlParameters("token", token));
-		}
-
 		return params;
 	}
 

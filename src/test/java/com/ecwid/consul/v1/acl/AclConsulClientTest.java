@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class AclConsulClientTest {
+class AclConsulClientTest {
 
     private static final String ACL_MASTER_TOKEN = "mastertoken";
 
@@ -45,12 +45,12 @@ public class AclConsulClientTest {
     }
 
     @Test
-    public void should_create_client_acl_token() {
+    void should_create_client_acl_token() {
         should_create_acl_token(AclType.CLIENT);
     }
 
     @Test
-    public void should_create_management_acl_token() {
+    void should_create_management_acl_token() {
         should_create_acl_token(AclType.MANAGEMENT);
     }
 

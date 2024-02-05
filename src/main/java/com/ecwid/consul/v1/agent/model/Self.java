@@ -2,6 +2,7 @@ package com.ecwid.consul.v1.agent.model;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -13,18 +14,23 @@ public class Self {
 	}
 
 	public static class Config {
+		@JsonProperty("Datacenter")
 		@SerializedName("Datacenter")
 		private String datacenter;
 
+		@JsonProperty("NodeName")
 		@SerializedName("NodeName")
 		private String nodeName;
 
+		@JsonProperty("Revision")
 		@SerializedName("Revision")
 		private String revision;
 
+		@JsonProperty("Server")
 		@SerializedName("Server")
 		private boolean server;
 
+		@JsonProperty("Version")
 		@SerializedName("Version")
 		private String version;
 
@@ -77,64 +83,83 @@ public class Self {
 	}
 
 	public static class DebugConfig {
-
+		@JsonProperty("Bootstrap")
 		@SerializedName("Bootstrap")
 		private boolean bootstrap;
 
+		@JsonProperty("DataDir")
 		@SerializedName("DataDir")
 		private String dataDir;
 
+		@JsonProperty("DNSRecursor")
 		@SerializedName("DNSRecursor")
 		private String dnsRecursor;
 
+		@JsonProperty("DNSDomain")
 		@SerializedName("DNSDomain")
 		private String dnsDomain;
 
+		@JsonProperty("LogLevel")
 		@SerializedName("LogLevel")
 		private LogLevel logLevel;
 
+		@JsonProperty("NodeID")
 		@SerializedName("NodeID")
 		private String nodeId;
 
+		@JsonProperty("ClientAddrs")
 		@SerializedName("ClientAddrs")
 		private String[] clientAddresses;
 
+		@JsonProperty("BindAddr")
 		@SerializedName("BindAddr")
 		private String bindAddress;
 
+		@JsonProperty("LeaveOnTerm")
 		@SerializedName("LeaveOnTerm")
 		private boolean leaveOnTerm;
 
+		@JsonProperty("SkipLeaveOnInt")
 		@SerializedName("SkipLeaveOnInt")
 		private boolean skipLeaveOnInt;
 
+		@JsonProperty("EnableDebug")
 		@SerializedName("EnableDebug")
 		private boolean enableDebug;
 
+		@JsonProperty("VerifyIncoming")
 		@SerializedName("VerifyIncoming")
 		private boolean verifyIncoming;
 
+		@JsonProperty("VerifyOutgoing")
 		@SerializedName("VerifyOutgoing")
 		private boolean verifyOutgoing;
 
+		@JsonProperty("CAFile")
 		@SerializedName("CAFile")
 		private String caFile;
 
+		@JsonProperty("CertFile")
 		@SerializedName("CertFile")
 		private String certFile;
 
+		@JsonProperty("KeyFile")
 		@SerializedName("KeyFile")
 		private String keyFile;
 
+		@JsonProperty("UiDir")
 		@SerializedName("UiDir")
 		private String uiDir;
 
+		@JsonProperty("PidFile")
 		@SerializedName("PidFile")
 		private String pidFile;
 
+		@JsonProperty("EnableSyslog")
 		@SerializedName("EnableSyslog")
 		private boolean enableSyslog;
 
+		@JsonProperty("RejoinAfterLeave")
 		@SerializedName("RejoinAfterLeave")
 		private boolean rejoinAfterLeave;
 
@@ -309,15 +334,17 @@ public class Self {
 					+ '\'' + ", keyFile='" + keyFile + '\'' + ", uiDir='" + uiDir + '\'' + ", pidFile='" + pidFile
 					+ '\'' + ", enableSyslog=" + enableSyslog + ", rejoinAfterLeave=" + rejoinAfterLeave + '}';
 		}
-
 	}
 
+	@JsonProperty("Config")
 	@SerializedName("Config")
 	private Config config;
 
+	@JsonProperty("DebugConfig")
 	@SerializedName("DebugConfig")
 	private DebugConfig debugConfig;
 
+	@JsonProperty("Member")
 	@SerializedName("Member")
 	private Member member;
 

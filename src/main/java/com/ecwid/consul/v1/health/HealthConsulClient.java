@@ -2,7 +2,7 @@ package com.ecwid.consul.v1.health;
 
 import java.util.List;
 
-import com.ecwid.consul.json.GsonFactory;
+import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
@@ -11,7 +11,7 @@ import com.ecwid.consul.v1.QueryParams;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.health.model.Check;
 import com.ecwid.consul.v1.health.model.HealthService;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -51,9 +51,9 @@ public final class HealthConsulClient implements HealthClient {
 	public Response<List<Check>> getHealthChecksForNode(String nodeName, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Check>>() {
-			}.getType());
-			return new Response<List<Check>>(value, httpResponse);
+			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
+			});
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
@@ -72,40 +72,40 @@ public final class HealthConsulClient implements HealthClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
 				healthChecksForServiceRequest.asUrlParameters());
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Check>>() {
-			}.getType());
-			return new Response<List<Check>>(value, httpResponse);
+			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
+			});
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.health.model.HealthService>> getHealthServices(String serviceName,
+	public Response<List<HealthService>> getHealthServices(String serviceName,
 			boolean onlyPassing, QueryParams queryParams) {
 		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.health.model.HealthService>> getHealthServices(String serviceName,
+	public Response<List<HealthService>> getHealthServices(String serviceName,
 			boolean onlyPassing, QueryParams queryParams, String token) {
 		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, token);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.health.model.HealthService>> getHealthServices(String serviceName,
+	public Response<List<HealthService>> getHealthServices(String serviceName,
 			String tag, boolean onlyPassing, QueryParams queryParams) {
 		return getHealthServices(serviceName, tag, onlyPassing, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.health.model.HealthService>> getHealthServices(String serviceName,
+	public Response<List<HealthService>> getHealthServices(String serviceName,
 			String tag, boolean onlyPassing, QueryParams queryParams, String token) {
 		return getHealthServices(serviceName, new String[] { tag }, onlyPassing, queryParams, token);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.health.model.HealthService>> getHealthServices(String serviceName,
+	public Response<List<HealthService>> getHealthServices(String serviceName,
 			String[] tags, boolean onlyPassing, QueryParams queryParams, String token) {
 		HealthServicesRequest request = HealthServicesRequest.newBuilder().setTags(tags).setPassing(onlyPassing)
 				.setQueryParams(queryParams).setToken(token).build();
@@ -118,10 +118,10 @@ public final class HealthConsulClient implements HealthClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/service/" + serviceName,
 				healthServicesRequest.asUrlParameters());
 		if (httpResponse.getStatusCode() == 200) {
-			List<com.ecwid.consul.v1.health.model.HealthService> value = GsonFactory.getGson().fromJson(
-					httpResponse.getContent(), new TypeToken<List<com.ecwid.consul.v1.health.model.HealthService>>() {
-					}.getType());
-			return new Response<List<com.ecwid.consul.v1.health.model.HealthService>>(value, httpResponse);
+			List<HealthService> value = JsonFactory.fromJson(httpResponse.getContent(),
+					new TypeReference<List<HealthService>>() {
+					});
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
@@ -137,9 +137,9 @@ public final class HealthConsulClient implements HealthClient {
 		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase();
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/state/" + status, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Check>>() {
-			}.getType());
-			return new Response<List<Check>>(value, httpResponse);
+			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
+			});
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}

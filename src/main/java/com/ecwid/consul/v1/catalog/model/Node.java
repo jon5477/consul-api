@@ -1,34 +1,43 @@
 package com.ecwid.consul.v1.catalog.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Node {
+	@JsonProperty("ID")
 	@SerializedName("ID")
 	private String id;
 
+	@JsonProperty("Node")
 	@SerializedName("Node")
 	private String node;
 
+	@JsonProperty("Address")
 	@SerializedName("Address")
 	private String address;
 
+	@JsonProperty("Datacenter")
 	@SerializedName("Datacenter")
 	private String datacenter;
 
+	@JsonProperty("TaggedAddresses")
 	@SerializedName("TaggedAddresses")
 	private Map<String, String> taggedAddresses;
 
+	@JsonProperty("Meta")
 	@SerializedName("Meta")
 	private Map<String, String> meta;
 
+	@JsonProperty("CreateIndex")
 	@SerializedName("CreateIndex")
 	private Long createIndex;
 
+	@JsonProperty("ModifyIndex")
 	@SerializedName("ModifyIndex")
 	private Long modifyIndex;
 

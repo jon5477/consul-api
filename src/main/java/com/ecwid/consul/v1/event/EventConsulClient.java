@@ -1,6 +1,8 @@
 package com.ecwid.consul.v1.event;
 
-import com.ecwid.consul.json.GsonFactory;
+import java.util.List;
+
+import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
@@ -9,9 +11,7 @@ import com.ecwid.consul.v1.QueryParams;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.event.model.Event;
 import com.ecwid.consul.v1.event.model.EventParams;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -47,8 +47,8 @@ public final class EventConsulClient implements EventClient {
 	public Response<Event> eventFire(String event, String payload, EventParams eventParams, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			Event value = GsonFactory.getGson().fromJson(httpResponse.getContent(), Event.class);
-			return new Response<Event>(value, httpResponse);
+			Event value = JsonFactory.fromJson(httpResponse.getContent(), Event.class);
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
@@ -72,9 +72,9 @@ public final class EventConsulClient implements EventClient {
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest.asUrlParameters());
 		if (httpResponse.getStatusCode() == 200) {
-			List<Event> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Event>>() {
-			}.getType());
-			return new Response<List<Event>>(value, httpResponse);
+			List<Event> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Event>>() {
+			});
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}

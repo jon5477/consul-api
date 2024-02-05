@@ -1,32 +1,41 @@
 package com.ecwid.consul.v1.event.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Event {
+	@JsonProperty("ID")
 	@SerializedName("ID")
 	private String id;
 
+	@JsonProperty("Name")
 	@SerializedName("Name")
 	private String name;
 
+	@JsonProperty("Payload")
 	@SerializedName("Payload")
 	private String payload;
 
+	@JsonProperty("NodeFilter")
 	@SerializedName("NodeFilter")
 	private String nodeFilter;
 
+	@JsonProperty("ServiceFilter")
 	@SerializedName("ServiceFilter")
 	private String serviceFilter;
 
+	@JsonProperty("TagFilter")
 	@SerializedName("TagFilter")
 	private String tagFilter;
 
+	@JsonProperty("Version")
 	@SerializedName("Version")
 	private int version;
 
+	@JsonProperty("LTime")
 	@SerializedName("LTime")
 	private int lTime;
 

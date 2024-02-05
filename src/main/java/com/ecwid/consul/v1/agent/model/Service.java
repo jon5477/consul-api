@@ -1,38 +1,48 @@
 package com.ecwid.consul.v1.agent.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Service {
+	@JsonProperty("ID")
 	@SerializedName("ID")
 	private String id;
 
+	@JsonProperty("Service")
 	@SerializedName("Service")
 	private String service;
 
+	@JsonProperty("Tags")
 	@SerializedName("Tags")
 	private List<String> tags;
 
+	@JsonProperty("Address")
 	@SerializedName("Address")
 	private String address;
 
+	@JsonProperty("Meta")
 	@SerializedName("Meta")
 	private Map<String, String> meta;
 
+	@JsonProperty("Port")
 	@SerializedName("Port")
 	private Integer port;
 
+	@JsonProperty("EnableTagOverride")
 	@SerializedName("EnableTagOverride")
 	private Boolean enableTagOverride;
 
+	@JsonProperty("CreateIndex")
 	@SerializedName("CreateIndex")
 	private Long createIndex;
 
+	@JsonProperty("ModifyIndex")
 	@SerializedName("ModifyIndex")
 	private Long modifyIndex;
 

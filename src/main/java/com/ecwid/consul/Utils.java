@@ -1,10 +1,15 @@
 package com.ecwid.consul;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -14,11 +19,7 @@ public class Utils {
 	}
 
 	public static String encodeValue(String value) {
-		try {
-			return URLEncoder.encode(value, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("So strange - every JVM has to support UTF-8 encoding.");
-		}
+		return URLEncoder.encode(value, StandardCharsets.UTF_8);
 	}
 
 	public static String encodeUrl(String str) {
@@ -40,7 +41,7 @@ public class Utils {
 			return baseUrl;
 		}
 
-		List<String> allParams = new ArrayList<String>();
+		List<String> allParams = new ArrayList<>();
 		for (UrlParameters item : params) {
 			if (item != null) {
 				allParams.addAll(item.toUrlParameters());

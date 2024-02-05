@@ -1,9 +1,10 @@
 package com.ecwid.consul.v1.agent.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -11,48 +12,63 @@ import java.util.Map;
  */
 public class NewService {
 	public static class Check {
+		@JsonProperty("Script")
 		@SerializedName("Script")
 		private String script;
 
+		@JsonProperty("DockerContainerID")
 		@SerializedName("DockerContainerID")
 		private String dockerContainerID;
 
+		@JsonProperty("Shell")
 		@SerializedName("Shell")
 		private String shell;
 
+		@JsonProperty("Interval")
 		@SerializedName("Interval")
 		private String interval;
 
+		@JsonProperty("TTL")
 		@SerializedName("TTL")
 		private String ttl;
 
+		@JsonProperty("HTTP")
 		@SerializedName("HTTP")
 		private String http;
 
+		@JsonProperty("Method")
 		@SerializedName("Method")
 		private String method;
 
+		@JsonProperty("Header")
 		@SerializedName("Header")
 		private Map<String, List<String>> header;
 
+		@JsonProperty("TCP")
 		@SerializedName("TCP")
 		private String tcp;
 
+		@JsonProperty("Timeout")
 		@SerializedName("Timeout")
 		private String timeout;
 
+		@JsonProperty("DeregisterCriticalServiceAfter")
 		@SerializedName("DeregisterCriticalServiceAfter")
 		private String deregisterCriticalServiceAfter;
 
+		@JsonProperty("TLSSkipVerify")
 		@SerializedName("TLSSkipVerify")
 		private Boolean tlsSkipVerify;
 
+		@JsonProperty("Status")
 		@SerializedName("Status")
 		private String status;
 
+		@JsonProperty("GRPC")
 		@SerializedName("GRPC")
 		private String grpc;
 
+		@JsonProperty("GRPCUseTLS")
 		@SerializedName("GRPCUseTLS")
 		private Boolean grpcUseTLS;
 
@@ -187,30 +203,39 @@ public class NewService {
 		}
 	}
 
+	@JsonProperty("ID")
 	@SerializedName("ID")
 	private String id;
 
+	@JsonProperty("Name")
 	@SerializedName("Name")
 	private String name;
 
+	@JsonProperty("Tags")
 	@SerializedName("Tags")
 	private List<String> tags;
 
+	@JsonProperty("Address")
 	@SerializedName("Address")
 	private String address;
 
+	@JsonProperty("Meta")
 	@SerializedName("Meta")
 	private Map<String, String> meta;
 
+	@JsonProperty("Port")
 	@SerializedName("Port")
 	private Integer port;
 
+	@JsonProperty("EnableTagOverride")
 	@SerializedName("EnableTagOverride")
 	private Boolean enableTagOverride;
 
+	@JsonProperty("Check")
 	@SerializedName("Check")
 	private Check check;
 
+	@JsonProperty("Checks")
 	@SerializedName("Checks")
 	private List<Check> checks;
 

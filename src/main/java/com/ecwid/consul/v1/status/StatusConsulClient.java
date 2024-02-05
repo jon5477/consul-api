@@ -1,14 +1,14 @@
 package com.ecwid.consul.v1.status;
 
-import com.ecwid.consul.json.GsonFactory;
+import java.util.List;
+
+import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Response;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -48,8 +48,8 @@ public final class StatusConsulClient implements StatusClient {
 	public Response<String> getStatusLeader() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/leader");
 		if (httpResponse.getStatusCode() == 200) {
-			String value = GsonFactory.getGson().fromJson(httpResponse.getContent(), String.class);
-			return new Response<String>(value, httpResponse);
+			String value = JsonFactory.fromJson(httpResponse.getContent(), String.class);
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
@@ -59,10 +59,10 @@ public final class StatusConsulClient implements StatusClient {
 	public Response<List<String>> getStatusPeers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/peers");
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = GsonFactory.getGson().fromJson(httpResponse.getContent(),
-					new TypeToken<List<String>>() {
-					}.getType());
-			return new Response<List<String>>(value, httpResponse);
+			List<String> value = JsonFactory.fromJson(httpResponse.getContent(),
+					new TypeReference<List<String>>() {
+					});
+			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
