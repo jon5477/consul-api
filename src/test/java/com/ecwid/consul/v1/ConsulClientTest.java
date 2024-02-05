@@ -26,31 +26,13 @@ class ConsulClientTest {
 	public void setup() {
 		String path = "src/test/resources/ssl";
 		String certRootPath = new File(path).getAbsolutePath().replace('\\', '/');
-		String customConfiguration =
-				"{\n" +
-				"  \"datacenter\": \"dc-test\",\n" +
-				"  \"log_level\": \"info\",\n" +
-//				"  \"client_addr\": \"0.0.0.0\",\n" +
-				"  \"ports\": {\n" +
-				"    \"https\": "+ randomHttpsPort+ "\n" +
-				"  },\n" +
-//				"  \"bootstrap_expect\": 1,\n" +
-//				"  \"ui_config\": {\n" +
-//				"    \"enabled\": true\n" +
-//				"  },\n" +
-				"  \"tls\": {\n" +
-				"    \"https\": {\n" +
-				"      \"ca_file\": \"" + certRootPath + "/ca.cert\",\n" +
-				"      \"key_file\": \"" + certRootPath + "/key.key\",\n" +
-				"      \"cert_file\": \"" + certRootPath + "/key.crt\"\n" +
-				"    }\n" +
-				"  }\n" +
-				"}\n";
-		consul = ConsulStarterBuilder.consulStarter()
-				.withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withCustomConfig(customConfiguration)
-				.build()
-				.start();
+		String customConfiguration = "{\n" + "  \"datacenter\": \"dc-test\",\n" + "  \"log_level\": \"info\",\n"
+				+ "  \"ports\": {\n" + "    \"https\": " + randomHttpsPort + "\n" + "  },\n" + "  \"tls\": {\n"
+				+ "    \"https\": {\n" + "      \"ca_file\": \"" + certRootPath + "/ca.cert\",\n"
+				+ "      \"key_file\": \"" + certRootPath + "/key.key\",\n" + "      \"cert_file\": \"" + certRootPath
+				+ "/key.crt\"\n" + "    }\n" + "  }\n" + "}\n";
+		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
+				.withCustomConfig(customConfiguration).build().start();
 	}
 
 	@AfterEach
