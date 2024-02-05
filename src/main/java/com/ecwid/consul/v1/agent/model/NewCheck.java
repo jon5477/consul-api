@@ -9,7 +9,6 @@ import java.util.Map;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class NewCheck {
-
 	@SerializedName("ID")
 	private String id;
 
@@ -244,27 +243,13 @@ public class NewCheck {
 
 	@Override
 	public String toString() {
-		return "NewCheck{" +
-				"id='" + id + '\'' +
-				", name='" + name + '\'' +
-				", serviceId='" + serviceId + '\'' +
-				", notes='" + notes + '\'' +
-				", script='" + script + '\'' +
-				", args=" + args +
-				", http='" + http + '\'' +
-				", method='" + method + '\'' +
-				", header=" + header +
-				", tcp='" + tcp + '\'' +
-				", dockerContainerID='" + dockerContainerID + '\'' +
-				", shell='" + shell + '\'' +
-				", interval='" + interval + '\'' +
-				", timeout='" + timeout + '\'' +
-				", ttl='" + ttl + '\'' +
-				", deregisterCriticalServiceAfter='" + deregisterCriticalServiceAfter + '\'' +
-				", tlsSkipVerify=" + tlsSkipVerify +
-				", status='" + status + '\'' +
-				", grpc='" + grpc + '\'' +
-				", grpcUseTLS=" + grpcUseTLS +
-				'}';
+		return "NewCheck{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", serviceId='" + serviceId + '\''
+				+ ", notes='" + notes + '\'' + ", script='" + script + '\'' + ", args=" + args + ", http='" + http
+				+ '\'' + ", method='" + method + '\'' + ", header=" + header + ", tcp='" + tcp + '\''
+				+ ", dockerContainerID='" + dockerContainerID + '\'' + ", shell='" + shell + '\'' + ", interval='"
+				+ interval + '\'' + ", timeout='" + timeout + '\'' + ", ttl='" + ttl + '\''
+				+ ", deregisterCriticalServiceAfter='" + deregisterCriticalServiceAfter + '\'' + ", tlsSkipVerify="
+				+ tlsSkipVerify + ", status='" + status + '\'' + ", grpc='" + grpc + '\'' + ", grpcUseTLS=" + grpcUseTLS
+				+ '}';
 	}
 }

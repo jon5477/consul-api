@@ -8,7 +8,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Coord {
-
 	@SerializedName("Error")
 	private Double error;
 	@SerializedName("Height")
@@ -52,11 +51,6 @@ public class Coord {
 
 	@Override
 	public String toString() {
-		return "Coord{" +
-				"error=" + error +
-				", height=" + height +
-				", adjustment=" + adjustment +
-				", vec=" + vec +
-				'}';
+		return "Coord{" + "error=" + error + ", height=" + height + ", adjustment=" + adjustment + ", vec=" + vec + '}';
 	}
 }

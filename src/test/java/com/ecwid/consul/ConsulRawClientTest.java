@@ -1,17 +1,18 @@
 package com.ecwid.consul;
 
-import com.ecwid.consul.v1.ConsulRawClient;
-import com.ecwid.consul.v1.QueryParams;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+
+import com.ecwid.consul.v1.ConsulRawClient;
+import com.ecwid.consul.v1.QueryParams;
 
 public class ConsulRawClientTest {
 
@@ -38,8 +39,8 @@ public class ConsulRawClientTest {
 
         // Then
         ArgumentCaptor<HttpUriRequest> calledUri = ArgumentCaptor.forClass(HttpUriRequest.class);
-        verify(httpClient).execute(calledUri.capture(), any(ResponseHandler.class));
-        assertEquals(EXPECTED_AGENT_ADDRESS_NO_PATH, calledUri.getValue().getURI().toString());
+        verify(httpClient).execute(calledUri.capture(), any(HttpClientResponseHandler.class));
+        assertEquals(EXPECTED_AGENT_ADDRESS_NO_PATH, calledUri.getValue().getUri().toString());
     }
 
     @Test
@@ -58,7 +59,7 @@ public class ConsulRawClientTest {
 
         // Then
         ArgumentCaptor<HttpUriRequest> calledUri = ArgumentCaptor.forClass(HttpUriRequest.class);
-        verify(httpClient).execute(calledUri.capture(), any(ResponseHandler.class));
-        assertEquals(EXPECTED_AGENT_ADDRESS, calledUri.getValue().getURI().toString());
+        verify(httpClient).execute(calledUri.capture(), any(HttpClientResponseHandler.class));
+        assertEquals(EXPECTED_AGENT_ADDRESS, calledUri.getValue().getUri().toString());
     }
 }

@@ -1,23 +1,18 @@
 package com.ecwid.consul.v1.agent.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
-import java.util.Map;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Check {
-
 	public static enum CheckStatus {
 		@SerializedName("unknown")
-		UNKNOWN,
-		@SerializedName("passing")
-		PASSING,
-		@SerializedName("warning")
-		WARNING,
-		@SerializedName("critical")
+		UNKNOWN, @SerializedName("passing")
+		PASSING, @SerializedName("warning")
+		WARNING, @SerializedName("critical")
 		CRITICAL
 	}
 
@@ -144,18 +139,9 @@ public class Check {
 
 	@Override
 	public String toString() {
-		return "Check{" +
-				"node='" + node + '\'' +
-				", checkId='" + checkId + '\'' +
-				", name='" + name + '\'' +
-				", status=" + status +
-				", notes='" + notes + '\'' +
-				", output='" + output + '\'' +
-				", serviceId='" + serviceId + '\'' +
-				", serviceName='" + serviceName + '\'' +
-				", serviceTags=" + serviceTags +
-				", createIndex=" + createIndex +
-				", modifyIndex=" + modifyIndex +
-				'}';
+		return "Check{" + "node='" + node + '\'' + ", checkId='" + checkId + '\'' + ", name='" + name + '\''
+				+ ", status=" + status + ", notes='" + notes + '\'' + ", output='" + output + '\'' + ", serviceId='"
+				+ serviceId + '\'' + ", serviceName='" + serviceName + '\'' + ", serviceTags=" + serviceTags
+				+ ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + '}';
 	}
 }

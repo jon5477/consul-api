@@ -1,18 +1,23 @@
 package com.ecwid.consul.v1;
 
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.Utils;
-import com.ecwid.consul.transport.*;
-import org.apache.http.client.HttpClient;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.hc.client5.http.classic.HttpClient;
+
+import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.Utils;
+import com.ecwid.consul.transport.DefaultHttpTransport;
+import com.ecwid.consul.transport.DefaultHttpsTransport;
+import com.ecwid.consul.transport.HttpRequest;
+import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.transport.HttpTransport;
+import com.ecwid.consul.transport.TLSConfig;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class ConsulRawClient {
-
 	public static final String DEFAULT_HOST = "localhost";
 	public static final int DEFAULT_PORT = 8500;
 	public static final String DEFAULT_PATH = "";
@@ -113,14 +118,12 @@ public class ConsulRawClient {
 	// hidden constructor, for tests
 	ConsulRawClient(HttpTransport httpTransport, String agentHost, int agentPort, String path) {
 		this.httpTransport = httpTransport;
-
 		// check that agentHost has scheme or not
 		String agentHostLowercase = agentHost.toLowerCase();
 		if (!agentHostLowercase.startsWith("https://") && !agentHostLowercase.startsWith("http://")) {
 			// no scheme in host, use default 'http'
 			agentHost = "http://" + agentHost;
 		}
-
 		this.agentAddress = Utils.assembleAgentAddress(agentHost, agentPort, path);
 	}
 
@@ -131,61 +134,40 @@ public class ConsulRawClient {
 	public HttpResponse makeGetRequest(String endpoint, List<UrlParameters> urlParams) {
 		String url = prepareUrl(agentAddress + endpoint);
 		url = Utils.generateUrl(url, urlParams);
-
-		HttpRequest request = HttpRequest.Builder.newBuilder()
-			.setUrl(url)
-			.build();
-
+		HttpRequest request = HttpRequest.Builder.newBuilder().setUrl(url).build();
 		return httpTransport.makeGetRequest(request);
 	}
 
 	public HttpResponse makeGetRequest(Request request) {
 		String url = prepareUrl(agentAddress + request.getEndpoint());
 		url = Utils.generateUrl(url, request.getUrlParameters());
-
-		HttpRequest httpRequest = HttpRequest.Builder.newBuilder()
-			.setUrl(url)
-			.addHeaders(Utils.createTokenMap(request.getToken()))
-			.build();
-
+		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url)
+				.addHeaders(Utils.createTokenMap(request.getToken())).build();
 		return httpTransport.makeGetRequest(httpRequest);
 	}
 
 	public HttpResponse makePutRequest(String endpoint, String content, UrlParameters... urlParams) {
 		String url = prepareUrl(agentAddress + endpoint);
 		url = Utils.generateUrl(url, urlParams);
-
-		HttpRequest request = HttpRequest.Builder.newBuilder()
-			.setUrl(url)
-			.setContent(content)
-			.build();
-
+		HttpRequest request = HttpRequest.Builder.newBuilder().setUrl(url).setContent(content).build();
 		return httpTransport.makePutRequest(request);
 	}
 
 	public HttpResponse makePutRequest(Request request) {
-		//,  String endpoint, byte[] binaryContent, UrlParameters... urlParams
+		// , String endpoint, byte[] binaryContent, UrlParameters... urlParams
 		String url = prepareUrl(agentAddress + request.getEndpoint());
 		url = Utils.generateUrl(url, request.getUrlParameters());
-
-		HttpRequest httpRequest = HttpRequest.Builder.newBuilder()
-			.setUrl(url)
-			.setBinaryContent(request.getBinaryContent())
-			.addHeaders(Utils.createTokenMap(request.getToken()))
-			.build();
-
+		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url)
+				.setBinaryContent(request.getBinaryContent()).addHeaders(Utils.createTokenMap(request.getToken()))
+				.build();
 		return httpTransport.makePutRequest(httpRequest);
 	}
 
 	public HttpResponse makeDeleteRequest(Request request) {
 		String url = prepareUrl(agentAddress + request.getEndpoint());
 		url = Utils.generateUrl(url, request.getUrlParameters());
-
-		HttpRequest httpRequest = HttpRequest.Builder.newBuilder()
-			.setUrl(url)
-			.addHeaders(Utils.createTokenMap(request.getToken()))
-			.build();
-
+		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url)
+				.addHeaders(Utils.createTokenMap(request.getToken())).build();
 		return httpTransport.makeDeleteRequest(httpRequest);
 	}
 

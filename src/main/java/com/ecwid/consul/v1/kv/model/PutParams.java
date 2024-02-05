@@ -1,19 +1,16 @@
 package com.ecwid.consul.v1.kv.model;
 
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.Utils;
-
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.Utils;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class PutParams implements UrlParameters {
-
 	private long flags;
 	private Long cas;
 	private String acquireSession;

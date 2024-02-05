@@ -1,16 +1,16 @@
 package com.ecwid.consul.v1.kv;
 
-import com.ecwid.consul.ConsulTestConstants;
-import com.pszymczyk.consul.ConsulProcess;
-import com.pszymczyk.consul.ConsulStarterBuilder;
-import com.pszymczyk.consul.infrastructure.Ports;
-import org.apache.commons.lang.math.RandomUtils;
+import java.util.Random;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import com.ecwid.consul.ConsulTestConstants;
+import com.pszymczyk.consul.ConsulProcess;
+import com.pszymczyk.consul.ConsulStarterBuilder;
+import com.pszymczyk.consul.infrastructure.Ports;
 
 class KeyValueConsulClientTest {
 

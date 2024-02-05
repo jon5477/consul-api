@@ -16,7 +16,6 @@ import java.util.Map;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class CatalogConsulClient implements CatalogClient {
-
 	private final ConsulRawClient rawClient;
 
 	public CatalogConsulClient(ConsulRawClient rawClient) {
@@ -56,7 +55,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, String token) {
 		String json = GsonFactory.getGson().toJson(catalogRegistration);
 		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<Void>(null, httpResponse);
@@ -74,7 +72,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, String token) {
 		String json = GsonFactory.getGson().toJson(catalogDeregistration);
 		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<Void>(null, httpResponse);
@@ -86,10 +83,10 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<List<String>> getCatalogDatacenters() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/datacenters");
-
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<String>>() {
-			}.getType());
+			List<String> value = GsonFactory.getGson().fromJson(httpResponse.getContent(),
+					new TypeToken<List<String>>() {
+					}.getType());
 			return new Response<List<String>>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -98,22 +95,15 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<List<Node>> getCatalogNodes(QueryParams queryParams) {
-		CatalogNodesRequest request = CatalogNodesRequest.newBuilder()
-				.setQueryParams(queryParams)
-				.build();
-
+		CatalogNodesRequest request = CatalogNodesRequest.newBuilder().setQueryParams(queryParams).build();
 		return getCatalogNodes(request);
 	}
 
 	@Override
 	public Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest) {
-		Request request = Request.Builder.newBuilder()
-			.setEndpoint("/v1/catalog/nodes")
-			.addUrlParameters(catalogNodesRequest.asUrlParameters())
-			.build();
-
+		Request request = Request.Builder.newBuilder().setEndpoint("/v1/catalog/nodes")
+				.addUrlParameters(catalogNodesRequest.asUrlParameters()).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
-
 		if (httpResponse.getStatusCode() == 200) {
 			List<Node> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Node>>() {
 			}.getType());
@@ -130,18 +120,15 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, String token) {
-		CatalogServicesRequest request = CatalogServicesRequest.newBuilder()
-				.setQueryParams(queryParams)
-				.setToken(token)
+		CatalogServicesRequest request = CatalogServicesRequest.newBuilder().setQueryParams(queryParams).setToken(token)
 				.build();
-
 		return getCatalogServices(request);
 	}
 
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest.asUrlParameters());
-
+		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services",
+				catalogServicesRequest.asUrlParameters());
 		if (httpResponse.getStatusCode() == 200) {
 			Map<String, List<String>> value = GsonFactory.getGson().fromJson(httpResponse.getContent(),
 					new TypeToken<Map<String, List<String>>>() {
@@ -153,46 +140,45 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, QueryParams queryParams) {
+	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+			QueryParams queryParams) {
 		return getCatalogService(serviceName, (String) null, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, QueryParams queryParams, String token) {
+	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+			QueryParams queryParams, String token) {
 		return getCatalogService(serviceName, (String) null, queryParams, token);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, String tag,
-																							  QueryParams queryParams) {
+	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+			String tag, QueryParams queryParams) {
 		return getCatalogService(serviceName, tag, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, String tag,
-																							  QueryParams queryParams, String token) {
-		return getCatalogService(serviceName, new String[]{tag}, queryParams, null);
+	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+			String tag, QueryParams queryParams, String token) {
+		return getCatalogService(serviceName, new String[] { tag }, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, String[] tag,
-	                                                                                          QueryParams queryParams, String token) {
-		CatalogServiceRequest request = CatalogServiceRequest.newBuilder()
-				.setTags(tag)
-				.setQueryParams(queryParams)
-				.setToken(token)
-				.build();
-
+	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+			String[] tag, QueryParams queryParams, String token) {
+		CatalogServiceRequest request = CatalogServiceRequest.newBuilder().setTags(tag).setQueryParams(queryParams)
+				.setToken(token).build();
 		return getCatalogService(serviceName, request);
 	}
 
 	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName, catalogServiceRequest.asUrlParameters());
-
+	public Response<List<CatalogService>> getCatalogService(String serviceName,
+			CatalogServiceRequest catalogServiceRequest) {
+		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName,
+				catalogServiceRequest.asUrlParameters());
 		if (httpResponse.getStatusCode() == 200) {
-			List<com.ecwid.consul.v1.catalog.model.CatalogService> value = GsonFactory.getGson().fromJson(httpResponse.getContent(),
-					new TypeToken<List<com.ecwid.consul.v1.catalog.model.CatalogService>>() {
+			List<com.ecwid.consul.v1.catalog.model.CatalogService> value = GsonFactory.getGson().fromJson(
+					httpResponse.getContent(), new TypeToken<List<com.ecwid.consul.v1.catalog.model.CatalogService>>() {
 					}.getType());
 			return new Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>>(value, httpResponse);
 		} else {
@@ -203,7 +189,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<CatalogNode> getCatalogNode(String nodeName, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/node/" + nodeName, queryParams);
-
 		if (httpResponse.getStatusCode() == 200) {
 			CatalogNode catalogNode = GsonFactory.getGson().fromJson(httpResponse.getContent(), CatalogNode.class);
 			return new Response<CatalogNode>(catalogNode, httpResponse);
@@ -211,5 +196,4 @@ public final class CatalogConsulClient implements CatalogClient {
 			throw new OperationException(httpResponse);
 		}
 	}
-
 }

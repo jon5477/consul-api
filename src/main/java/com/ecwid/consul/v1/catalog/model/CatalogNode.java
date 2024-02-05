@@ -9,7 +9,6 @@ import java.util.Map;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogNode {
-
 	public static class Service {
 		@SerializedName("ID")
 		private String id;
@@ -57,12 +56,8 @@ public class CatalogNode {
 
 		@Override
 		public String toString() {
-			return "Service{" +
-					"id='" + id + '\'' +
-					", service='" + service + '\'' +
-					", tags=" + tags +
-					", port=" + port +
-					'}';
+			return "Service{" + "id='" + id + '\'' + ", service='" + service + '\'' + ", tags=" + tags + ", port="
+					+ port + '}';
 		}
 	}
 
@@ -90,11 +85,6 @@ public class CatalogNode {
 
 	@Override
 	public String toString() {
-		return "CatalogNode{" +
-				"node=" + node +
-				", services=" + services +
-				'}';
+		return "CatalogNode{" + "node=" + node + ", services=" + services + '}';
 	}
 }
-
-

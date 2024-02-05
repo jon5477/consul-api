@@ -8,7 +8,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class NewSession {
-
 	@SerializedName("LockDelay")
 	private long lockDelay;
 

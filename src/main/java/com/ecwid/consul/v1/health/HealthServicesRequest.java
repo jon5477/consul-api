@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class HealthServicesRequest implements ConsulRequest {
-
 	private final String datacenter;
 	private final String near;
 	private final String[] tags;

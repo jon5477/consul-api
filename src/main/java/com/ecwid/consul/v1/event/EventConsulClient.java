@@ -17,7 +17,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class EventConsulClient implements EventClient {
-
 	private final ConsulRawClient rawClient;
 
 	public EventConsulClient(ConsulRawClient rawClient) {
@@ -47,7 +46,6 @@ public final class EventConsulClient implements EventClient {
 	@Override
 	public Response<Event> eventFire(String event, String payload, EventParams eventParams, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams, queryParams);
-
 		if (httpResponse.getStatusCode() == 200) {
 			Event value = GsonFactory.getGson().fromJson(httpResponse.getContent(), Event.class);
 			return new Response<Event>(value, httpResponse);
@@ -67,14 +65,12 @@ public final class EventConsulClient implements EventClient {
 				.setName(event)
 				.setQueryParams(queryParams)
 				.build();
-
 		return eventList(request);
 	}
 
 	@Override
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest.asUrlParameters());
-
 		if (httpResponse.getStatusCode() == 200) {
 			List<Event> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Event>>() {
 			}.getType());

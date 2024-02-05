@@ -8,7 +8,6 @@ import java.util.Map;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Node {
-
 	@SerializedName("ID")
 	private String id;
 
@@ -99,15 +98,8 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node{" +
-				"id='" + id + '\'' +
-				", node='" + node + '\'' +
-				", address='" + address + '\'' +
-				", datacenter='" + datacenter + '\'' +
-				", taggedAddresses=" + taggedAddresses +
-				", meta=" + meta +
-				", createIndex=" + createIndex +
-				", modifyIndex=" + modifyIndex +
-				'}';
+		return "Node{" + "id='" + id + '\'' + ", node='" + node + '\'' + ", address='" + address + '\''
+				+ ", datacenter='" + datacenter + '\'' + ", taggedAddresses=" + taggedAddresses + ", meta=" + meta
+				+ ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + '}';
 	}
 }

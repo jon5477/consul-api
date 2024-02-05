@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public final class EventListRequest implements ConsulRequest {
-
 	private final String name;
 	private final String node;
 	private final String service;
@@ -18,7 +17,8 @@ public final class EventListRequest implements ConsulRequest {
 	private final QueryParams queryParams;
 	private final String token;
 
-	private EventListRequest(String name, String node, String service, String tag, QueryParams queryParams, String token) {
+	private EventListRequest(String name, String node, String service, String tag, QueryParams queryParams,
+			String token) {
 		this.name = name;
 		this.node = node;
 		this.service = service;
@@ -101,31 +101,24 @@ public final class EventListRequest implements ConsulRequest {
 	@Override
 	public List<UrlParameters> asUrlParameters() {
 		List<UrlParameters> params = new ArrayList<>();
-
 		if (name != null) {
 			params.add(new SingleUrlParameters("name", name));
 		}
-
 		if (node != null) {
 			params.add(new SingleUrlParameters("node", node));
 		}
-
 		if (service != null) {
 			params.add(new SingleUrlParameters("service", service));
 		}
-
 		if (tag != null) {
 			params.add(new SingleUrlParameters("tag", tag));
 		}
-
 		if (queryParams != null) {
 			params.add(queryParams);
 		}
-
 		if (token != null) {
 			params.add(new SingleUrlParameters("token", token));
 		}
-
 		return params;
 	}
 
@@ -138,12 +131,9 @@ public final class EventListRequest implements ConsulRequest {
 			return false;
 		}
 		EventListRequest that = (EventListRequest) o;
-		return Objects.equals(name, that.name) &&
-			Objects.equals(node, that.node) &&
-			Objects.equals(service, that.service) &&
-			Objects.equals(tag, that.tag) &&
-			Objects.equals(queryParams, that.queryParams) &&
-			Objects.equals(token, that.token);
+		return Objects.equals(name, that.name) && Objects.equals(node, that.node)
+				&& Objects.equals(service, that.service) && Objects.equals(tag, that.tag)
+				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
 	}
 
 	@Override

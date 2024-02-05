@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Node {
-
 	@SerializedName("Node")
 	private String node;
 
@@ -31,9 +30,6 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node{" +
-				"node='" + node + '\'' +
-				", coord=" + coord +
-				'}';
+		return "Node{" + "node='" + node + '\'' + ", coord=" + coord + '}';
 	}
 }

@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class CatalogNodesRequest implements ConsulRequest {
-
 	private final String datacenter;
 	private final String near;
 	private final Map<String, String> nodeMeta;
@@ -117,10 +116,8 @@ public final class CatalogNodesRequest implements ConsulRequest {
 			return false;
 		}
 		CatalogNodesRequest that = (CatalogNodesRequest) o;
-		return Objects.equals(datacenter, that.datacenter) &&
-			Objects.equals(near, that.near) &&
-			Objects.equals(nodeMeta, that.nodeMeta) &&
-			Objects.equals(queryParams, that.queryParams);
+		return Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
+				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override

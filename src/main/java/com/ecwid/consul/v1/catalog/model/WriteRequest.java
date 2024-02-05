@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class WriteRequest {
-
 	@SerializedName("Token")
 	private String token;
 
@@ -20,8 +19,6 @@ public class WriteRequest {
 
 	@Override
 	public String toString() {
-		return "WriteRequest{" +
-				"token='" + token + '\'' +
-				'}';
+		return "WriteRequest{" + "token='" + token + '\'' + '}';
 	}
 }

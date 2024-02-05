@@ -1,18 +1,19 @@
 package com.ecwid.consul.v1;
 
-import com.ecwid.consul.Utils;
-import com.ecwid.consul.v1.catalog.CatalogServiceRequest;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static com.ecwid.consul.v1.QueryParams.Builder;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import com.ecwid.consul.Utils;
+import com.ecwid.consul.v1.QueryParams.Builder;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class QueryParamsTest {
 	@Test

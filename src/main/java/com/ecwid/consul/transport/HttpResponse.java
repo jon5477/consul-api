@@ -4,17 +4,15 @@ package com.ecwid.consul.transport;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class HttpResponse {
-
 	private final int statusCode;
 	private final String statusMessage;
-
 	private final String content;
-
 	private final Long consulIndex;
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;
 
-	public HttpResponse(int statusCode, String statusMessage, String content, Long consulIndex, Boolean consulKnownLeader, Long consulLastContact) {
+	public HttpResponse(int statusCode, String statusMessage, String content, Long consulIndex,
+			Boolean consulKnownLeader, Long consulLastContact) {
 		this.statusCode = statusCode;
 		this.statusMessage = statusMessage;
 		this.content = content;

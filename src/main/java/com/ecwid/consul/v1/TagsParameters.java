@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class TagsParameters implements UrlParameters {
-
 	private final String[] tags;
 
 	public TagsParameters(String[] tags) {

@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Acl {
-
 	@SerializedName("CreateIndex")
 	private long createIndex;
 

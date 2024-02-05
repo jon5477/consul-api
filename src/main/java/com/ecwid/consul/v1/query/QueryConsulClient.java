@@ -10,7 +10,6 @@ import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.query.model.QueryExecution;
 
 public final class QueryConsulClient implements QueryClient {
-
 	private final ConsulRawClient rawClient;
 
 	public QueryConsulClient(ConsulRawClient rawClient) { this.rawClient = rawClient; }
@@ -38,7 +37,6 @@ public final class QueryConsulClient implements QueryClient {
 	@Override
 	public Response<QueryExecution> executePreparedQuery(String uuid, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/query/" + uuid + "/execute", queryParams);
-
 		if (httpResponse.getStatusCode() == 200) {
 			QueryExecution queryExecution = GsonFactory.getGson().fromJson(httpResponse.getContent(), QueryExecution.class);
 			return new Response<QueryExecution>(queryExecution, httpResponse);

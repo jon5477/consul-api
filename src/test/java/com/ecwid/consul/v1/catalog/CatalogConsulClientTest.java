@@ -1,25 +1,21 @@
 package com.ecwid.consul.v1.catalog;
 
-import com.ecwid.consul.ConsulTestConstants;
-import com.ecwid.consul.v1.Response;
-import com.ecwid.consul.v1.catalog.model.Node;
-import com.ecwid.consul.v1.kv.KeyValueConsulClient;
-import com.pszymczyk.consul.ConsulProcess;
-import com.pszymczyk.consul.ConsulStarterBuilder;
-import com.pszymczyk.consul.infrastructure.Ports;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.catalog.model.Node;
+import com.pszymczyk.consul.ConsulProcess;
+import com.pszymczyk.consul.ConsulStarterBuilder;
+import com.pszymczyk.consul.infrastructure.Ports;
 
 class CatalogConsulClientTest {
-
-	private static final Random rnd = new Random();
-
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
 

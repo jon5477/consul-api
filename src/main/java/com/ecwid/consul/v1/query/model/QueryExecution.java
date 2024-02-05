@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class QueryExecution {
-
 	public static class DNS {
 		@SerializedName("TTL")
 		private String ttl;

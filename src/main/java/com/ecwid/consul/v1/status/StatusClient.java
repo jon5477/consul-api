@@ -8,8 +8,7 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface StatusClient {
+	Response<String> getStatusLeader();
 
-	public Response<String> getStatusLeader();
-
-	public Response<List<String>> getStatusPeers();
+	Response<List<String>> getStatusPeers();
 }

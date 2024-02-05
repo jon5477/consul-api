@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Event {
-
 	@SerializedName("ID")
 	private String id;
 

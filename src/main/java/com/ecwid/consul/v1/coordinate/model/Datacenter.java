@@ -8,7 +8,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Datacenter {
-
 	@SerializedName("Datacenter")
 	private String datacenter;
 
@@ -44,10 +43,7 @@ public class Datacenter {
 
 	@Override
 	public String toString() {
-		return "Datacenter{" +
-				"datacenter='" + datacenter + '\'' +
-				", areaId='" + areaId + '\'' +
-				", coordinates=" + coordinates +
-				'}';
+		return "Datacenter{" + "datacenter='" + datacenter + '\'' + ", areaId='" + areaId + '\'' + ", coordinates="
+				+ coordinates + '}';
 	}
 }

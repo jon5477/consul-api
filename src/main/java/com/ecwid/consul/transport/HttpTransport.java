@@ -1,16 +1,12 @@
 package com.ecwid.consul.transport;
 
-import java.util.Map;
-
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface HttpTransport {
+	HttpResponse makeGetRequest(HttpRequest request);
 
-	public HttpResponse makeGetRequest(HttpRequest request);
+	HttpResponse makePutRequest(HttpRequest request);
 
-	public HttpResponse makePutRequest(HttpRequest request);
-
-	public HttpResponse makeDeleteRequest(HttpRequest request);
-
+	HttpResponse makeDeleteRequest(HttpRequest request);
 }

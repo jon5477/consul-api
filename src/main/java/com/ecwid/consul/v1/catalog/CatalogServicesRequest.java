@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class CatalogServicesRequest implements ConsulRequest {
-
 	private final String datacenter;
 	private final Map<String, String> nodeMeta;
 	private final QueryParams queryParams;
 	private final String token;
 
-	public CatalogServicesRequest(String datacenter, Map<String, String> nodeMeta, QueryParams queryParams, String token) {
+	public CatalogServicesRequest(String datacenter, Map<String, String> nodeMeta, QueryParams queryParams,
+			String token) {
 		this.datacenter = datacenter;
 		this.nodeMeta = nodeMeta;
 		this.queryParams = queryParams;
@@ -117,10 +117,8 @@ public final class CatalogServicesRequest implements ConsulRequest {
 			return false;
 		}
 		CatalogServicesRequest that = (CatalogServicesRequest) o;
-		return Objects.equals(datacenter, that.datacenter) &&
-			Objects.equals(nodeMeta, that.nodeMeta) &&
-			Objects.equals(queryParams, that.queryParams) &&
-			Objects.equals(token, that.token);
+		return Objects.equals(datacenter, that.datacenter) && Objects.equals(nodeMeta, that.nodeMeta)
+				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryNode {
-
 	public static class Node {
 		@SerializedName("ID")
 		private String id;

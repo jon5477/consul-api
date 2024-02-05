@@ -6,9 +6,7 @@ import com.ecwid.consul.transport.HttpResponse;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class Response<T> {
-
 	private final T value;
-
 	private final Long consulIndex;
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;

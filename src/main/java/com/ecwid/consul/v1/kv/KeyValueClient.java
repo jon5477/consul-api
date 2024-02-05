@@ -12,93 +12,84 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface KeyValueClient {
+	Response<GetValue> getKVValue(String key);
 
-	public Response<GetValue> getKVValue(String key);
+	Response<GetValue> getKVValue(String key, String token);
 
-	public Response<GetValue> getKVValue(String key, String token);
+	Response<GetValue> getKVValue(String key, QueryParams queryParams);
 
-	public Response<GetValue> getKVValue(String key, QueryParams queryParams);
+	Response<GetValue> getKVValue(String key, String token, QueryParams queryParams);
 
-	public Response<GetValue> getKVValue(String key, String token, QueryParams queryParams);
+	Response<GetBinaryValue> getKVBinaryValue(String key);
 
+	Response<GetBinaryValue> getKVBinaryValue(String key, String token);
 
-	public Response<GetBinaryValue> getKVBinaryValue(String key);
+	Response<GetBinaryValue> getKVBinaryValue(String key, QueryParams queryParams);
 
-	public Response<GetBinaryValue> getKVBinaryValue(String key, String token);
+	Response<GetBinaryValue> getKVBinaryValue(String key, String token, QueryParams queryParams);
 
-	public Response<GetBinaryValue> getKVBinaryValue(String key, QueryParams queryParams);
+	Response<List<GetValue>> getKVValues(String keyPrefix);
 
-	public Response<GetBinaryValue> getKVBinaryValue(String key, String token, QueryParams queryParams);
+	Response<List<GetValue>> getKVValues(String keyPrefix, String token);
 
+	Response<List<GetValue>> getKVValues(String keyPrefix, QueryParams queryParams);
 
-	public Response<List<GetValue>> getKVValues(String keyPrefix);
+	Response<List<GetValue>> getKVValues(String keyPrefix, String token, QueryParams queryParams);
 
-	public Response<List<GetValue>> getKVValues(String keyPrefix, String token);
+	Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix);
 
-	public Response<List<GetValue>> getKVValues(String keyPrefix, QueryParams queryParams);
+	Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, String token);
 
-	public Response<List<GetValue>> getKVValues(String keyPrefix, String token, QueryParams queryParams);
+	Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, QueryParams queryParams);
 
+	Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, String token, QueryParams queryParams);
 
-	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix);
+	Response<List<String>> getKVKeysOnly(String keyPrefix);
 
-	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, String token);
+	Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, String token);
 
-	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, QueryParams queryParams);
+	Response<List<String>> getKVKeysOnly(String keyPrefix, QueryParams queryParams);
 
-	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, String token, QueryParams queryParams);
+	Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, String token, QueryParams queryParams);
 
+	Response<Boolean> setKVValue(String key, String value);
 
-	public Response<List<String>> getKVKeysOnly(String keyPrefix);
+	Response<Boolean> setKVValue(String key, String value, PutParams putParams);
 
-	public Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, String token);
+	Response<Boolean> setKVValue(String key, String value, String token, PutParams putParams);
 
-	public Response<List<String>> getKVKeysOnly(String keyPrefix, QueryParams queryParams);
+	Response<Boolean> setKVValue(String key, String value, QueryParams queryParams);
 
-	public Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, String token, QueryParams queryParams);
+	Response<Boolean> setKVValue(String key, String value, PutParams putParams, QueryParams queryParams);
 
+	Response<Boolean> setKVValue(String key, String value, String token, PutParams putParams, QueryParams queryParams);
 
-	public Response<Boolean> setKVValue(String key, String value);
+	Response<Boolean> setKVBinaryValue(String key, byte[] value);
 
-	public Response<Boolean> setKVValue(String key, String value, PutParams putParams);
+	Response<Boolean> setKVBinaryValue(String key, byte[] value, PutParams putParams);
 
-	public Response<Boolean> setKVValue(String key, String value, String token, PutParams putParams);
+	Response<Boolean> setKVBinaryValue(String key, byte[] value, String token, PutParams putParams);
 
-	public Response<Boolean> setKVValue(String key, String value, QueryParams queryParams);
+	Response<Boolean> setKVBinaryValue(String key, byte[] value, QueryParams queryParams);
 
-	public Response<Boolean> setKVValue(String key, String value, PutParams putParams, QueryParams queryParams);
+	Response<Boolean> setKVBinaryValue(String key, byte[] value, PutParams putParams, QueryParams queryParams);
 
-	public Response<Boolean> setKVValue(String key, String value, String token, PutParams putParams, QueryParams queryParams);
+	Response<Boolean> setKVBinaryValue(String key, byte[] value, String token, PutParams putParams,
+			QueryParams queryParams);
 
+	Response<Void> deleteKVValue(String key);
 
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value);
+	Response<Void> deleteKVValue(String key, String token);
 
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, PutParams putParams);
+	Response<Void> deleteKVValue(String key, QueryParams queryParams);
 
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, String token, PutParams putParams);
+	Response<Void> deleteKVValue(String key, String token, QueryParams queryParams);
 
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, QueryParams queryParams);
+	Response<Void> deleteKVValues(String key);
 
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, PutParams putParams, QueryParams queryParams);
+	Response<Void> deleteKVValues(String key, String token);
 
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, String token, PutParams putParams, QueryParams queryParams);
+	Response<Void> deleteKVValues(String key, QueryParams queryParams);
 
-
-	public Response<Void> deleteKVValue(String key);
-
-	public Response<Void> deleteKVValue(String key, String token);
-
-	public Response<Void> deleteKVValue(String key, QueryParams queryParams);
-
-	public Response<Void> deleteKVValue(String key, String token, QueryParams queryParams);
-
-
-	public Response<Void> deleteKVValues(String key);
-
-	public Response<Void> deleteKVValues(String key, String token);
-
-	public Response<Void> deleteKVValues(String key, QueryParams queryParams);
-
-	public Response<Void> deleteKVValues(String key, String token, QueryParams queryParams);
-
+	Response<Void> deleteKVValues(String key, String token, QueryParams queryParams);
 }

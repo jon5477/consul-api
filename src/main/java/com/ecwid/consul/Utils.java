@@ -10,6 +10,8 @@ import java.util.*;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Utils {
+	private Utils() {
+	}
 
 	public static String encodeValue(String value) {
 		try {
@@ -73,7 +75,6 @@ public class Utils {
 		if (path != null && !path.trim().isEmpty()) {
 			agentPath = "/" + path;
 		}
-
 		return String.format("%s:%d%s", host, port, agentPath);
 	}
 }

@@ -6,6 +6,7 @@ package com.ecwid.consul;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class ConsulException extends RuntimeException {
+	private static final long serialVersionUID = -3520481098875184703L;
 
 	public ConsulException() {
 	}

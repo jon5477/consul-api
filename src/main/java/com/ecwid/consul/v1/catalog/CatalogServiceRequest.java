@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class CatalogServiceRequest implements ConsulRequest {
-
 	private final String datacenter;
 	private final String[] tags;
 	private final String near;
@@ -23,7 +22,8 @@ public final class CatalogServiceRequest implements ConsulRequest {
 	private final QueryParams queryParams;
 	private final String token;
 
-	private CatalogServiceRequest(String datacenter, String[] tags, String near, Map<String, String> nodeMeta, QueryParams queryParams, String token) {
+	private CatalogServiceRequest(String datacenter, String[] tags, String near, Map<String, String> nodeMeta,
+			QueryParams queryParams, String token) {
 		this.datacenter = datacenter;
 		this.tags = tags;
 		this.near = near;
@@ -77,7 +77,7 @@ public final class CatalogServiceRequest implements ConsulRequest {
 		}
 
 		public Builder setTag(String tag) {
-			this.tags = new String[]{tag};
+			this.tags = new String[] { tag };
 			return this;
 		}
 
@@ -160,12 +160,9 @@ public final class CatalogServiceRequest implements ConsulRequest {
 			return false;
 		}
 		CatalogServiceRequest that = (CatalogServiceRequest) o;
-		return Objects.equals(datacenter, that.datacenter) &&
-			Arrays.equals(tags, that.tags) &&
-			Objects.equals(near, that.near) &&
-			Objects.equals(nodeMeta, that.nodeMeta) &&
-			Objects.equals(queryParams, that.queryParams) &&
-			Objects.equals(token, that.token);
+		return Objects.equals(datacenter, that.datacenter) && Arrays.equals(tags, that.tags)
+				&& Objects.equals(near, that.near) && Objects.equals(nodeMeta, that.nodeMeta)
+				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
 	}
 
 	@Override

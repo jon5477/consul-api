@@ -8,7 +8,6 @@ import java.util.Objects;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class SingleUrlParameters implements UrlParameters {
-
 	private final String key;
 	private final String value;
 
@@ -32,20 +31,24 @@ public final class SingleUrlParameters implements UrlParameters {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof SingleUrlParameters)) {
-			return false;
-		}
-		SingleUrlParameters that = (SingleUrlParameters) o;
-		return Objects.equals(key, that.key) &&
-			Objects.equals(value, that.value);
+	public int hashCode() {
+		return Objects.hash(key, value);
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(key, value);
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof SingleUrlParameters)) {
+			return false;
+		}
+		SingleUrlParameters other = (SingleUrlParameters) obj;
+		return Objects.equals(key, other.key) && Objects.equals(value, other.value);
+	}
+
+	@Override
+	public String toString() {
+		return "SingleUrlParameters [key=" + key + ", value=" + value + "]";
 	}
 }

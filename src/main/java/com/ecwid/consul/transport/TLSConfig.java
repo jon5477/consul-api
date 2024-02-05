@@ -1,7 +1,6 @@
 package com.ecwid.consul.transport;
 
 public final class TLSConfig {
-
 	public enum KeyStoreInstanceType {
 		JKS, JCEKS, PKCS12, PKCS11, DKS
 	}
@@ -12,8 +11,8 @@ public final class TLSConfig {
 	private final String keyStorePath;
 	private final String keyStorePassword;
 
-	public TLSConfig(KeyStoreInstanceType keyStoreInstanceType, String certificatePath, String certificatePassword, String keyStorePath,
-					 String keyStorePassword) {
+	public TLSConfig(KeyStoreInstanceType keyStoreInstanceType, String certificatePath, String certificatePassword,
+			String keyStorePath, String keyStorePassword) {
 		this.keyStoreInstanceType = keyStoreInstanceType;
 		this.certificatePath = certificatePath;
 		this.certificatePassword = certificatePassword;

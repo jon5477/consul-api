@@ -1,9 +1,8 @@
 package com.ecwid.consul.v1.agent.model;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 import java.util.Map;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)

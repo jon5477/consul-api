@@ -1,17 +1,15 @@
 package com.ecwid.consul.v1.kv.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class GetValue {
-
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
-
 	@SerializedName("CreateIndex")
 	private long createIndex;
 
@@ -94,13 +92,13 @@ public class GetValue {
 			return null;
 		}
 		if (charset == null) {
-			charset = UTF_8;
+			charset = StandardCharsets.UTF_8;
 		}
 		return new String(Base64.getDecoder().decode(value), charset);
 	}
 
 	public String getDecodedValue() {
-		return getDecodedValue(UTF_8);
+		return getDecodedValue(StandardCharsets.UTF_8);
 	}
 
 	@Override

@@ -1,26 +1,18 @@
 package com.ecwid.consul.v1.agent.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Self {
-
 	public enum LogLevel {
-		TRACE,
-		DEBUG,
-		INFO,
-		WARN,
-		ERR
+		TRACE, DEBUG, INFO, WARN, ERR
 	}
 
 	public static class Config {
-
 		@SerializedName("Datacenter")
 		private String datacenter;
 
@@ -78,13 +70,8 @@ public class Self {
 
 		@Override
 		public String toString() {
-			return "DebugConfig{" +
-					"datacenter='" + datacenter + "'" +
-					", nodeName='" + nodeName + "'" +
-					", revision='" + revision + '\'' +
-					", server=" + server +
-					", version='" + version + '\'' +
-					'}';
+			return "DebugConfig{" + "datacenter='" + datacenter + "'" + ", nodeName='" + nodeName + "'" + ", revision='"
+					+ revision + '\'' + ", server=" + server + ", version='" + version + '\'' + '}';
 		}
 
 	}
@@ -158,7 +145,6 @@ public class Self {
 		public void setBootstrap(boolean bootstrap) {
 			this.bootstrap = bootstrap;
 		}
-
 
 		public String getDataDir() {
 			return dataDir;
@@ -312,33 +298,17 @@ public class Self {
 			this.rejoinAfterLeave = rejoinAfterLeave;
 		}
 
-
 		@Override
 		public String toString() {
-			return "Config{" +
-					"bootstrap=" + bootstrap +
-					", dataDir='" + dataDir + '\'' +
-					", dnsRecursor='" + dnsRecursor + '\'' +
-					", dnsDomain='" + dnsDomain + '\'' +
-					", logLevel='" + logLevel + '\'' +
-					", nodeId='" + nodeId + '\'' +
-					", clientAddresses='" + Arrays.toString(clientAddresses) + '\'' +
-					", bindAddress='" + bindAddress + '\'' +
-					", leaveOnTerm=" + leaveOnTerm +
-					", skipLeaveOnInt=" + skipLeaveOnInt +
-					", enableDebug=" + enableDebug +
-					", verifyIncoming=" + verifyIncoming +
-					", verifyOutgoing=" + verifyOutgoing +
-					", caFile='" + caFile + '\'' +
-					", certFile='" + certFile + '\'' +
-					", keyFile='" + keyFile + '\'' +
-					", uiDir='" + uiDir + '\'' +
-					", pidFile='" + pidFile + '\'' +
-					", enableSyslog=" + enableSyslog +
-					", rejoinAfterLeave=" + rejoinAfterLeave +
-					'}';
+			return "Config{" + "bootstrap=" + bootstrap + ", dataDir='" + dataDir + '\'' + ", dnsRecursor='"
+					+ dnsRecursor + '\'' + ", dnsDomain='" + dnsDomain + '\'' + ", logLevel='" + logLevel + '\''
+					+ ", nodeId='" + nodeId + '\'' + ", clientAddresses='" + Arrays.toString(clientAddresses) + '\''
+					+ ", bindAddress='" + bindAddress + '\'' + ", leaveOnTerm=" + leaveOnTerm + ", skipLeaveOnInt="
+					+ skipLeaveOnInt + ", enableDebug=" + enableDebug + ", verifyIncoming=" + verifyIncoming
+					+ ", verifyOutgoing=" + verifyOutgoing + ", caFile='" + caFile + '\'' + ", certFile='" + certFile
+					+ '\'' + ", keyFile='" + keyFile + '\'' + ", uiDir='" + uiDir + '\'' + ", pidFile='" + pidFile
+					+ '\'' + ", enableSyslog=" + enableSyslog + ", rejoinAfterLeave=" + rejoinAfterLeave + '}';
 		}
-
 
 	}
 
@@ -377,9 +347,6 @@ public class Self {
 
 	@Override
 	public String toString() {
-		return "Self{" +
-				"config=" + config +
-				", member=" + member +
-				'}';
+		return "Self{" + "config=" + config + ", member=" + member + '}';
 	}
 }

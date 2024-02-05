@@ -14,7 +14,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class StatusConsulClient implements StatusClient {
-
 	private final ConsulRawClient rawClient;
 
 	public StatusConsulClient(ConsulRawClient rawClient) {
@@ -48,7 +47,6 @@ public final class StatusConsulClient implements StatusClient {
 	@Override
 	public Response<String> getStatusLeader() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/leader");
-
 		if (httpResponse.getStatusCode() == 200) {
 			String value = GsonFactory.getGson().fromJson(httpResponse.getContent(), String.class);
 			return new Response<String>(value, httpResponse);
@@ -60,14 +58,13 @@ public final class StatusConsulClient implements StatusClient {
 	@Override
 	public Response<List<String>> getStatusPeers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/peers");
-
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<String>>() {
-			}.getType());
+			List<String> value = GsonFactory.getGson().fromJson(httpResponse.getContent(),
+					new TypeToken<List<String>>() {
+					}.getType());
 			return new Response<List<String>>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
 	}
-
 }

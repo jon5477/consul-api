@@ -11,7 +11,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface AclClient {
-
 	Response<String> aclCreate(NewAcl newAcl, String token);
 
 	Response<Void> aclUpdate(UpdateAcl updateAcl, String token);
@@ -23,5 +22,4 @@ public interface AclClient {
 	Response<String> aclClone(String aclId, String token);
 
 	Response<List<Acl>> getAclList(String token);
-
 }

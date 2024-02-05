@@ -9,7 +9,6 @@ import java.util.Map;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogRegistration {
-
 	public static class Service {
 		@SerializedName("ID")
 		private String id;
@@ -79,25 +78,16 @@ public class CatalogRegistration {
 
 		@Override
 		public String toString() {
-			return "Service{" +
-					"id='" + id + '\'' +
-					", service='" + service + '\'' +
-					", tags=" + tags +
-					", address='" + address + '\'' +
-					", meta=" + meta +
-					", port=" + port +
-					'}';
+			return "Service{" + "id='" + id + '\'' + ", service='" + service + '\'' + ", tags=" + tags + ", address='"
+					+ address + '\'' + ", meta=" + meta + ", port=" + port + '}';
 		}
 	}
 
 	public static enum CheckStatus {
 		@SerializedName("unknown")
-		UNKNOWN,
-		@SerializedName("passing")
-		PASSING,
-		@SerializedName("warning")
-		WARNING,
-		@SerializedName("critical")
+		UNKNOWN, @SerializedName("passing")
+		PASSING, @SerializedName("warning")
+		WARNING, @SerializedName("critical")
 		CRITICAL
 	}
 
@@ -171,14 +161,8 @@ public class CatalogRegistration {
 
 		@Override
 		public String toString() {
-			return "Check{" +
-					"node='" + node + '\'' +
-					", checkId='" + checkId + '\'' +
-					", name='" + name + '\'' +
-					", notes='" + notes + '\'' +
-					", status=" + status +
-					", serviceId='" + serviceId + '\'' +
-					'}';
+			return "Check{" + "node='" + node + '\'' + ", checkId='" + checkId + '\'' + ", name='" + name + '\''
+					+ ", notes='" + notes + '\'' + ", status=" + status + ", serviceId='" + serviceId + '\'' + '}';
 		}
 	}
 
@@ -283,16 +267,9 @@ public class CatalogRegistration {
 
 	@Override
 	public String toString() {
-		return "CatalogRegistration{" +
-				"datacenter='" + datacenter + '\'' +
-				", node='" + node + '\'' +
-				", address='" + address + '\'' +
-				", service=" + service +
-				", check=" + check +
-				", writeRequest=" + writeRequest +
-				", nodeMeta=" + nodeMeta +
-				", skipNodeUpdate=" + skipNodeUpdate +
-				", taggedAddresses=" + taggedAddresses +
-				'}';
+		return "CatalogRegistration{" + "datacenter='" + datacenter + '\'' + ", node='" + node + '\'' + ", address='"
+				+ address + '\'' + ", service=" + service + ", check=" + check + ", writeRequest=" + writeRequest
+				+ ", nodeMeta=" + nodeMeta + ", skipNodeUpdate=" + skipNodeUpdate + ", taggedAddresses="
+				+ taggedAddresses + '}';
 	}
 }

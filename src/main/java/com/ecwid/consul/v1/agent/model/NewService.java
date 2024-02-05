@@ -10,15 +10,13 @@ import java.util.Map;
  * @author Spencer Gibb (spencer@gibb.us)
  */
 public class NewService {
-
 	public static class Check {
-
 		@SerializedName("Script")
 		private String script;
-		
+
 		@SerializedName("DockerContainerID")
 		private String dockerContainerID;
-		
+
 		@SerializedName("Shell")
 		private String shell;
 
@@ -65,21 +63,21 @@ public class NewService {
 		public void setScript(String script) {
 			this.script = script;
 		}
-		
+
 		public String getDockerContainerID() {
-		    	return dockerContainerID;
+			return dockerContainerID;
 		}
 
 		public void setDockerContainerID(String dockerContainerID) {
-		   	this.dockerContainerID = dockerContainerID;
+			this.dockerContainerID = dockerContainerID;
 		}
 
 		public String getShell() {
-		    	return shell;
+			return shell;
 		}
 
 		public void setShell(String shell) {
-		    	this.shell = shell;
+			this.shell = shell;
 		}
 
 		public String getInterval() {
@@ -162,33 +160,30 @@ public class NewService {
 			this.status = status;
 		}
 
-		public String getGrpc() { return grpc; }
+		public String getGrpc() {
+			return grpc;
+		}
 
-		public void setGrpc(String grpc) { this.grpc = grpc; }
+		public void setGrpc(String grpc) {
+			this.grpc = grpc;
+		}
 
-		public Boolean getGrpcUseTLS() { return grpcUseTLS; }
+		public Boolean getGrpcUseTLS() {
+			return grpcUseTLS;
+		}
 
-		public void setGrpcUseTLS(Boolean grpcUseTLS) { this.grpcUseTLS = grpcUseTLS; }
+		public void setGrpcUseTLS(Boolean grpcUseTLS) {
+			this.grpcUseTLS = grpcUseTLS;
+		}
 
 		@Override
 		public String toString() {
-			return "Check{" +
-				"script='" + script + '\'' +
-				", dockerContainerID='" + dockerContainerID + '\'' +
-				", shell='" + shell + '\'' +
-				", interval='" + interval + '\'' +
-				", ttl='" + ttl + '\'' +
-				", http='" + http + '\'' +
-				", method='" + method + '\'' +
-				", header=" + header +
-				", tcp='" + tcp + '\'' +
-				", timeout='" + timeout + '\'' +
-				", deregisterCriticalServiceAfter='" + deregisterCriticalServiceAfter + '\'' +
-				", tlsSkipVerify=" + tlsSkipVerify +
-				", status='" + status + '\'' +
-				", grpc='" + grpc + '\'' +
-				", grpcUseTLS=" + grpcUseTLS +
-				'}';
+			return "Check{" + "script='" + script + '\'' + ", dockerContainerID='" + dockerContainerID + '\''
+					+ ", shell='" + shell + '\'' + ", interval='" + interval + '\'' + ", ttl='" + ttl + '\''
+					+ ", http='" + http + '\'' + ", method='" + method + '\'' + ", header=" + header + ", tcp='" + tcp
+					+ '\'' + ", timeout='" + timeout + '\'' + ", deregisterCriticalServiceAfter='"
+					+ deregisterCriticalServiceAfter + '\'' + ", tlsSkipVerify=" + tlsSkipVerify + ", status='" + status
+					+ '\'' + ", grpc='" + grpc + '\'' + ", grpcUseTLS=" + grpcUseTLS + '}';
 		}
 	}
 
@@ -293,16 +288,8 @@ public class NewService {
 
 	@Override
 	public String toString() {
-		return "NewService{" +
-				"id='" + id + '\'' +
-				", name='" + name + '\'' +
-				", tags=" + tags +
-				", address='" + address + '\'' +
-				", meta=" + meta +
-				", port=" + port +
-				", enableTagOverride=" + enableTagOverride +
-				", check=" + check +
-				", checks=" + checks +
-				'}';
+		return "NewService{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", tags=" + tags + ", address='"
+				+ address + '\'' + ", meta=" + meta + ", port=" + port + ", enableTagOverride=" + enableTagOverride
+				+ ", check=" + check + ", checks=" + checks + '}';
 	}
 }

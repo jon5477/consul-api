@@ -1,10 +1,9 @@
 package com.ecwid.consul.v1;
 
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.transport.HttpRequest;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ecwid.consul.UrlParameters;
 
 public final class Request {
 

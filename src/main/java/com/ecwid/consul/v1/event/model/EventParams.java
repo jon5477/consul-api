@@ -11,7 +11,6 @@ import com.ecwid.consul.Utils;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class EventParams implements UrlParameters {
-
 	private String name;
 	private String service;
 	private String tag;
@@ -81,10 +80,8 @@ public class EventParams implements UrlParameters {
 			return false;
 		}
 		EventParams that = (EventParams) o;
-		return Objects.equals(name, that.name) &&
-			Objects.equals(service, that.service) &&
-			Objects.equals(tag, that.tag) &&
-			Objects.equals(node, that.node);
+		return Objects.equals(name, that.name) && Objects.equals(service, that.service) && Objects.equals(tag, that.tag)
+				&& Objects.equals(node, that.node);
 	}
 
 	@Override

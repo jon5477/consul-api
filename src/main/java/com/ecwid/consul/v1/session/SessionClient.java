@@ -11,14 +11,13 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface SessionClient {
+	Response<String> sessionCreate(NewSession newSession, QueryParams queryParams);
 
-	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams);
+	Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, String token);
 
-	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, String token);
+	Response<Void> sessionDestroy(String session, QueryParams queryParams);
 
-	public Response<Void> sessionDestroy(String session, QueryParams queryParams);
-
-	public Response<Void> sessionDestroy(String session, QueryParams queryParams, String token);
+	Response<Void> sessionDestroy(String session, QueryParams queryParams, String token);
 
 	Response<Session> getSessionInfo(String session, QueryParams queryParams);
 

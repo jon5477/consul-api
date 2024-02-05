@@ -12,13 +12,12 @@ import java.util.Base64;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Base64TypeAdapter extends TypeAdapter<byte[]> {
-
 	@Override
 	public void write(JsonWriter out, byte[] value) throws IOException {
 		if (value == null) {
 			out.nullValue();
 		} else {
-      out.value(Base64.getEncoder().encodeToString(value));
+			out.value(Base64.getEncoder().encodeToString(value));
 		}
 	}
 

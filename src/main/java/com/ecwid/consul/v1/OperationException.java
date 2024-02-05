@@ -7,7 +7,7 @@ import com.ecwid.consul.transport.HttpResponse;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class OperationException extends ConsulException {
-
+	private static final long serialVersionUID = 7189026270432209391L;
 	private final int statusCode;
 	private final String statusMessage;
 	private final String statusContent;

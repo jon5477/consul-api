@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class UpdateAcl {
-
 	@SerializedName("ID")
 	private String id;
 
@@ -53,11 +52,7 @@ public class UpdateAcl {
 
 	@Override
 	public String toString() {
-		return "UpdateAcl{" +
-				"id='" + id + '\'' +
-				", name='" + name + '\'' +
-				", type=" + type +
-				", rules='" + rules + '\'' +
-				'}';
+		return "UpdateAcl{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", type=" + type + ", rules='" + rules
+				+ '\'' + '}';
 	}
 }

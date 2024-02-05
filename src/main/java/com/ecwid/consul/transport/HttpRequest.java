@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class HttpRequest {
-
 	private final String url;
 	private final Map<String, String> headers;
-
 	private final String content;
 	private final byte[] binaryContent;
 
@@ -15,7 +13,6 @@ public final class HttpRequest {
 		if (content != null && binaryContent != null) {
 			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
 		}
-
 		this.url = url;
 		this.headers = headers;
 		this.content = content;
@@ -79,5 +76,4 @@ public final class HttpRequest {
 			return new HttpRequest(url, headers, content, binaryContent);
 		}
 	}
-
 }

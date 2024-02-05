@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogDeregistration {
-
 	@SerializedName("Datacenter")
 	private String datacenter;
 
@@ -64,12 +63,7 @@ public class CatalogDeregistration {
 
 	@Override
 	public String toString() {
-		return "CatalogDeregistration{" +
-				"datacenter='" + datacenter + '\'' +
-				", node='" + node + '\'' +
-				", checkId='" + checkId + '\'' +
-				", serviceId='" + serviceId + '\'' +
-				", writeRequest=" + writeRequest +
-				'}';
+		return "CatalogDeregistration{" + "datacenter='" + datacenter + '\'' + ", node='" + node + '\'' + ", checkId='"
+				+ checkId + '\'' + ", serviceId='" + serviceId + '\'' + ", writeRequest=" + writeRequest + '}';
 	}
 }

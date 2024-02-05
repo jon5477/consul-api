@@ -8,7 +8,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Session {
-
 	public static enum Behavior {
 		@SerializedName("release")
 		RELEASE,
@@ -118,16 +117,8 @@ public class Session {
 
 	@Override
 	public String toString() {
-		return "Session{" +
-				"lockDelay=" + lockDelay +
-				", checks=" + checks +
-				", node='" + node + '\'' +
-				", id='" + id + '\'' +
-				", name='" + name + '\'' +
-				", createIndex=" + createIndex +
-				", modifyIndex=" + modifyIndex +
-				", ttl='" + ttl + '\'' +
-				", behavior=" + behavior +
-				'}';
+		return "Session{" + "lockDelay=" + lockDelay + ", checks=" + checks + ", node='" + node + '\'' + ", id='" + id
+				+ '\'' + ", name='" + name + '\'' + ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex
+				+ ", ttl='" + ttl + '\'' + ", behavior=" + behavior + '}';
 	}
 }

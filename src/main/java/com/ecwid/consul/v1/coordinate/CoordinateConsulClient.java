@@ -16,7 +16,6 @@ import java.util.List;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CoordinateConsulClient implements CoordinateClient {
-
 	private final ConsulRawClient rawClient;
 
 	public CoordinateConsulClient(ConsulRawClient rawClient) {
@@ -26,10 +25,10 @@ public class CoordinateConsulClient implements CoordinateClient {
 	@Override
 	public Response<List<Datacenter>> getDatacenters() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/coordinate/datacenters");
-
 		if (httpResponse.getStatusCode() == 200) {
-			List<Datacenter> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Datacenter>>() {
-			}.getType());
+			List<Datacenter> value = GsonFactory.getGson().fromJson(httpResponse.getContent(),
+					new TypeToken<List<Datacenter>>() {
+					}.getType());
 			return new Response<List<Datacenter>>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -39,7 +38,6 @@ public class CoordinateConsulClient implements CoordinateClient {
 	@Override
 	public Response<List<Node>> getNodes(QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/coordinate/nodes", queryParams);
-
 		if (httpResponse.getStatusCode() == 200) {
 			List<Node> value = GsonFactory.getGson().fromJson(httpResponse.getContent(), new TypeToken<List<Node>>() {
 			}.getType());

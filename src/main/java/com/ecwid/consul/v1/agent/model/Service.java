@@ -9,7 +9,6 @@ import java.util.Map;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Service {
-
 	@SerializedName("ID")
 	private String id;
 

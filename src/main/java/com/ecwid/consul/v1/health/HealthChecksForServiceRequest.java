@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class HealthChecksForServiceRequest implements ConsulRequest {
-
 	private final String datacenter;
 	private final String near;
 	private final Map<String, String> nodeMeta;

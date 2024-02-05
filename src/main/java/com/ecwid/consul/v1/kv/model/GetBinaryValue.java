@@ -10,7 +10,6 @@ import java.util.Arrays;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class GetBinaryValue {
-
 	@SerializedName("CreateIndex")
 	private long createIndex;
 
