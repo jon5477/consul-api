@@ -1,7 +1,6 @@
 consul-api
 ==========
-
-[![Build Status](https://api.travis-ci.org/Ecwid/consul-api.svg)](http://travis-ci.org/Ecwid/consul-api)
+Updated for Consul 1.16.1
 
 Java client for Consul HTTP API (http://consul.io)
 
@@ -73,19 +72,19 @@ Response<List<HealthService>> healthyServices = client.getHealthServices("myapp"
 ## How to add consul-api into your project
 ### Gradle
 ```
-compile "com.ecwid.consul:consul-api:1.4.5"
+compile "com.ecwid.consul:consul-api:1.4.6"
 ```
 ### Maven
 ```
 <dependency>
   <groupId>com.ecwid.consul</groupId>
   <artifactId>consul-api</artifactId>
-  <version>1.4.5</version>
+  <version>1.4.6</version>
 </dependency>
 ```
 
 ## How to build from sources
 * Checkout the sources
-* ./gradlew build
+* mvn package
 
-Gradle will compile sources, package classes (sources and javadocs too) into jars and run all tests. The build results will located in build/libs/ folder
+Maven will compile sources, package classes, sources, and javadocs into jars and run all tests. The build results will located in the `target/` folder.
