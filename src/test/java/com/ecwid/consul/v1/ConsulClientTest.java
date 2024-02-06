@@ -56,9 +56,9 @@ class ConsulClientTest {
 		String path = "src/test/resources/ssl";
 		String certRootPath = new File(path).getAbsolutePath().replace('\\', '/');
 		String certificatePath = certRootPath + "/trustStore.jks";
-		String certificatePassword = "change_me";
+		char[] certificatePassword = "change_me".toCharArray();
 		String keyStorePath = certRootPath + "/keyStore.jks";
-		String keyStorePassword = "change_me";
+		char[] keyStorePassword = "change_me".toCharArray();
 		TLSConfig tlsConfig = new TLSConfig(TLSConfig.KeyStoreInstanceType.JKS, certificatePath, certificatePassword,
 				keyStorePath, keyStorePassword);
 		ConsulClient consulClient = new ConsulClient(host, httpsPort, tlsConfig);
