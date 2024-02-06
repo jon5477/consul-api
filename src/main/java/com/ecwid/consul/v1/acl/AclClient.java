@@ -3,23 +3,25 @@ package com.ecwid.consul.v1.acl;
 import java.util.List;
 
 import com.ecwid.consul.v1.Response;
-import com.ecwid.consul.v1.acl.model.LegacyAcl;
-import com.ecwid.consul.v1.acl.model.LegacyNewAcl;
-import com.ecwid.consul.v1.acl.model.LegacyUpdateAcl;
+import com.ecwid.consul.v1.acl.model.AclToken;
+import com.ecwid.consul.v1.acl.model.NewAcl;
+import com.ecwid.consul.v1.acl.model.UpdateAcl;
 
 /**
- * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
  */
 public interface AclClient {
-	Response<String> aclCreate(LegacyNewAcl newAcl, String token);
+	Response<AclToken> aclCreate(String token, NewAcl newAcl);
 
-	Response<Void> aclUpdate(LegacyUpdateAcl updateAcl, String token);
+	Response<AclToken> aclRead(String token, String accessorId);
 
-	Response<Void> aclDestroy(String aclId, String token);
+	Response<AclToken> aclReadSelf(String token);
 
-	Response<LegacyAcl> getAcl(String id);
+	Response<AclToken> aclUpdate(String token, UpdateAcl updateAcl, String accessorId);
 
-	Response<String> aclClone(String aclId, String token);
+	Response<AclToken> aclClone(String token, String accessorId);
 
-	Response<List<LegacyAcl>> getAclList(String token);
+	Response<Void> aclDelete(String token, String accessorId);
+
+	Response<List<AclToken>> aclList(String token, AclTokensRequest request);
 }

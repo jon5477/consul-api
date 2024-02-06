@@ -9,18 +9,18 @@ import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
 import com.ecwid.consul.v1.Response;
-import com.ecwid.consul.v1.acl.model.LegacyAcl;
-import com.ecwid.consul.v1.acl.model.LegacyAclType;
-import com.ecwid.consul.v1.acl.model.LegacyNewAcl;
+import com.ecwid.consul.v1.acl.model.legacy.LegacyAcl;
+import com.ecwid.consul.v1.acl.model.legacy.LegacyAclType;
+import com.ecwid.consul.v1.acl.model.legacy.LegacyNewAcl;
 import com.pszymczyk.consul.ConsulProcess;
 import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
 
-class AclConsulClientTest {
+class LegacyAclConsulClientTest {
 	private static final String ACL_MASTER_TOKEN = "mastertoken";
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-	private AclClient aclClient = new AclConsulClient("localhost", port);
+	private LegacyAclClient aclClient = new LegacyAclConsulClient("localhost", port);
 
 	@BeforeEach
 	public void setup() {

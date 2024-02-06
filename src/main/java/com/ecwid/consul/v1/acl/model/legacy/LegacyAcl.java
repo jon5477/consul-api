@@ -1,4 +1,4 @@
-package com.ecwid.consul.v1.acl.model;
+package com.ecwid.consul.v1.acl.model.legacy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;

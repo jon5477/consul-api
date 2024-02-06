@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Jon Huang (jon5477)
  */
-public final class AclPolicy {
+public final class AclRole {
 	@JsonProperty("ID")
 	@SerializedName("ID")
 	private String id;
@@ -16,10 +16,10 @@ public final class AclPolicy {
 	@SerializedName("Name")
 	private String name;
 
-	public AclPolicy() {
+	public AclRole() {
 	}
 
-	public AclPolicy(String id, String name) {
+	public AclRole(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -50,15 +50,15 @@ public final class AclPolicy {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclPolicy)) {
+		if (!(obj instanceof AclRole)) {
 			return false;
 		}
-		AclPolicy other = (AclPolicy) obj;
+		AclRole other = (AclRole) obj;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
 	}
 
 	@Override
 	public final String toString() {
-		return "AclPolicy [id=" + id + ", name=" + name + "]";
+		return "AclRole [id=" + id + ", name=" + name + "]";
 	}
 }

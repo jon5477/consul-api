@@ -1,4 +1,4 @@
-package com.ecwid.consul.v1.acl.model;
+package com.ecwid.consul.v1.acl.model.legacy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
@@ -6,11 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public class LegacyUpdateAcl {
-	@JsonProperty("ID")
-	@SerializedName("ID")
-	private String id;
-
+public class LegacyNewAcl {
 	@JsonProperty("Name")
 	@SerializedName("Name")
 	private String name;
@@ -22,14 +18,6 @@ public class LegacyUpdateAcl {
 	@JsonProperty("Rules")
 	@SerializedName("Rules")
 	private String rules;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -57,7 +45,10 @@ public class LegacyUpdateAcl {
 
 	@Override
 	public String toString() {
-		return "LegacyUpdateAcl{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", type=" + type + ", rules='" + rules
-				+ '\'' + '}';
+		return "LegacyNewAcl{" +
+				"name='" + name + '\'' +
+				", type=" + type +
+				", rules='" + rules + '\'' +
+				'}';
 	}
 }

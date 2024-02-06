@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecwid.consul.transport.TLSConfig;
-import com.ecwid.consul.v1.acl.AclClient;
-import com.ecwid.consul.v1.acl.AclConsulClient;
-import com.ecwid.consul.v1.acl.model.LegacyAcl;
-import com.ecwid.consul.v1.acl.model.LegacyNewAcl;
-import com.ecwid.consul.v1.acl.model.LegacyUpdateAcl;
+import com.ecwid.consul.v1.acl.LegacyAclClient;
+import com.ecwid.consul.v1.acl.LegacyAclConsulClient;
+import com.ecwid.consul.v1.acl.model.legacy.LegacyAcl;
+import com.ecwid.consul.v1.acl.model.legacy.LegacyNewAcl;
+import com.ecwid.consul.v1.acl.model.legacy.LegacyUpdateAcl;
 import com.ecwid.consul.v1.agent.AgentClient;
 import com.ecwid.consul.v1.agent.AgentConsulClient;
 import com.ecwid.consul.v1.agent.model.Check;
@@ -66,7 +66,7 @@ import com.ecwid.consul.v1.status.StatusConsulClient;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class ConsulClient implements
-		AclClient,
+		LegacyAclClient,
 		AgentClient,
 		CatalogClient,
 		CoordinateClient,
@@ -77,7 +77,7 @@ public class ConsulClient implements
 		SessionClient,
 		StatusClient {
 
-	private final AclClient aclClient;
+	private final LegacyAclClient aclClient;
 	private final AgentClient agentClient;
 	private final CatalogClient catalogClient;
 	private final CoordinateClient coordinateClient;
@@ -89,7 +89,7 @@ public class ConsulClient implements
 	private final StatusClient statusClient;
 
 	public ConsulClient(ConsulRawClient rawClient) {
-		aclClient = new AclConsulClient(rawClient);
+		aclClient = new LegacyAclConsulClient(rawClient);
 		agentClient = new AgentConsulClient(rawClient);
 		catalogClient = new CatalogConsulClient(rawClient);
 		coordinateClient = new CoordinateConsulClient(rawClient);
