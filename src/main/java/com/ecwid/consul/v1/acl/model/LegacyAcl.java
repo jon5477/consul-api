@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public class Acl {
+public class LegacyAcl {
 	@JsonProperty("CreateIndex")
 	@SerializedName("CreateIndex")
 	private long createIndex;
@@ -25,7 +25,7 @@ public class Acl {
 
 	@JsonProperty("Type")
 	@SerializedName("Type")
-	private AclType type;
+	private LegacyAclType type;
 
 	@JsonProperty("Rules")
 	@SerializedName("Rules")
@@ -63,11 +63,11 @@ public class Acl {
 		this.name = name;
 	}
 
-	public AclType getType() {
+	public LegacyAclType getType() {
 		return type;
 	}
 
-	public void setType(AclType type) {
+	public void setType(LegacyAclType type) {
 		this.type = type;
 	}
 

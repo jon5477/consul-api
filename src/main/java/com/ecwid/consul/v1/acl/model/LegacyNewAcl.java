@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public class NewAcl {
+public class LegacyNewAcl {
 	@JsonProperty("Name")
 	@SerializedName("Name")
 	private String name;
 
 	@JsonProperty("Type")
 	@SerializedName("Type")
-	private AclType type;
+	private LegacyAclType type;
 
 	@JsonProperty("Rules")
 	@SerializedName("Rules")
@@ -27,11 +27,11 @@ public class NewAcl {
 		this.name = name;
 	}
 
-	public AclType getType() {
+	public LegacyAclType getType() {
 		return type;
 	}
 
-	public void setType(AclType type) {
+	public void setType(LegacyAclType type) {
 		this.type = type;
 	}
 
@@ -45,7 +45,7 @@ public class NewAcl {
 
 	@Override
 	public String toString() {
-		return "NewAcl{" +
+		return "LegacyNewAcl{" +
 				"name='" + name + '\'' +
 				", type=" + type +
 				", rules='" + rules + '\'' +

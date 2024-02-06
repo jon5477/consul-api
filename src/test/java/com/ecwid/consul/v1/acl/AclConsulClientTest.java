@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
 import com.ecwid.consul.v1.Response;
-import com.ecwid.consul.v1.acl.model.Acl;
-import com.ecwid.consul.v1.acl.model.AclType;
-import com.ecwid.consul.v1.acl.model.NewAcl;
+import com.ecwid.consul.v1.acl.model.LegacyAcl;
+import com.ecwid.consul.v1.acl.model.LegacyAclType;
+import com.ecwid.consul.v1.acl.model.LegacyNewAcl;
 import com.pszymczyk.consul.ConsulProcess;
 import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
@@ -24,9 +24,11 @@ class AclConsulClientTest {
 
 	@BeforeEach
 	public void setup() {
-		String customConfiguration = "{\n" + "  \"acl\": {\n" + "    \"tokens\": {\n" + "      \"master\": \""
-				+ ACL_MASTER_TOKEN + "\"\n" + "    }\n" + "  },\n" + "  \"primary_datacenter\": \"dc-test\",\n"
-				+ "  \"datacenter\": \"dc-test\"\n" + "}";
+//		String customConfiguration = "{\n" + "  \"acl\": {\n" + "    \"tokens\": {\n" + "      \"master\": \""
+//				+ ACL_MASTER_TOKEN + "\"\n" + "    }\n" + "  },\n" + "  \"primary_datacenter\": \"dc-test\",\n"
+//				+ "  \"datacenter\": \"dc-test\"\n" + "}";
+		String customConfiguration = "{ \"acl_master_token\": \"" + ACL_MASTER_TOKEN + "\""
+				+ ", \"acl_datacenter\": \"dc-test\"" + ", \"datacenter\": \"dc-test\" }";
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
 				.withHttpPort(port).withCustomConfig(customConfiguration).build().start();
 	}
@@ -38,17 +40,17 @@ class AclConsulClientTest {
 
 	@Test
 	void should_create_client_acl_token() {
-		should_create_acl_token(AclType.CLIENT);
+		should_create_acl_token(LegacyAclType.CLIENT);
 	}
 
 	@Test
 	void should_create_management_acl_token() {
-		should_create_acl_token(AclType.MANAGEMENT);
+		should_create_acl_token(LegacyAclType.MANAGEMENT);
 	}
 
-	private void should_create_acl_token(AclType aclType) {
+	private void should_create_acl_token(LegacyAclType aclType) {
 		// given
-		NewAcl newAcl = new NewAcl();
+		LegacyNewAcl newAcl = new LegacyNewAcl();
 		newAcl.setName("test-acl");
 		newAcl.setType(aclType);
 		newAcl.setRules("");
@@ -58,7 +60,7 @@ class AclConsulClientTest {
 		String aclId = response.getValue();
 
 		// then
-		Acl createdAcl = aclClient.getAcl(aclId).getValue();
+		LegacyAcl createdAcl = aclClient.getAcl(aclId).getValue();
 		assertThat(createdAcl.getName(), equalTo(newAcl.getName()));
 		assertThat(createdAcl.getType(), equalTo(newAcl.getType()));
 		assertThat(createdAcl.getRules(), equalTo(newAcl.getRules()));

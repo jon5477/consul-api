@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public enum AclType {
+public enum LegacyAclType {
 	@JsonProperty("client")
 	@SerializedName("client")
 	CLIENT,

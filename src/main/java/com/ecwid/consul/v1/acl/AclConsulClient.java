@@ -1,5 +1,6 @@
 package com.ecwid.consul.v1.acl;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,11 @@ import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
+import com.ecwid.consul.v1.Request;
 import com.ecwid.consul.v1.Response;
-import com.ecwid.consul.v1.acl.model.Acl;
-import com.ecwid.consul.v1.acl.model.NewAcl;
-import com.ecwid.consul.v1.acl.model.UpdateAcl;
+import com.ecwid.consul.v1.acl.model.LegacyAcl;
+import com.ecwid.consul.v1.acl.model.LegacyNewAcl;
+import com.ecwid.consul.v1.acl.model.LegacyUpdateAcl;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
@@ -52,14 +54,16 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<String> aclCreate(NewAcl newAcl, String token) {
-		UrlParameters tokenParams = token != null ? new SingleUrlParameters("token", token) : null;
+	public Response<String> aclCreate(LegacyNewAcl newAcl, String token) {
 		String json = JsonFactory.toJson(newAcl);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/acl/create", json, tokenParams);
+		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/create")
+				.setBinaryContent(json.getBytes(StandardCharsets.UTF_8)).setToken(token).build();
+		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			Map<String, String> value = JsonFactory.fromJson(httpResponse.getContent(),
 					new TypeReference<Map<String, String>>() {
 					});
+			System.out.println(value);
 			return new Response<>(value.get("ID"), httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -67,7 +71,7 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<Void> aclUpdate(UpdateAcl updateAcl, String token) {
+	public Response<Void> aclUpdate(LegacyUpdateAcl updateAcl, String token) {
 		UrlParameters tokenParams = token != null ? new SingleUrlParameters("token", token) : null;
 		String json = JsonFactory.toJson(updateAcl);
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/acl/update", json, tokenParams);
@@ -90,10 +94,10 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<Acl> getAcl(String id) {
+	public Response<LegacyAcl> getAcl(String id) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/acl/info/" + id);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Acl> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Acl>>() {
+			List<LegacyAcl> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<LegacyAcl>>() {
 			});
 			if (value.isEmpty()) {
 				return new Response<>(null, httpResponse);
@@ -122,11 +126,11 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<List<Acl>> getAclList(String token) {
+	public Response<List<LegacyAcl>> getAclList(String token) {
 		UrlParameters tokenParams = token != null ? new SingleUrlParameters("token", token) : null;
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/acl/list", tokenParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Acl> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Acl>>() {
+			List<LegacyAcl> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<LegacyAcl>>() {
 			});
 			return new Response<>(value, httpResponse);
 		} else {
