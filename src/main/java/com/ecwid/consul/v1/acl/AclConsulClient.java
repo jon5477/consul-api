@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 /**
  * @author Jon Huang (jon5477)
  */
-public class AclConsulClient implements AclClient {
+public final class AclConsulClient implements AclClient {
 	private static final String API_TOKEN_PREFIX = "/v1/acl/token/";
 	private final ConsulRawClient rawClient;
 

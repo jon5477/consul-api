@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecwid.consul.transport.TLSConfig;
-import com.ecwid.consul.v1.acl.LegacyAclClient;
-import com.ecwid.consul.v1.acl.LegacyAclConsulClient;
-import com.ecwid.consul.v1.acl.model.legacy.LegacyAcl;
-import com.ecwid.consul.v1.acl.model.legacy.LegacyNewAcl;
-import com.ecwid.consul.v1.acl.model.legacy.LegacyUpdateAcl;
+import com.ecwid.consul.v1.acl.AclClient;
+import com.ecwid.consul.v1.acl.AclConsulClient;
+import com.ecwid.consul.v1.acl.AclTokensRequest;
+import com.ecwid.consul.v1.acl.model.AclToken;
+import com.ecwid.consul.v1.acl.model.NewAcl;
+import com.ecwid.consul.v1.acl.model.UpdateAcl;
 import com.ecwid.consul.v1.agent.AgentClient;
 import com.ecwid.consul.v1.agent.AgentConsulClient;
 import com.ecwid.consul.v1.agent.model.Check;
@@ -66,7 +67,7 @@ import com.ecwid.consul.v1.status.StatusConsulClient;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class ConsulClient implements
-		LegacyAclClient,
+		AclClient,
 		AgentClient,
 		CatalogClient,
 		CoordinateClient,
@@ -77,7 +78,7 @@ public class ConsulClient implements
 		SessionClient,
 		StatusClient {
 
-	private final LegacyAclClient aclClient;
+	private final AclClient aclClient;
 	private final AgentClient agentClient;
 	private final CatalogClient catalogClient;
 	private final CoordinateClient coordinateClient;
@@ -89,7 +90,7 @@ public class ConsulClient implements
 	private final StatusClient statusClient;
 
 	public ConsulClient(ConsulRawClient rawClient) {
-		aclClient = new LegacyAclConsulClient(rawClient);
+		aclClient = new AclConsulClient(rawClient);
 		agentClient = new AgentConsulClient(rawClient);
 		catalogClient = new CatalogConsulClient(rawClient);
 		coordinateClient = new CoordinateConsulClient(rawClient);
@@ -171,33 +172,38 @@ public class ConsulClient implements
 	// ACL
 
 	@Override
-	public Response<String> aclCreate(LegacyNewAcl newAcl, String token) {
-		return aclClient.aclCreate(newAcl, token);
+	public Response<AclToken> aclCreate(String token, NewAcl newAcl) {
+		return aclClient.aclCreate(token, newAcl);
 	}
 
 	@Override
-	public Response<Void> aclUpdate(LegacyUpdateAcl updateAcl, String token) {
-		return aclClient.aclUpdate(updateAcl, token);
+	public Response<AclToken> aclRead(String token, String accessorId) {
+		return aclClient.aclRead(token, accessorId);
 	}
 
 	@Override
-	public Response<Void> aclDestroy(String aclId, String token) {
-		return aclClient.aclDestroy(aclId, token);
+	public Response<AclToken> aclReadSelf(String token) {
+		return aclClient.aclReadSelf(token);
 	}
 
 	@Override
-	public Response<LegacyAcl> getAcl(String id) {
-		return aclClient.getAcl(id);
+	public Response<AclToken> aclUpdate(String token, UpdateAcl updateAcl, String accessorId) {
+		return aclClient.aclUpdate(token, updateAcl, accessorId);
 	}
 
 	@Override
-	public Response<String> aclClone(String aclId, String token) {
-		return aclClient.aclClone(aclId, token);
+	public Response<AclToken> aclClone(String token, String accessorId) {
+		return aclClient.aclClone(token, accessorId);
 	}
 
 	@Override
-	public Response<List<LegacyAcl>> getAclList(String token) {
-		return aclClient.getAclList(token);
+	public Response<Void> aclDelete(String token, String accessorId) {
+		return aclClient.aclDelete(token, accessorId);
+	}
+
+	@Override
+	public Response<List<AclToken>> aclList(String token, AclTokensRequest request) {
+		return aclClient.aclList(token, request);
 	}
 
 	// -------------------------------------------------------------------------------------------
