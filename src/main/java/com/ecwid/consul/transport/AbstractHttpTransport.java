@@ -46,7 +46,7 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 		addHeadersToRequest(httpPut, request.getHeaders());
 		if (request.getContent() != null) {
 			httpPut.setEntity(new StringEntity(request.getContent(), StandardCharsets.UTF_8));
-		} else {
+		} else if (request.getBinaryContent() != null) {
 			httpPut.setEntity(new ByteArrayEntity(request.getBinaryContent(), null));
 		}
 		return executeRequest(httpPut);

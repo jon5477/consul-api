@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Jon Huang (jon5477)
  */
 public class AclConsulClient implements AclClient {
+	private static final String API_TOKEN_PREFIX = "/v1/acl/token/";
 	private final ConsulRawClient rawClient;
 
 	public AclConsulClient(ConsulRawClient rawClient) {
@@ -64,7 +65,7 @@ public class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclRead(String token, String accessorId) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token/" + accessorId).setToken(token)
+		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).setToken(token)
 				.build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
@@ -90,7 +91,7 @@ public class AclConsulClient implements AclClient {
 	@Override
 	public Response<AclToken> aclUpdate(String token, UpdateAcl updateAcl, String accessorId) {
 		String json = JsonFactory.toJson(updateAcl);
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token/" + accessorId).setContent(json)
+		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).setContent(json)
 				.setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
@@ -103,8 +104,8 @@ public class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclClone(String token, String accessorId) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token/" + accessorId + "/clone")
-				.setToken(token).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId + "/clone")
+				.setContent("{}").setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
@@ -116,7 +117,7 @@ public class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<Void> aclDelete(String token, String accessorId) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token/" + accessorId).setToken(token)
+		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).setToken(token)
 				.build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {

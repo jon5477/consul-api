@@ -1,12 +1,17 @@
 package com.ecwid.consul.v1.acl.model;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * @author Jon Huang (jon5477)
+ */
+@JsonInclude(Include.NON_NULL)
 public final class AclToken {
 	@JsonProperty("AccessorID")
 	@SerializedName("AccessorID")
@@ -28,7 +33,7 @@ public final class AclToken {
 	private boolean local;
 	@JsonProperty("CreateTime")
 	@SerializedName("CreateTime")
-	private ZonedDateTime createTime;
+	private String createTime;
 	@JsonProperty("Hash")
 	@SerializedName("Hash")
 	private String hash;
@@ -94,11 +99,11 @@ public final class AclToken {
 		this.local = local;
 	}
 
-	public final ZonedDateTime getCreateTime() {
+	public final String getCreateTime() {
 		return createTime;
 	}
 
-	public final void setCreateTime(ZonedDateTime createTime) {
+	public final void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 

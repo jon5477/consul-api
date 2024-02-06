@@ -44,7 +44,6 @@ class ConsulClientTest {
 	void agentHttpTest() throws Exception {
 		String host = "http://localhost";
 		int port = consul.getHttpPort();
-		System.out.println(port);
 		ConsulClient consulClient = new ConsulClient(host, port);
 		serviceRegisterTest(consulClient);
 	}

@@ -3,12 +3,15 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Jon Huang (jon5477)
  */
+@JsonInclude(Include.NON_NULL)
 public final class NewAcl {
 	@JsonProperty("AccessorID")
 	@SerializedName("AccessorID")
@@ -43,9 +46,6 @@ public final class NewAcl {
 	@JsonProperty("ExpirationTTL")
 	@SerializedName("ExpirationTTL")
 	private String expirationTtl;
-	@JsonProperty("Namespace")
-	@SerializedName("Namespace")
-	private String namespace;
 
 	public final String getAccessorId() {
 		return accessorId;
@@ -135,18 +135,10 @@ public final class NewAcl {
 		this.expirationTtl = expirationTtl;
 	}
 
-	public final String getNamespace() {
-		return namespace;
-	}
-
-	public final void setNamespace(String namespace) {
-		this.namespace = namespace;
-	}
-
 	@Override
 	public final int hashCode() {
-		return Objects.hash(accessorId, description, expirationTime, expirationTtl, local, namespace, nodeIdentities,
-				policies, roles, secretId, serviceIdentities, templatedPolicies);
+		return Objects.hash(accessorId, description, expirationTime, expirationTtl, local, nodeIdentities, policies,
+				roles, secretId, serviceIdentities, templatedPolicies);
 	}
 
 	@Override
@@ -161,9 +153,8 @@ public final class NewAcl {
 		return Objects.equals(accessorId, other.accessorId) && Objects.equals(description, other.description)
 				&& Objects.equals(expirationTime, other.expirationTime)
 				&& Objects.equals(expirationTtl, other.expirationTtl) && local == other.local
-				&& Objects.equals(namespace, other.namespace) && Objects.equals(nodeIdentities, other.nodeIdentities)
-				&& Objects.equals(policies, other.policies) && Objects.equals(roles, other.roles)
-				&& Objects.equals(secretId, other.secretId)
+				&& Objects.equals(nodeIdentities, other.nodeIdentities) && Objects.equals(policies, other.policies)
+				&& Objects.equals(roles, other.roles) && Objects.equals(secretId, other.secretId)
 				&& Objects.equals(serviceIdentities, other.serviceIdentities)
 				&& Objects.equals(templatedPolicies, other.templatedPolicies);
 	}
@@ -173,7 +164,6 @@ public final class NewAcl {
 		return "NewAcl [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
 				+ ", policies=" + policies + ", roles=" + roles + ", templatedPolicies=" + templatedPolicies
 				+ ", serviceIdentities=" + serviceIdentities + ", nodeIdentities=" + nodeIdentities + ", local=" + local
-				+ ", expirationTime=" + expirationTime + ", expirationTtl=" + expirationTtl + ", namespace=" + namespace
-				+ "]";
+				+ ", expirationTime=" + expirationTime + ", expirationTtl=" + expirationTtl + "]";
 	}
 }

@@ -8,6 +8,9 @@ import com.ecwid.consul.ConsulRequest;
 import com.ecwid.consul.SingleUrlParameters;
 import com.ecwid.consul.UrlParameters;
 
+/**
+ * @author Jon Huang (jon5477)
+ */
 public class AclTokensRequest implements ConsulRequest {
 	private final String policy;
 	private final String role;

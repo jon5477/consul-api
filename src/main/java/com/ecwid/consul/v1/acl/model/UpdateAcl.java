@@ -3,9 +3,15 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * @author Jon Huang (jon5477)
+ */
+@JsonInclude(Include.NON_NULL)
 public final class UpdateAcl {
 	@JsonProperty("AccessorID")
 	@SerializedName("AccessorID")
@@ -34,9 +40,6 @@ public final class UpdateAcl {
 	@JsonProperty("ExpirationTime")
 	@SerializedName("ExpirationTime")
 	private String expirationTime;
-	@JsonProperty("Namespace")
-	@SerializedName("Namespace")
-	private String namespace;
 
 	public final String getAccessorId() {
 		return accessorId;
@@ -110,18 +113,10 @@ public final class UpdateAcl {
 		this.expirationTime = expirationTime;
 	}
 
-	public final String getNamespace() {
-		return namespace;
-	}
-
-	public final void setNamespace(String namespace) {
-		this.namespace = namespace;
-	}
-
 	@Override
 	public final int hashCode() {
-		return Objects.hash(accessorId, description, expirationTime, local, namespace, nodeIdentities, policies, roles,
-				secretId, serviceIdentities);
+		return Objects.hash(accessorId, description, expirationTime, local, nodeIdentities, policies, roles, secretId,
+				serviceIdentities);
 	}
 
 	@Override
@@ -135,9 +130,8 @@ public final class UpdateAcl {
 		UpdateAcl other = (UpdateAcl) obj;
 		return Objects.equals(accessorId, other.accessorId) && Objects.equals(description, other.description)
 				&& Objects.equals(expirationTime, other.expirationTime) && local == other.local
-				&& Objects.equals(namespace, other.namespace) && Objects.equals(nodeIdentities, other.nodeIdentities)
-				&& Objects.equals(policies, other.policies) && Objects.equals(roles, other.roles)
-				&& Objects.equals(secretId, other.secretId)
+				&& Objects.equals(nodeIdentities, other.nodeIdentities) && Objects.equals(policies, other.policies)
+				&& Objects.equals(roles, other.roles) && Objects.equals(secretId, other.secretId)
 				&& Objects.equals(serviceIdentities, other.serviceIdentities);
 	}
 
@@ -146,6 +140,6 @@ public final class UpdateAcl {
 		return "UpdateAcl [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
 				+ ", policies=" + policies + ", roles=" + roles + ", serviceIdentities=" + serviceIdentities
 				+ ", nodeIdentities=" + nodeIdentities + ", local=" + local + ", expirationTime=" + expirationTime
-				+ ", namespace=" + namespace + "]";
+				+ "]";
 	}
 }

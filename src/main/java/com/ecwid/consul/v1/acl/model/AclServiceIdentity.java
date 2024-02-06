@@ -3,9 +3,15 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * @author Jon Huang (jon5477)
+ */
+@JsonInclude(Include.NON_NULL)
 public final class AclServiceIdentity {
 	@JsonProperty("ServiceName")
 	@SerializedName("ServiceName")
