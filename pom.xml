@@ -16,6 +16,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.release>11</maven.compiler.release>
+		<slf4j.version>2.0.12</slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -52,7 +53,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.11</version>
+			<version>${slf4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -60,6 +61,11 @@
 			<artifactId>embedded-consul</artifactId>
 			<version>2.2.1</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -132,13 +138,6 @@
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>3.0.2</version>
-					<configuration>
-						<archive>
-							<manifestEntries>
-								<Automatic-Module-Name>com.github.jon5477.consul.api</Automatic-Module-Name>
-							</manifestEntries>
-						</archive>
-					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>

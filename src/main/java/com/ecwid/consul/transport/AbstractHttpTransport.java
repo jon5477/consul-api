@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
@@ -18,11 +17,13 @@ import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.util.Timeout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ecwid.consul.ConsulException;
 
 public abstract class AbstractHttpTransport implements HttpTransport {
-	private static final Logger log = Logger.getLogger(AbstractHttpTransport.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpTransport.class);
 	static final int DEFAULT_MAX_CONNECTIONS = 1000;
 	static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 500;
 	static final Timeout DEFAULT_CONNECTION_TIMEOUT = Timeout.ofSeconds(10);
@@ -67,7 +68,9 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 	protected abstract HttpClient getHttpClient();
 
 	private HttpResponse executeRequest(HttpUriRequest httpRequest) {
-		logRequest(httpRequest);
+		if (LOGGER.isTraceEnabled()) {
+			logRequest(httpRequest);
+		}
 		try {
 			return getHttpClient().execute(httpRequest, response -> {
 				int statusCode = response.getCode();
@@ -148,6 +151,6 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 			}
 			sb.append("] ");
 		}
-		log.finest(sb.toString());
+		LOGGER.trace(sb.toString());
 	}
 }
