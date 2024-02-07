@@ -50,7 +50,7 @@ module com.ecwid.consul.api {
 	opens com.ecwid.consul.v1.status;
 
 	requires com.fasterxml.jackson.annotation;
-	requires static com.fasterxml.jackson.core;
+	requires com.fasterxml.jackson.core;
 	requires static com.fasterxml.jackson.databind;
 	requires static com.google.gson;
 	requires org.apache.httpcomponents.client5.httpclient5;
