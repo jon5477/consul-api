@@ -1,5 +1,6 @@
 package com.ecwid.consul.v1.agent.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public class NewService {
 		@JsonProperty("DockerContainerID")
 		private String dockerContainerID;
 
-		@JsonProperty("Shell")
-		private String shell;
+		@JsonProperty("Args")
+		private String[] args;
 
 		@JsonProperty("Interval")
 		private String interval;
@@ -72,12 +73,12 @@ public class NewService {
 			this.dockerContainerID = dockerContainerID;
 		}
 
-		public String getShell() {
-			return shell;
+		public String[] getArgs() {
+			return args;
 		}
 
-		public void setShell(String shell) {
-			this.shell = shell;
+		public void setArgs(String[] args) {
+			this.args = args;
 		}
 
 		public String getInterval() {
@@ -179,9 +180,9 @@ public class NewService {
 		@Override
 		public String toString() {
 			return "Check{" + "script='" + script + '\'' + ", dockerContainerID='" + dockerContainerID + '\''
-					+ ", shell='" + shell + '\'' + ", interval='" + interval + '\'' + ", ttl='" + ttl + '\''
-					+ ", http='" + http + '\'' + ", method='" + method + '\'' + ", header=" + header + ", tcp='" + tcp
-					+ '\'' + ", timeout='" + timeout + '\'' + ", deregisterCriticalServiceAfter='"
+					+ ", args='" + Arrays.toString(args) + '\'' + ", interval='" + interval + '\'' + ", ttl='" + ttl
+					+ '\'' + ", http='" + http + '\'' + ", method='" + method + '\'' + ", header=" + header + ", tcp='"
+					+ tcp + '\'' + ", timeout='" + timeout + '\'' + ", deregisterCriticalServiceAfter='"
 					+ deregisterCriticalServiceAfter + '\'' + ", tlsSkipVerify=" + tlsSkipVerify + ", status='" + status
 					+ '\'' + ", grpc='" + grpc + '\'' + ", grpcUseTLS=" + grpcUseTLS + '}';
 		}
