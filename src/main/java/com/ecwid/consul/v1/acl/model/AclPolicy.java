@@ -5,7 +5,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Jon Huang (jon5477)
@@ -13,10 +12,8 @@ import com.google.gson.annotations.SerializedName;
 @JsonInclude(Include.NON_NULL)
 public final class AclPolicy {
 	@JsonProperty("ID")
-	@SerializedName("ID")
 	private String id;
 	@JsonProperty("Name")
-	@SerializedName("Name")
 	private String name;
 
 	public AclPolicy() {

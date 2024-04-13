@@ -1,22 +1,18 @@
 package com.ecwid.consul.v1.acl.model.legacy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class LegacyNewAcl {
 	@JsonProperty("Name")
-	@SerializedName("Name")
 	private String name;
 
 	@JsonProperty("Type")
-	@SerializedName("Type")
 	private LegacyAclType type;
 
 	@JsonProperty("Rules")
-	@SerializedName("Rules")
 	private String rules;
 
 	public String getName() {

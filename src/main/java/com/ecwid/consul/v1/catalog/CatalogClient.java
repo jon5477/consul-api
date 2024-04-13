@@ -1,14 +1,14 @@
 package com.ecwid.consul.v1.catalog;
 
+import java.util.List;
+import java.util.Map;
+
 import com.ecwid.consul.v1.QueryParams;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.catalog.model.CatalogDeregistration;
 import com.ecwid.consul.v1.catalog.model.CatalogNode;
 import com.ecwid.consul.v1.catalog.model.CatalogRegistration;
 import com.ecwid.consul.v1.catalog.model.Node;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)

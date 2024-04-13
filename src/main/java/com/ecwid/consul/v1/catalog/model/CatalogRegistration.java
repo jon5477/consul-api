@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -12,27 +11,21 @@ import com.google.gson.annotations.SerializedName;
 public class CatalogRegistration {
 	public static class Service {
 		@JsonProperty("ID")
-		@SerializedName("ID")
 		private String id;
 
 		@JsonProperty("Service")
-		@SerializedName("Service")
 		private String service;
 
 		@JsonProperty("Tags")
-		@SerializedName("Tags")
 		private List<String> tags;
 
 		@JsonProperty("Address")
-		@SerializedName("Address")
 		private String address;
 
 		@JsonProperty("Meta")
-		@SerializedName("Meta")
 		private Map<String, String> meta;
 
 		@JsonProperty("Port")
-		@SerializedName("Port")
 		private Integer port;
 
 		public String getId() {
@@ -92,39 +85,32 @@ public class CatalogRegistration {
 
 	public static enum CheckStatus {
 		@JsonProperty("unknown")
-		@SerializedName("unknown")
 		UNKNOWN, 
-		@JsonProperty("passing")@SerializedName("passing")
+		@JsonProperty("passing")
 		PASSING, 
-		@JsonProperty("warning")@SerializedName("warning")
+		@JsonProperty("warning")
 		WARNING, 
-		@JsonProperty("critical")@SerializedName("critical")
+		@JsonProperty("critical")
 		CRITICAL
 	}
 
 	public static class Check {
 		@JsonProperty("Node")
-		@SerializedName("Node")
 		private String node;
 
 		@JsonProperty("CheckID")
-		@SerializedName("CheckID")
 		private String checkId;
 
 		@JsonProperty("Name")
-		@SerializedName("Name")
 		private String name;
 
 		@JsonProperty("Notes")
-		@SerializedName("Notes")
 		private String notes;
 
 		@JsonProperty("Status")
-		@SerializedName("Status")
 		private CheckStatus status;
 
 		@JsonProperty("ServiceID")
-		@SerializedName("ServiceID")
 		private String serviceId;
 
 		public String getNode() {
@@ -183,39 +169,30 @@ public class CatalogRegistration {
 	}
 
 	@JsonProperty("Datacenter")
-	@SerializedName("Datacenter")
 	private String datacenter;
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private String node;
 
 	@JsonProperty("Address")
-	@SerializedName("Address")
 	private String address;
 
 	@JsonProperty("Service")
-	@SerializedName("Service")
 	private Service service;
 
 	@JsonProperty("Check")
-	@SerializedName("Check")
 	private Check check;
 
 	@JsonProperty("WriteRequest")
-	@SerializedName("WriteRequest")
 	private WriteRequest writeRequest;
 
 	@JsonProperty("NodeMeta")
-	@SerializedName("NodeMeta")
 	private Map<String, String> nodeMeta;
 
 	@JsonProperty("SkipNodeUpdate")
-	@SerializedName("SkipNodeUpdate")
 	private boolean skipNodeUpdate;
 
 	@JsonProperty("TaggedAddresses")
-	@SerializedName("TaggedAddresses")
 	private Map<String, String> taggedAddresses;
 
 	public String getDatacenter() {

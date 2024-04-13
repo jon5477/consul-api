@@ -3,7 +3,6 @@ package com.ecwid.consul.v1.session.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -11,48 +10,37 @@ import com.google.gson.annotations.SerializedName;
 public class Session {
 	public static enum Behavior {
 		@JsonProperty("release")
-		@SerializedName("release")
 		RELEASE,
 
 		@JsonProperty("delete")
-		@SerializedName("delete")
 		DELETE
 	}
 
 	@JsonProperty("LockDelay")
-	@SerializedName("LockDelay")
 	private long lockDelay;
 
 	@JsonProperty("Checks")
-	@SerializedName("Checks")
 	private List<String> checks;
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private String node;
 
 	@JsonProperty("ID")
-	@SerializedName("ID")
 	private String id;
 
 	@JsonProperty("Name")
-	@SerializedName("Name")
 	private String name;
 
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private long modifyIndex;
 
 	@JsonProperty("TTL")
-	@SerializedName("TTL")
 	private String ttl;
 
 	@JsonProperty("Behavior")
-	@SerializedName("Behavior")
 	private Behavior behavior;
 
 	public long getLockDelay() {

@@ -1,30 +1,24 @@
 package com.ecwid.consul.v1.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogDeregistration {
 	@JsonProperty("Datacenter")
-	@SerializedName("Datacenter")
 	private String datacenter;
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private String node;
 
 	@JsonProperty("CheckID")
-	@SerializedName("CheckID")
 	private String checkId;
 
 	@JsonProperty("ServiceID")
-	@SerializedName("ServiceID")
 	private String serviceId;
 
 	@JsonProperty("WriteRequest")
-	@SerializedName("WriteRequest")
 	private WriteRequest writeRequest;
 
 	public String getDatacenter() {

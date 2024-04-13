@@ -6,7 +6,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Jon Huang (jon5477)
@@ -14,10 +13,8 @@ import com.google.gson.annotations.SerializedName;
 @JsonInclude(Include.NON_NULL)
 public final class AclServiceIdentity {
 	@JsonProperty("ServiceName")
-	@SerializedName("ServiceName")
 	private String serviceName;
 	@JsonProperty("Datacenters")
-	@SerializedName("Datacenters")
 	private List<String> datacenters;
 
 	public AclServiceIdentity() {

@@ -1,16 +1,16 @@
 package com.ecwid.consul.v1.health;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.v1.NodeMetaParameters;
-import com.ecwid.consul.v1.QueryParams;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.ecwid.consul.ConsulRequest;
+import com.ecwid.consul.SingleUrlParameters;
+import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.v1.NodeMetaParameters;
+import com.ecwid.consul.v1.QueryParams;
 
 public final class HealthChecksForServiceRequest implements ConsulRequest {
 	private final String datacenter;

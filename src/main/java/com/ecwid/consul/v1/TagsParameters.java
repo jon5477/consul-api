@@ -1,10 +1,10 @@
 package com.ecwid.consul.v1;
 
-import com.ecwid.consul.UrlParameters;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.ecwid.consul.UrlParameters;
 
 public final class TagsParameters implements UrlParameters {
 	private final String[] tags;

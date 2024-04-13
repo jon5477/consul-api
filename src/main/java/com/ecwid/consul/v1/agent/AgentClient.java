@@ -1,10 +1,15 @@
 package com.ecwid.consul.v1.agent;
 
-import com.ecwid.consul.v1.Response;
-import com.ecwid.consul.v1.agent.model.*;
-
 import java.util.List;
 import java.util.Map;
+
+import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.agent.model.Check;
+import com.ecwid.consul.v1.agent.model.Member;
+import com.ecwid.consul.v1.agent.model.NewCheck;
+import com.ecwid.consul.v1.agent.model.NewService;
+import com.ecwid.consul.v1.agent.model.Self;
+import com.ecwid.consul.v1.agent.model.Service;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)

@@ -36,14 +36,16 @@ public final class DefaultHttpsTransport extends AbstractHttpTransport {
 	public DefaultHttpsTransport(TLSConfig tlsConfig) {
 		try {
 			KeyStore clientStore = KeyStore.getInstance(tlsConfig.getKeyStoreInstanceType().name());
-			clientStore.load(new FileInputStream(tlsConfig.getCertificatePath()),
-					tlsConfig.getCertificatePassword());
+			try (FileInputStream fis = new FileInputStream(tlsConfig.getCertificatePath())) {
+				clientStore.load(fis, tlsConfig.getCertificatePassword());
+			}
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			kmf.init(clientStore, tlsConfig.getCertificatePassword());
 			KeyManager[] kms = kmf.getKeyManagers();
 			KeyStore trustStore = KeyStore.getInstance(KeyStoreInstanceType.JKS.name());
-			trustStore.load(new FileInputStream(tlsConfig.getKeyStorePath()),
-					tlsConfig.getKeyStorePassword());
+			try (FileInputStream fis = new FileInputStream(tlsConfig.getKeyStorePath())) {
+				trustStore.load(fis, tlsConfig.getKeyStorePassword());
+			}
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 			tmf.init(trustStore);
 			TrustManager[] tms = tmf.getTrustManagers();

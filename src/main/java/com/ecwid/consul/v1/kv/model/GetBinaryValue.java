@@ -2,42 +2,31 @@ package com.ecwid.consul.v1.kv.model;
 
 import java.util.Arrays;
 
-import com.ecwid.consul.json.Base64TypeAdapter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class GetBinaryValue {
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private long modifyIndex;
 
 	@JsonProperty("LockIndex")
-	@SerializedName("LockIndex")
 	private Long lockIndex;
 
 	@JsonProperty("Flags")
-	@SerializedName("Flags")
 	private long flags;
 
 	@JsonProperty("Session")
-	@SerializedName("Session")
 	private String session;
 
 	@JsonProperty("Key")
-	@SerializedName("Key")
 	private String key;
 
 	@JsonProperty("Value")
-	@SerializedName("Value")
-	@JsonAdapter(Base64TypeAdapter.class)
 	private byte[] value;
 
 	public long getCreateIndex() {

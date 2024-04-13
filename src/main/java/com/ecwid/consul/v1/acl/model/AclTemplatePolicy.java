@@ -6,7 +6,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Jon Huang (jon5477)
@@ -14,13 +13,10 @@ import com.google.gson.annotations.SerializedName;
 @JsonInclude(Include.NON_NULL)
 public final class AclTemplatePolicy {
 	@JsonProperty("TemplateID")
-	@SerializedName("TemplateID")
 	private String templateID;
 	@JsonProperty("TemplateName")
-	@SerializedName("TemplateName")
 	private String templateName;
 	@JsonProperty("TemplateVariables")
-	@SerializedName("TemplateVariables")
 	private Map<String, String> templateVariables;
 
 	public AclTemplatePolicy() {

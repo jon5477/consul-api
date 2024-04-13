@@ -4,40 +4,31 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 public class QueryNode {
 	public static class Node {
 		@JsonProperty("ID")
-		@SerializedName("ID")
 		private String id;
 
 		@JsonProperty("Node")
-		@SerializedName("Node")
 		private String node;
 
 		@JsonProperty("Address")
-		@SerializedName("Address")
 		private String address;
 
 		@JsonProperty("Datacenter")
-		@SerializedName("Datacenter")
 		private String datacenter;
 
 		@JsonProperty("TaggedAddresses")
-		@SerializedName("TaggedAddresses")
 		private Map<String, String> taggedAddresses;
 
 		@JsonProperty("Meta")
-		@SerializedName("Meta")
 		private Map<String, String> meta;
 
 		@JsonProperty("CreateIndex")
-		@SerializedName("CreateIndex")
 		private Long createIndex;
 
 		@JsonProperty("ModifyIndex")
-		@SerializedName("ModifyIndex")
 		private Long modifyIndex;
 
 		public String getId() {
@@ -121,39 +112,30 @@ public class QueryNode {
 
 	public static class Service {
 		@JsonProperty("ID")
-		@SerializedName("ID")
 		private String id;
 
 		@JsonProperty("Service")
-		@SerializedName("Service")
 		private String service;
 
 		@JsonProperty("Tags")
-		@SerializedName("Tags")
 		private List<String> tags;
 
 		@JsonProperty("Address")
-		@SerializedName("Address")
 		private String address;
 
 		@JsonProperty("Port")
-		@SerializedName("Port")
 		private Integer port;
 
 		@JsonProperty("EnableTagOverride")
-		@SerializedName("EnableTagOverride")
 		private Boolean enableTagOverride;
 
 		@JsonProperty("CreateIndex")
-		@SerializedName("CreateIndex")
 		private Long createIndex;
 
 		@JsonProperty("ModifyIndex")
-		@SerializedName("ModifyIndex")
 		private Long modifyIndex;
 
 		@JsonProperty("Meta")
-		@SerializedName("Meta")
 		private Map<String, String> meta;
 
 		public String getId() {
@@ -245,15 +227,12 @@ public class QueryNode {
 	}
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private Node node;
 
 	@JsonProperty("Service")
-	@SerializedName("Service")
 	private Service service;
 
 	@JsonProperty("Checks")
-	@SerializedName("Checks")
 	private List<Check> checks;
 
 	public Node getNode() { return node; }

@@ -1,34 +1,27 @@
 package com.ecwid.consul.v1.acl.model.legacy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class LegacyAcl {
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private long modifyIndex;
 
 	@JsonProperty("ID")
-	@SerializedName("ID")
 	private String id;
 
 	@JsonProperty("Name")
-	@SerializedName("Name")
 	private String name;
 
 	@JsonProperty("Type")
-	@SerializedName("Type")
 	private LegacyAclType type;
 
 	@JsonProperty("Rules")
-	@SerializedName("Rules")
 	private String rules;
 
 	public long getCreateIndex() {

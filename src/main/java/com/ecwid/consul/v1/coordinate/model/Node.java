@@ -1,18 +1,15 @@
 package com.ecwid.consul.v1.coordinate.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Node {
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private String node;
 
 	@JsonProperty("Coord")
-	@SerializedName("Coord")
 	private Coord coord;
 
 	public String getNode() {

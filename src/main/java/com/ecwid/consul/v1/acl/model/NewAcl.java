@@ -6,7 +6,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Jon Huang (jon5477)
@@ -14,37 +13,26 @@ import com.google.gson.annotations.SerializedName;
 @JsonInclude(Include.NON_NULL)
 public final class NewAcl {
 	@JsonProperty("AccessorID")
-	@SerializedName("AccessorID")
 	private String accessorId;
 	@JsonProperty("SecretID")
-	@SerializedName("SecretID")
 	private String secretId;
 	@JsonProperty("Description")
-	@SerializedName("Description")
 	private String description;
 	@JsonProperty("Policies")
-	@SerializedName("Policies")
 	private List<AclPolicy> policies;
 	@JsonProperty("Roles")
-	@SerializedName("Roles")
 	private List<AclRole> roles;
 	@JsonProperty("TemplatedPolicies")
-	@SerializedName("TemplatedPolicies")
 	private List<AclTemplatePolicy> templatedPolicies;
 	@JsonProperty("ServiceIdentities")
-	@SerializedName("ServiceIdentities")
 	private List<AclServiceIdentity> serviceIdentities;
 	@JsonProperty("NodeIdentities")
-	@SerializedName("NodeIdentities")
 	private List<AclNodeIdentity> nodeIdentities;
 	@JsonProperty("Local")
-	@SerializedName("Local")
 	private boolean local;
 	@JsonProperty("ExpirationTime")
-	@SerializedName("ExpirationTime")
 	private String expirationTime;
 	@JsonProperty("ExpirationTTL")
-	@SerializedName("ExpirationTTL")
 	private String expirationTtl;
 
 	public final String getAccessorId() {

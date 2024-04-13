@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Jon Huang (jon5477)
@@ -14,49 +13,34 @@ import com.google.gson.annotations.SerializedName;
 @JsonInclude(Include.NON_NULL)
 public final class AclToken {
 	@JsonProperty("AccessorID")
-	@SerializedName("AccessorID")
 	private String accessorId;
 	@JsonProperty("SecretID")
-	@SerializedName("SecretID")
 	private String secretId;
 	@JsonProperty("Description")
-	@SerializedName("Description")
 	private String description;
 	@JsonProperty("Policies")
-	@SerializedName("Policies")
 	private List<AclPolicy> policies;
 	@JsonProperty("TemplatedPolicies")
-	@SerializedName("TemplatedPolicies")
 	private List<AclTemplatePolicy> templatedPolicies;
 	@JsonProperty("Local")
-	@SerializedName("Local")
 	private boolean local;
 	@JsonProperty("CreateTime")
-	@SerializedName("CreateTime")
 	private String createTime;
 	@JsonProperty("Hash")
-	@SerializedName("Hash")
 	private String hash;
 //	@JsonProperty("ExpandedPolicies")
-//	@SerializedName("ExpandedPolicies")
 //	private List<AclPolicy> expandedPolicies;
 //	@JsonProperty("ExpandedRoles")
-//	@SerializedName("ExpandedRoles")
 //	private List<AclRole> expandedRoles;
 //	@JsonProperty("AgentACLDefaultPolicy")
-//	@SerializedName("AgentACLDefaultPolicy")
 //	private String agentACLDefaultPolicy;
 //	@JsonProperty("AgentACLDownPolicy")
-//	@SerializedName("AgentACLDownPolicy")
 //	private String agentACLDownPolicy;
 //	@JsonProperty("ResolvedByAgent")
-//	@SerializedName("ResolvedByAgent")
 //	private String resolvedByAgent;
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private int createIndex;
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private int modifyIndex;
 
 	public final String getAccessorId() {

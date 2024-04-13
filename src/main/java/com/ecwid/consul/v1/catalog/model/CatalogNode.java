@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -12,19 +11,15 @@ import com.google.gson.annotations.SerializedName;
 public class CatalogNode {
 	public static class Service {
 		@JsonProperty("ID")
-		@SerializedName("ID")
 		private String id;
 
 		@JsonProperty("Service")
-		@SerializedName("Service")
 		private String service;
 
 		@JsonProperty("Tags")
-		@SerializedName("Tags")
 		private List<String> tags;
 
 		@JsonProperty("Port")
-		@SerializedName("Port")
 		private Integer port;
 
 		public String getId() {
@@ -67,11 +62,9 @@ public class CatalogNode {
 	}
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private Node node;
 
 	@JsonProperty("Services")
-	@SerializedName("Services")
 	private Map<String, Service> services;
 
 	public Node getNode() {

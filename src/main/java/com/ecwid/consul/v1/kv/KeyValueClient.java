@@ -1,12 +1,12 @@
 package com.ecwid.consul.v1.kv;
 
+import java.util.List;
+
 import com.ecwid.consul.v1.QueryParams;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.kv.model.GetBinaryValue;
 import com.ecwid.consul.v1.kv.model.GetValue;
 import com.ecwid.consul.v1.kv.model.PutParams;
-
-import java.util.List;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)

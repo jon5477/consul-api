@@ -3,7 +3,6 @@ package com.ecwid.consul.v1.query.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -11,61 +10,43 @@ import com.google.gson.annotations.SerializedName;
 public class Check {
 	public static enum CheckStatus {
 		@JsonProperty("unknown")
-		@SerializedName("unknown")
-		UNKNOWN,
-		@JsonProperty("passing")
-		@SerializedName("passing")
-		PASSING,
-		@JsonProperty("warning")
-		@SerializedName("warning")
-		WARNING,
-		@JsonProperty("critical")
-		@SerializedName("critical")
+		UNKNOWN, @JsonProperty("passing")
+		PASSING, @JsonProperty("warning")
+		WARNING, @JsonProperty("critical")
 		CRITICAL
 	}
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private String node;
 
 	@JsonProperty("CheckID")
-	@SerializedName("CheckID")
 	private String checkId;
 
 	@JsonProperty("Name")
-	@SerializedName("Name")
 	private String name;
 
 	@JsonProperty("Status")
-	@SerializedName("Status")
 	private CheckStatus status;
 
 	@JsonProperty("Notes")
-	@SerializedName("Notes")
 	private String notes;
 
 	@JsonProperty("Output")
-	@SerializedName("Output")
 	private String output;
 
 	@JsonProperty("ServiceID")
-	@SerializedName("ServiceID")
 	private String serviceId;
 
 	@JsonProperty("ServiceName")
-	@SerializedName("ServiceName")
 	private String serviceName;
 
 	@JsonProperty("ServiceTags")
-	@SerializedName("ServiceTags")
 	private List<String> serviceTags;
 
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private Long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private Long modifyIndex;
 
 	public String getNode() {
@@ -158,18 +139,9 @@ public class Check {
 
 	@Override
 	public String toString() {
-		return "Check{" +
-				"node='" + node + '\'' +
-				", checkId='" + checkId + '\'' +
-				", name='" + name + '\'' +
-				", status=" + status +
-				", notes='" + notes + '\'' +
-				", output='" + output + '\'' +
-				", serviceId='" + serviceId + '\'' +
-				", serviceName='" + serviceName + '\'' +
-				", serviceTags=" + serviceTags +
-				", createIndex=" + createIndex +
-				", modifyIndex=" + modifyIndex +
-				'}';
+		return "Check{" + "node='" + node + '\'' + ", checkId='" + checkId + '\'' + ", name='" + name + '\''
+				+ ", status=" + status + ", notes='" + notes + '\'' + ", output='" + output + '\'' + ", serviceId='"
+				+ serviceId + '\'' + ", serviceName='" + serviceName + '\'' + ", serviceTags=" + serviceTags
+				+ ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + '}';
 	}
 }

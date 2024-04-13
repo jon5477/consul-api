@@ -4,46 +4,36 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Service {
 	@JsonProperty("ID")
-	@SerializedName("ID")
 	private String id;
 
 	@JsonProperty("Service")
-	@SerializedName("Service")
 	private String service;
 
 	@JsonProperty("Tags")
-	@SerializedName("Tags")
 	private List<String> tags;
 
 	@JsonProperty("Address")
-	@SerializedName("Address")
 	private String address;
 
 	@JsonProperty("Meta")
-	@SerializedName("Meta")
 	private Map<String, String> meta;
 
 	@JsonProperty("Port")
-	@SerializedName("Port")
 	private Integer port;
 
 	@JsonProperty("EnableTagOverride")
-	@SerializedName("EnableTagOverride")
 	private Boolean enableTagOverride;
 
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private Long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private Long modifyIndex;
 
 	public String getId() {
@@ -120,16 +110,8 @@ public class Service {
 
 	@Override
 	public String toString() {
-		return "Service{" +
-				"id='" + id + '\'' +
-				", service='" + service + '\'' +
-				", tags=" + tags +
-				", address='" + address + '\'' +
-				", meta=" + meta +
-				", port=" + port +
-				", enableTagOverride=" + enableTagOverride +
-				", createIndex=" + createIndex +
-				", modifyIndex=" + modifyIndex +
-				'}';
+		return "Service{" + "id='" + id + '\'' + ", service='" + service + '\'' + ", tags=" + tags + ", address='"
+				+ address + '\'' + ", meta=" + meta + ", port=" + port + ", enableTagOverride=" + enableTagOverride
+				+ ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + '}';
 	}
 }

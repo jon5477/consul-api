@@ -10,6 +10,7 @@ public class ConsulTestConstants {
 	 * 1.6.0 2019
 	 * 1.11.0 2021 - Legacy ACL was removed
 	 * 1.16.1
+	 * 1.18.1
 	 */
-	public static final String CONSUL_VERSION = "1.16.1";
+	public static final String CONSUL_VERSION = "1.18.1";
 }

@@ -5,38 +5,30 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class GetValue {
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private long modifyIndex;
 
 	@JsonProperty("LockIndex")
-	@SerializedName("LockIndex")
 	private Long lockIndex;
 
 	@JsonProperty("Flags")
-	@SerializedName("Flags")
 	private long flags;
 
 	@JsonProperty("Session")
-	@SerializedName("Session")
 	private String session;
 
 	@JsonProperty("Key")
-	@SerializedName("Key")
 	private String key;
 
 	@JsonProperty("Value")
-	@SerializedName("Value")
 	private String value;
 
 	public long getCreateIndex() {

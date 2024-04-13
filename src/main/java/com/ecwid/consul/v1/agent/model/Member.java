@@ -3,54 +3,42 @@ package com.ecwid.consul.v1.agent.model;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Member {
 	@JsonProperty("Name")
-	@SerializedName("Name")
 	private String name;
 
 	@JsonProperty("Addr")
-	@SerializedName("Addr")
 	private String address;
 
 	@JsonProperty("Port")
-	@SerializedName("Port")
 	private Integer port;
 
 	@JsonProperty("Tags")
-	@SerializedName("Tags")
 	private Map<String, String> tags;
 
 	@JsonProperty("Status")
-	@SerializedName("Status")
 	private int status;
 
 	@JsonProperty("ProtocolMin")
-	@SerializedName("ProtocolMin")
 	private int protocolMin;
 
 	@JsonProperty("ProtocolMax")
-	@SerializedName("ProtocolMax")
 	private int protocolMax;
 
 	@JsonProperty("ProtocolCur")
-	@SerializedName("ProtocolCur")
 	private int protocolCur;
 
 	@JsonProperty("DelegateMin")
-	@SerializedName("DelegateMin")
 	private int delegateMin;
 
 	@JsonProperty("DelegateMax")
-	@SerializedName("DelegateMax")
 	private int delegateMax;
 
 	@JsonProperty("DelegateCur")
-	@SerializedName("DelegateCur")
 	private int delegateCur;
 
 	public String getName() {
@@ -143,18 +131,9 @@ public class Member {
 
 	@Override
 	public String toString() {
-		return "Member{" +
-				"name='" + name + '\'' +
-				", address='" + address + '\'' +
-				", port=" + port +
-				", tags=" + tags +
-				", status=" + status +
-				", protocolMin=" + protocolMin +
-				", protocolMax=" + protocolMax +
-				", protocolCur=" + protocolCur +
-				", delegateMin=" + delegateMin +
-				", delegateMax=" + delegateMax +
-				", delegateCur=" + delegateCur +
-				'}';
+		return "Member{" + "name='" + name + '\'' + ", address='" + address + '\'' + ", port=" + port + ", tags=" + tags
+				+ ", status=" + status + ", protocolMin=" + protocolMin + ", protocolMax=" + protocolMax
+				+ ", protocolCur=" + protocolCur + ", delegateMin=" + delegateMin + ", delegateMax=" + delegateMax
+				+ ", delegateCur=" + delegateCur + '}';
 	}
 }

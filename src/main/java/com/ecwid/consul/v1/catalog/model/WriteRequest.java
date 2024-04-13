@@ -1,14 +1,12 @@
 package com.ecwid.consul.v1.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class WriteRequest {
 	@JsonProperty("Token")
-	@SerializedName("Token")
 	private String token;
 
 	public String getToken() {

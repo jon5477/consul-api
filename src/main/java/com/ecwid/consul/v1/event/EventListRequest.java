@@ -1,13 +1,13 @@
 package com.ecwid.consul.v1.event;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.ecwid.consul.ConsulRequest;
 import com.ecwid.consul.SingleUrlParameters;
 import com.ecwid.consul.UrlParameters;
 import com.ecwid.consul.v1.QueryParams;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public final class EventListRequest implements ConsulRequest {
 	private final String name;

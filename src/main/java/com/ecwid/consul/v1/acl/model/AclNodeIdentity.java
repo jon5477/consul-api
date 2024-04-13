@@ -3,9 +3,8 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Jon Huang (jon5477)
@@ -13,10 +12,8 @@ import com.google.gson.annotations.SerializedName;
 @JsonInclude(Include.NON_NULL)
 public final class AclNodeIdentity {
 	@JsonProperty("NodeName")
-	@SerializedName("NodeName")
 	private String nodeName;
 	@JsonProperty("Datacenter")
-	@SerializedName("Datacenter")
 	private String datacenter;
 
 	public AclNodeIdentity() {

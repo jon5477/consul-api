@@ -5,70 +5,54 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogService {
 	@JsonProperty("ID")
-	@SerializedName("ID")
 	private String id;
 
 	@JsonProperty("Node")
-	@SerializedName("Node")
 	private String node;
 
 	@JsonProperty("Address")
-	@SerializedName("Address")
 	private String address;
 
 	@JsonProperty("Datacenter")
-	@SerializedName("Datacenter")
 	private String datacenter;
 
 	@JsonProperty("TaggedAddresses")
-	@SerializedName("TaggedAddresses")
 	private Map<String, String> taggedAddresses;
 
 	@JsonProperty("NodeMeta")
-	@SerializedName("NodeMeta")
 	private Map<String, String> nodeMeta;
 
 	@JsonProperty("ServiceID")
-	@SerializedName("ServiceID")
 	private String serviceId;
 
 	@JsonProperty("ServiceName")
-	@SerializedName("ServiceName")
 	private String serviceName;
 
 	@JsonProperty("ServiceTags")
-	@SerializedName("ServiceTags")
 	private List<String> serviceTags;
 
 	@JsonProperty("ServiceAddress")
-	@SerializedName("ServiceAddress")
 	private String serviceAddress;
 
 	@JsonProperty("ServiceMeta")
-	@SerializedName("ServiceMeta")
 	private Map<String, String> serviceMeta;
 
 	@JsonProperty("ServicePort")
-	@SerializedName("ServicePort")
 	private Integer servicePort;
 
 	@JsonProperty("ServiceEnableTagOverride")
-	@SerializedName("ServiceEnableTagOverride")
 	private Boolean serviceEnableTagOverride;
 
 	@JsonProperty("CreateIndex")
-	@SerializedName("CreateIndex")
 	private Long createIndex;
 
 	@JsonProperty("ModifyIndex")
-	@SerializedName("ModifyIndex")
 	private Long modifyIndex;
 
 	public String getId() {
