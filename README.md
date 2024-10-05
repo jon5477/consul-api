@@ -84,7 +84,12 @@ compile "com.ecwid.consul:consul-api:1.4.6"
 ```
 
 ## How to build from sources
-* Checkout the sources
-* mvn package
+### Requirements
+- Java 17+
+- Maven 3.6.3 (Latest version is preferred)
+
+### Steps
+- Checkout the sources
+- mvn package
 
 Maven will compile sources, package classes, sources, and javadocs into jars and run all tests. The build results will located in the `target/` folder.
