@@ -1,6 +1,6 @@
 consul-api
 ==========
-Updated for Consul 1.18.1
+Updated for Consul 1.18.1+
 
 Java client for Consul HTTP API (http://consul.io)
 
