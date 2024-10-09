@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Provides utilities for serializing a POJO (Plain old Java Object) to JSON.
  * 
  * @author Jon Huang (jon5477)
+ *
  */
 public final class JsonFactory {
 	private static final String SERIALIZE_ERROR = "Unable to serialize object from JSON";

@@ -55,20 +55,6 @@ public final class EventConsulClient implements EventClient {
 	}
 
 	@Override
-	public Response<List<Event>> eventList(QueryParams queryParams) {
-		return eventList(null, queryParams);
-	}
-
-	@Override
-	public Response<List<Event>> eventList(String event, QueryParams queryParams) {
-		EventListRequest request = EventListRequest.newBuilder()
-				.setName(event)
-				.setQueryParams(queryParams)
-				.build();
-		return eventList(request);
-	}
-
-	@Override
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest.asUrlParameters());
 		if (httpResponse.getStatusCode() == 200) {
