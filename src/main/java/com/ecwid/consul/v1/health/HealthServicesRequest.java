@@ -23,7 +23,8 @@ public final class HealthServicesRequest implements ConsulRequest {
 	private final QueryParams queryParams;
 	private final String token;
 
-	private HealthServicesRequest(String datacenter, String near, String[] tags, Map<String, String> nodeMeta, boolean passing, QueryParams queryParams, String token) {
+	private HealthServicesRequest(String datacenter, String near, String[] tags, Map<String, String> nodeMeta,
+			boolean passing, QueryParams queryParams, String token) {
 		this.datacenter = datacenter;
 		this.near = near;
 		this.tags = tags;
@@ -88,7 +89,7 @@ public final class HealthServicesRequest implements ConsulRequest {
 		}
 
 		public Builder setTag(String tag) {
-			this.tags = new String[]{tag};
+			this.tags = new String[] { tag };
 			return this;
 		}
 
@@ -138,10 +139,14 @@ public final class HealthServicesRequest implements ConsulRequest {
 			params.add(new SingleUrlParameters("near", near));
 		}
 
+		// TODO Specifying tags here is deprecated since Consul 1.9.x
+		// Use filter with the Service.Tags selector instead.
 		if (tags != null) {
 			params.add(new TagsParameters(tags));
 		}
 
+		// TODO Specifying node-meta here is deprecated since Consul 1.9.x
+		// Use filter with the Node.Meta selector instead.
 		if (nodeMeta != null) {
 			params.add(new NodeMetaParameters(nodeMeta));
 		}
@@ -168,13 +173,9 @@ public final class HealthServicesRequest implements ConsulRequest {
 			return false;
 		}
 		HealthServicesRequest that = (HealthServicesRequest) o;
-		return passing == that.passing &&
-			Objects.equals(datacenter, that.datacenter) &&
-			Objects.equals(near, that.near) &&
-			Arrays.equals(tags, that.tags) &&
-			Objects.equals(nodeMeta, that.nodeMeta) &&
-			Objects.equals(queryParams, that.queryParams) &&
-			Objects.equals(token, that.token);
+		return passing == that.passing && Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
+				&& Arrays.equals(tags, that.tags) && Objects.equals(nodeMeta, that.nodeMeta)
+				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
 	}
 
 	@Override
