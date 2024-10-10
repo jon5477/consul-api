@@ -49,6 +49,7 @@ module com.ecwid.consul.api {
 	opens com.ecwid.consul.v1.session.model;
 	opens com.ecwid.consul.v1.status;
 
+	requires com.fasterxml.jackson.annotation;
 	requires com.fasterxml.jackson.core;
 	requires transitive com.fasterxml.jackson.databind;
 	requires transitive org.apache.httpcomponents.client5.httpclient5;

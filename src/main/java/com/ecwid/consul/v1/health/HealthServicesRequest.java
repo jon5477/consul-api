@@ -19,16 +19,18 @@ public final class HealthServicesRequest implements ConsulRequest {
 	private final String near;
 	private final String[] tags;
 	private final Map<String, String> nodeMeta;
+	private final String filter;
 	private final boolean passing;
 	private final QueryParams queryParams;
 	private final String token;
 
 	private HealthServicesRequest(String datacenter, String near, String[] tags, Map<String, String> nodeMeta,
-			boolean passing, QueryParams queryParams, String token) {
+			String filter, boolean passing, QueryParams queryParams, String token) {
 		this.datacenter = datacenter;
 		this.near = near;
 		this.tags = tags;
 		this.nodeMeta = nodeMeta;
+		this.filter = filter;
 		this.passing = passing;
 		this.queryParams = queryParams;
 		this.token = token;
@@ -54,6 +56,10 @@ public final class HealthServicesRequest implements ConsulRequest {
 		return nodeMeta;
 	}
 
+	public String getFilter() {
+		return filter;
+	}
+
 	public boolean isPassing() {
 		return passing;
 	}
@@ -71,6 +77,7 @@ public final class HealthServicesRequest implements ConsulRequest {
 		private String near;
 		private String[] tags;
 		private Map<String, String> nodeMeta;
+		private String filter;
 		private boolean passing;
 		private QueryParams queryParams;
 		private String token;
@@ -88,18 +95,56 @@ public final class HealthServicesRequest implements ConsulRequest {
 			return this;
 		}
 
+		/**
+		 * Sets the service tag to filter results by.
+		 * 
+		 * @see https://developer.hashicorp.com/consul/api-docs/health#query-parameters-2
+		 * @param tag The service tag to filter by.
+		 * @return This {@link Builder} instance for method chaining.
+		 */
+		@Deprecated
 		public Builder setTag(String tag) {
 			this.tags = new String[] { tag };
 			return this;
 		}
 
+		/**
+		 * Sets the service tags to filter results by.
+		 * 
+		 * @deprecated Use filter with the Service.Tags selector instead.
+		 * @see https://developer.hashicorp.com/consul/api-docs/health#query-parameters-2
+		 * @param tags The service tags to filter by.
+		 * @return This {@link Builder} instance for method chaining.
+		 */
+		@Deprecated
 		public Builder setTags(String[] tags) {
 			this.tags = tags;
 			return this;
 		}
 
+		/**
+		 * Sets the node metadata to filter results by.
+		 * 
+		 * @deprecated Use filter with the Node.Meta selector instead.
+		 * @see https://developer.hashicorp.com/consul/api-docs/health#query-parameters-2
+		 * @param nodeMeta The node metadata to filter by.
+		 * @return This {@link Builder} instance for method chaining.
+		 */
+		@Deprecated
 		public Builder setNodeMeta(Map<String, String> nodeMeta) {
 			this.nodeMeta = nodeMeta != null ? Collections.unmodifiableMap(nodeMeta) : null;
+			return this;
+		}
+
+		/**
+		 * Set the expression used to filter the queries results prior to returning the
+		 * data.
+		 * 
+		 * @param filter The filter expression.
+		 * @return This {@link Builder} instance for method chaining.
+		 */
+		public Builder setFilter(String filter) {
+			this.filter = filter;
 			return this;
 		}
 
@@ -119,7 +164,7 @@ public final class HealthServicesRequest implements ConsulRequest {
 		}
 
 		public HealthServicesRequest build() {
-			return new HealthServicesRequest(datacenter, near, tags, nodeMeta, passing, queryParams, token);
+			return new HealthServicesRequest(datacenter, near, tags, nodeMeta, filter, passing, queryParams, token);
 		}
 	}
 
@@ -149,6 +194,11 @@ public final class HealthServicesRequest implements ConsulRequest {
 		// Use filter with the Node.Meta selector instead.
 		if (nodeMeta != null) {
 			params.add(new NodeMetaParameters(nodeMeta));
+		}
+
+		// Allow a very basic form of filtering for now
+		if (filter != null) {
+			params.add(new SingleUrlParameters("filter", filter));
 		}
 
 		params.add(new SingleUrlParameters("passing", String.valueOf(passing)));
