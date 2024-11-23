@@ -225,12 +225,13 @@ public final class HealthServicesRequest implements ConsulRequest {
 		HealthServicesRequest that = (HealthServicesRequest) o;
 		return passing == that.passing && Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
 				&& Arrays.equals(tags, that.tags) && Objects.equals(nodeMeta, that.nodeMeta)
-				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
+				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token)
+			&& Objects.equals(filter, that.filter);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(datacenter, near, nodeMeta, passing, queryParams, token);
+		int result = Objects.hash(datacenter, near, nodeMeta, passing, queryParams, token, filter);
 		result = 31 * result + Arrays.hashCode(tags);
 		return result;
 	}
