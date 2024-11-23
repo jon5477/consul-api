@@ -215,23 +215,26 @@ public final class HealthServicesRequest implements ConsulRequest {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof HealthServicesRequest)) {
-			return false;
-		}
-		HealthServicesRequest that = (HealthServicesRequest) o;
-		return passing == that.passing && Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
-				&& Arrays.equals(tags, that.tags) && Objects.equals(nodeMeta, that.nodeMeta)
-				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(tags);
+		result = prime * result + Objects.hash(datacenter, filter, near, nodeMeta, passing, queryParams, token);
+		return result;
 	}
 
 	@Override
-	public int hashCode() {
-		int result = Objects.hash(datacenter, near, nodeMeta, passing, queryParams, token);
-		result = 31 * result + Arrays.hashCode(tags);
-		return result;
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof HealthServicesRequest)) {
+			return false;
+		}
+		HealthServicesRequest other = (HealthServicesRequest) obj;
+		return Objects.equals(datacenter, other.datacenter) && Objects.equals(filter, other.filter)
+				&& Objects.equals(near, other.near) && Objects.equals(nodeMeta, other.nodeMeta)
+				&& passing == other.passing && Objects.equals(queryParams, other.queryParams)
+				&& Arrays.equals(tags, other.tags) && Objects.equals(token, other.token);
 	}
 }
