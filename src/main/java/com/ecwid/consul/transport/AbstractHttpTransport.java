@@ -15,7 +15,7 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +37,16 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 	@Override
 	public HttpResponse makeGetRequest(HttpRequest request) {
 		HttpGet httpGet = new HttpGet(request.getUrl());
-		addHeadersToRequest(httpGet, request.getHeaders());
+		addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
 		return executeRequest(httpGet);
 	}
 
 	@Override
 	public HttpResponse makePutRequest(HttpRequest request) {
 		HttpPut httpPut = new HttpPut(request.getUrl());
-		addHeadersToRequest(httpPut, request.getHeaders());
+		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
 		if (request.getContent() != null) {
-			httpPut.setEntity(new StringEntity(request.getContent(), StandardCharsets.UTF_8));
-		} else if (request.getBinaryContent() != null) {
-			httpPut.setEntity(new ByteArrayEntity(request.getBinaryContent(), null));
+			httpPut.setEntity(new ByteArrayEntity(request.getContent(), null));
 		}
 		return executeRequest(httpPut);
 	}
@@ -56,7 +54,7 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 	@Override
 	public HttpResponse makeDeleteRequest(HttpRequest request) {
 		HttpDelete httpDelete = new HttpDelete(request.getUrl());
-		addHeadersToRequest(httpDelete, request.getHeaders());
+		addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
 		return executeRequest(httpDelete);
 	}
 
@@ -68,9 +66,7 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 	protected abstract HttpClient getHttpClient();
 
 	private HttpResponse executeRequest(HttpUriRequest httpRequest) {
-		if (LOGGER.isTraceEnabled()) {
-			logRequest(httpRequest);
-		}
+		logRequest(httpRequest);
 		try {
 			return getHttpClient().execute(httpRequest, response -> {
 				int statusCode = response.getCode();
@@ -115,42 +111,46 @@ public abstract class AbstractHttpTransport implements HttpTransport {
 		return null;
 	}
 
-	private void addHeadersToRequest(HttpUriRequestBase request, Map<String, String> headers) {
-		if (headers == null) {
-			return;
+	private void addHeadersToRequest(HttpUriRequestBase request, char[] token, Map<String, String> headers) {
+		if (token != null) {
+			request.addHeader(new BasicHeader("X-Consul-Token", new String(token), true));
 		}
-		for (Map.Entry<String, String> headerValue : headers.entrySet()) {
-			String name = headerValue.getKey();
-			String value = headerValue.getValue();
-			request.addHeader(name, value);
+		if (headers != null && !headers.isEmpty()) {
+			for (Map.Entry<String, String> headerValue : headers.entrySet()) {
+				String name = headerValue.getKey();
+				String value = headerValue.getValue();
+				request.addHeader(name, value);
+			}
 		}
 	}
 
 	private void logRequest(HttpUriRequest httpRequest) {
-		StringBuilder sb = new StringBuilder();
-		// method
-		sb.append(httpRequest.getMethod());
-		sb.append(" ");
-		// url
-		try {
-			sb.append(httpRequest.getUri());
-		} catch (URISyntaxException e) {
-			throw new ConsulException(e);
-		}
-		sb.append(" ");
-		// headers, if any
-		Iterator<Header> iterator = httpRequest.headerIterator();
-		if (iterator.hasNext()) {
-			sb.append("Headers:[");
-			Header header = iterator.next();
-			sb.append(header.getName()).append("=").append(header.getValue());
-			while (iterator.hasNext()) {
-				header = iterator.next();
-				sb.append(header.getName()).append("=").append(header.getValue());
-				sb.append(";");
+		if (LOGGER.isTraceEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			// method
+			sb.append(httpRequest.getMethod());
+			sb.append(" ");
+			// url
+			try {
+				sb.append(httpRequest.getUri());
+			} catch (URISyntaxException e) {
+				throw new ConsulException(e);
 			}
-			sb.append("] ");
+			sb.append(" ");
+			// headers, if any
+			Iterator<Header> iterator = httpRequest.headerIterator();
+			if (iterator.hasNext()) {
+				sb.append("Headers:[");
+				Header header = iterator.next();
+				sb.append(header.getName()).append("=").append(header.getValue());
+				while (iterator.hasNext()) {
+					header = iterator.next();
+					sb.append(header.getName()).append("=").append(header.getValue());
+					sb.append(";");
+				}
+				sb.append("] ");
+			}
+			LOGGER.trace(sb.toString());
 		}
-		LOGGER.trace(sb.toString());
 	}
 }

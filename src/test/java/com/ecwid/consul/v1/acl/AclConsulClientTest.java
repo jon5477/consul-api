@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.acl.model.AclToken;
@@ -23,7 +24,7 @@ import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
 
 class AclConsulClientTest {
-	private static final String ACL_MASTER_TOKEN = "mastertoken";
+	private static final char[] ACL_MASTER_TOKEN = "mastertoken".toCharArray();
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
 	private AclClient aclClient = new AclConsulClient("localhost", port);
@@ -32,7 +33,7 @@ class AclConsulClientTest {
 	public void setup() {
 		String customConfiguration = "{\n" + "  \"acl\": {\n" + "    \"enabled\": true,\n"
 				+ "    \"enable_token_persistence\": true,\n" + "    \"tokens\": {\n"
-				+ "      \"initial_management\": \"" + ACL_MASTER_TOKEN + "\"\n" + "    }\n" + "  },\n"
+				+ "      \"initial_management\": \"" + new String(ACL_MASTER_TOKEN) + "\"\n" + "    }\n" + "  },\n"
 				+ "  \"primary_datacenter\": \"dc-test\",\n" + "  \"datacenter\": \"dc-test\"\n" + "}";
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
 				.withHttpPort(port).withCustomConfig(customConfiguration).build().start();
@@ -73,7 +74,8 @@ class AclConsulClientTest {
 	@Test
 	void should_read_self_acl_token() {
 		AclToken token = createTestToken();
-		Response<AclToken> response = aclClient.aclReadSelf(token.getSecretId());
+		char[] secretId = Utils.charSequenceToArray(token.getSecretId());
+		Response<AclToken> response = aclClient.aclReadSelf(secretId);
 		assertEquals(token, response.getValue());
 
 	}

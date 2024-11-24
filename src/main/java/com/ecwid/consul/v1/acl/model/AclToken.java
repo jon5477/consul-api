@@ -15,7 +15,7 @@ public final class AclToken {
 	@JsonProperty("AccessorID")
 	private String accessorId;
 	@JsonProperty("SecretID")
-	private String secretId;
+	private CharSequence secretId;
 	@JsonProperty("Description")
 	private String description;
 	@JsonProperty("Policies")
@@ -51,11 +51,11 @@ public final class AclToken {
 		this.accessorId = accessorId;
 	}
 
-	public final String getSecretId() {
+	public final CharSequence getSecretId() {
 		return secretId;
 	}
 
-	public final void setSecretId(String secretId) {
+	public final void setSecretId(CharSequence secretId) {
 		this.secretId = secretId;
 	}
 

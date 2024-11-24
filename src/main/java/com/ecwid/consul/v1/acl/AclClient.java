@@ -8,20 +8,23 @@ import com.ecwid.consul.v1.acl.model.NewAcl;
 import com.ecwid.consul.v1.acl.model.UpdateAcl;
 
 /**
+ * Methods for the ACL Token HTTP API
+ * 
  * @author Jon Huang (jon5477)
+ *
  */
 public interface AclClient {
-	Response<AclToken> aclCreate(String token, NewAcl newAcl);
+	Response<AclToken> aclCreate(char[] token, NewAcl newAcl);
 
-	Response<AclToken> aclRead(String token, String accessorId);
+	Response<AclToken> aclRead(char[] token, String accessorId);
 
-	Response<AclToken> aclReadSelf(String token);
+	Response<AclToken> aclReadSelf(char[] token);
 
-	Response<AclToken> aclUpdate(String token, UpdateAcl updateAcl, String accessorId);
+	Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId);
 
-	Response<AclToken> aclClone(String token, String accessorId);
+	Response<AclToken> aclClone(char[] token, String accessorId);
 
-	Response<Void> aclDelete(String token, String accessorId);
+	Response<Void> aclDelete(char[] token, String accessorId);
 
-	Response<List<AclToken>> aclList(String token, AclTokensRequest request);
+	Response<List<AclToken>> aclList(char[] token, AclTokensRequest request);
 }

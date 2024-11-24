@@ -6,20 +6,20 @@ import java.util.List;
 import com.ecwid.consul.UrlParameters;
 
 public final class Request {
-
 	private final String endpoint;
 	private final List<UrlParameters> urlParameters;
-
 	private final String content;
 	private final byte[] binaryContent;
+	/**
+	 * The Consul token to use, specified as a char[] to prevent string pooling.
+	 */
+	private final char[] token;
 
-	private final String token;
-
-	private Request(String endpoint, List<UrlParameters> urlParameters, String content, byte[] binaryContent, String token) {
+	private Request(String endpoint, List<UrlParameters> urlParameters, String content, byte[] binaryContent,
+			char[] token) {
 		if (content != null && binaryContent != null) {
 			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
 		}
-
 		this.endpoint = endpoint;
 		this.urlParameters = urlParameters;
 		this.content = content;
@@ -35,6 +35,7 @@ public final class Request {
 		return urlParameters;
 	}
 
+	@Deprecated // It is better to keep content in binary form
 	public String getContent() {
 		return content;
 	}
@@ -43,7 +44,7 @@ public final class Request {
 		return binaryContent;
 	}
 
-	public String getToken() {
+	public char[] getToken() {
 		return token;
 	}
 
@@ -52,11 +53,9 @@ public final class Request {
 	public static class Builder {
 		private String endpoint;
 		private List<UrlParameters> urlParameters = new ArrayList<>();
-
 		private String content;
 		private byte[] binaryContent;
-
-		private String token;
+		private char[] token;
 
 		public static Builder newBuilder() {
 			return new Builder();
@@ -77,6 +76,7 @@ public final class Request {
 			return this;
 		}
 
+		@Deprecated
 		public Builder setContent(String content) {
 			this.content = content;
 			return this;
@@ -87,7 +87,13 @@ public final class Request {
 			return this;
 		}
 
+		@Deprecated
 		public Builder setToken(String token) {
+			this.token = token != null ? token.toCharArray() : null;
+			return this;
+		}
+
+		public Builder setToken(char[] token) {
 			this.token = token;
 			return this;
 		}

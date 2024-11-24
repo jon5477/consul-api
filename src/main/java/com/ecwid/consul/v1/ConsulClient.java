@@ -3,6 +3,7 @@ package com.ecwid.consul.v1;
 import java.util.List;
 import java.util.Map;
 
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.acl.AclClient;
 import com.ecwid.consul.v1.acl.AclConsulClient;
@@ -90,16 +91,24 @@ public class ConsulClient implements
 	private final StatusClient statusClient;
 
 	public ConsulClient(ConsulRawClient rawClient) {
-		aclClient = new AclConsulClient(rawClient);
-		agentClient = new AgentConsulClient(rawClient);
-		catalogClient = new CatalogConsulClient(rawClient);
-		coordinateClient = new CoordinateConsulClient(rawClient);
-		eventClient = new EventConsulClient(rawClient);
-		healthClient = new HealthConsulClient(rawClient);
-		keyValueClient = new KeyValueConsulClient(rawClient);
-		queryClient = new QueryConsulClient(rawClient);
-		sessionClient = new SessionConsulClient(rawClient);
-		statusClient = new StatusConsulClient(rawClient);
+		this(rawClient, (char[]) null);
+	}
+
+	public ConsulClient(ConsulRawClient rawClient, CharSequence token) {
+		this(rawClient, Utils.charSequenceToArray(token));
+	}
+
+	public ConsulClient(ConsulRawClient rawClient, char[] token) {
+		this.aclClient = new AclConsulClient(rawClient);
+		this.agentClient = new AgentConsulClient(rawClient);
+		this.catalogClient = new CatalogConsulClient(rawClient);
+		this.coordinateClient = new CoordinateConsulClient(rawClient);
+		this.eventClient = new EventConsulClient(rawClient);
+		this.healthClient = new HealthConsulClient(rawClient);
+		this.keyValueClient = new KeyValueConsulClient(rawClient);
+		this.queryClient = new QueryConsulClient(rawClient);
+		this.sessionClient = new SessionConsulClient(rawClient);
+		this.statusClient = new StatusConsulClient(rawClient);
 	}
 
 	/**
@@ -172,37 +181,37 @@ public class ConsulClient implements
 	// ACL
 
 	@Override
-	public Response<AclToken> aclCreate(String token, NewAcl newAcl) {
+	public Response<AclToken> aclCreate(char[] token, NewAcl newAcl) {
 		return aclClient.aclCreate(token, newAcl);
 	}
 
 	@Override
-	public Response<AclToken> aclRead(String token, String accessorId) {
+	public Response<AclToken> aclRead(char[] token, String accessorId) {
 		return aclClient.aclRead(token, accessorId);
 	}
 
 	@Override
-	public Response<AclToken> aclReadSelf(String token) {
+	public Response<AclToken> aclReadSelf(char[] token) {
 		return aclClient.aclReadSelf(token);
 	}
 
 	@Override
-	public Response<AclToken> aclUpdate(String token, UpdateAcl updateAcl, String accessorId) {
+	public Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId) {
 		return aclClient.aclUpdate(token, updateAcl, accessorId);
 	}
 
 	@Override
-	public Response<AclToken> aclClone(String token, String accessorId) {
+	public Response<AclToken> aclClone(char[] token, String accessorId) {
 		return aclClient.aclClone(token, accessorId);
 	}
 
 	@Override
-	public Response<Void> aclDelete(String token, String accessorId) {
+	public Response<Void> aclDelete(char[] token, String accessorId) {
 		return aclClient.aclDelete(token, accessorId);
 	}
 
 	@Override
-	public Response<List<AclToken>> aclList(String token, AclTokensRequest request) {
+	public Response<List<AclToken>> aclList(char[] token, AclTokensRequest request) {
 		return aclClient.aclList(token, request);
 	}
 

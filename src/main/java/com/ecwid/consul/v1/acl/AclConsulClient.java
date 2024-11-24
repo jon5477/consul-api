@@ -1,5 +1,6 @@
 package com.ecwid.consul.v1.acl;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import com.ecwid.consul.json.JsonFactory;
@@ -50,10 +51,9 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<AclToken> aclCreate(String token, NewAcl newAcl) {
-		String json = JsonFactory.toJson(newAcl);
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token").setContent(json).setToken(token)
-				.build();
+	public Response<AclToken> aclCreate(char[] token, NewAcl newAcl) {
+		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token")
+				.setBinaryContent(JsonFactory.toBytes(newAcl)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
@@ -64,7 +64,7 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<AclToken> aclRead(String token, String accessorId) {
+	public Response<AclToken> aclRead(char[] token, String accessorId) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).setToken(token)
 				.build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
@@ -77,8 +77,8 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<AclToken> aclReadSelf(String token) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token/self").setToken(token).build();
+	public Response<AclToken> aclReadSelf(char[] token) {
+		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + "self").setToken(token).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
@@ -89,10 +89,9 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<AclToken> aclUpdate(String token, UpdateAcl updateAcl, String accessorId) {
-		String json = JsonFactory.toJson(updateAcl);
-		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).setContent(json)
-				.setToken(token).build();
+	public Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId) {
+		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId)
+				.setBinaryContent(JsonFactory.toBytes(updateAcl)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
@@ -103,9 +102,9 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<AclToken> aclClone(String token, String accessorId) {
+	public Response<AclToken> aclClone(char[] token, String accessorId) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId + "/clone")
-				.setContent("{}").setToken(token).build();
+				.setBinaryContent("{}".getBytes(StandardCharsets.UTF_8)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
@@ -116,7 +115,7 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<Void> aclDelete(String token, String accessorId) {
+	public Response<Void> aclDelete(char[] token, String accessorId) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).setToken(token)
 				.build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
@@ -128,7 +127,7 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<List<AclToken>> aclList(String token, AclTokensRequest req) {
+	public Response<List<AclToken>> aclList(char[] token, AclTokensRequest req) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/tokens")
 				.addUrlParameters(req.asUrlParameters()).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);

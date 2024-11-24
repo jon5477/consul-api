@@ -1,22 +1,20 @@
 package com.ecwid.consul.transport;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class HttpRequest {
 	private final String url;
 	private final Map<String, String> headers;
-	private final String content;
-	private final byte[] binaryContent;
+	private final char[] token;
+	private final byte[] content;
 
-	private HttpRequest(String url, Map<String, String> headers, String content, byte[] binaryContent) {
-		if (content != null && binaryContent != null) {
-			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
-		}
-		this.url = url;
-		this.headers = headers;
-		this.content = content;
-		this.binaryContent = binaryContent;
+	private HttpRequest(Builder b) {
+		this.url = b.url;
+		this.headers = b.headers;
+		this.token = b.token;
+		this.content = b.content;
 	}
 
 	public String getUrl() {
@@ -27,12 +25,12 @@ public final class HttpRequest {
 		return headers;
 	}
 
-	public String getContent() {
-		return content;
+	public char[] getToken() {
+		return token;
 	}
 
-	public byte[] getBinaryContent() {
-		return binaryContent;
+	public byte[] getContent() {
+		return content;
 	}
 
 	// ---------------------------------------
@@ -40,8 +38,8 @@ public final class HttpRequest {
 	public static final class Builder {
 		private String url;
 		private Map<String, String> headers = new HashMap<>();
-		private String content;
-		private byte[] binaryContent;
+		private char[] token;
+		private byte[] content;
 
 		public static Builder newBuilder() {
 			return new Builder();
@@ -62,18 +60,24 @@ public final class HttpRequest {
 			return this;
 		}
 
+		public Builder setToken(char[] token) {
+			this.token = token;
+			return this;
+		}
+
+		@Deprecated(forRemoval = true)
 		public Builder setContent(String content) {
-			this.content = content;
+			this.content = content != null ? content.getBytes(StandardCharsets.UTF_8) : null;
 			return this;
 		}
 
 		public Builder setBinaryContent(byte[] binaryContent) {
-			this.binaryContent = binaryContent;
+			this.content = binaryContent;
 			return this;
 		}
 
 		public HttpRequest build() {
-			return new HttpRequest(url, headers, content, binaryContent);
+			return new HttpRequest(this);
 		}
 	}
 }

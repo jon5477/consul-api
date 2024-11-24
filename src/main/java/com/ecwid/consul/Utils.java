@@ -6,16 +6,23 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Utils {
 	private Utils() {
+	}
+
+	public static char[] charSequenceToArray(CharSequence seq) {
+		int length = seq.length();
+		char[] arr = new char[length];
+		for (int i = 0; i < length; i++) {
+			arr[i] = seq.charAt(i);
+		}
+		return arr;
 	}
 
 	public static String encodeValue(String value) {
@@ -25,7 +32,8 @@ public class Utils {
 	public static String encodeUrl(String str) {
 		try {
 			URL url = new URL(str);
-			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(),
+					url.getQuery(), url.getRef());
 			return uri.toASCIIString();
 		} catch (Exception e) {
 			throw new RuntimeException("Can't encode url", e);
@@ -59,12 +67,6 @@ public class Utils {
 			}
 		}
 		return result.toString();
-	}
-
-	public static Map<String, String> createTokenMap(String token) {
-		Map<String, String> headers = new HashMap<>();
-		headers.put("X-Consul-Token", token);
-		return headers;
 	}
 
 	public static String toSecondsString(long waitTime) {

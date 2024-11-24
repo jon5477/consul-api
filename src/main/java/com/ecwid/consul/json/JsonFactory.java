@@ -24,6 +24,14 @@ public final class JsonFactory {
 		// static utility class
 	}
 
+	public static byte[] toBytes(Object src) {
+		try {
+			return OBJ_MAPPER.writeValueAsBytes(src);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Unable to serialize object to JSON", e);
+		}
+	}
+
 	public static String toJson(Object src) {
 		try {
 			return OBJ_MAPPER.writeValueAsString(src);

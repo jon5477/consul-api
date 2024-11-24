@@ -5,11 +5,13 @@ import java.util.Map;
 
 import com.ecwid.consul.SingleUrlParameters;
 import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
+import com.ecwid.consul.v1.Request;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.agent.model.Check;
 import com.ecwid.consul.v1.agent.model.Member;
@@ -83,9 +85,8 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<List<Member>> getAgentMembers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/members");
 		if (httpResponse.getStatusCode() == 200) {
-			List<Member> members = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Member>>() {
-					});
+			List<Member> members = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Member>>() {
+			});
 			return new Response<>(members, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -258,9 +259,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceRegister(NewService newService, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		String json = JsonFactory.toJson(newService);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/register", json, tokenParam);
+		Request request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
+				.setBinaryContent(JsonFactory.toBytes(newService)).setToken(Utils.charSequenceToArray(token)).build();
+		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {

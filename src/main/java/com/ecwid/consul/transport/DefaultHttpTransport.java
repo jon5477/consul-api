@@ -1,5 +1,7 @@
 package com.ecwid.consul.transport;
 
+import java.util.Objects;
+
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -27,7 +29,7 @@ public final class DefaultHttpTransport extends AbstractHttpTransport {
 	}
 
 	public DefaultHttpTransport(HttpClient httpClient) {
-		this.httpClient = httpClient;
+		this.httpClient = Objects.requireNonNull(httpClient, "http client cannot be null");
 	}
 
 	@Override

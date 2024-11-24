@@ -1,5 +1,6 @@
 package com.ecwid.consul.transport;
 
+@Deprecated(forRemoval = true)
 public final class TLSConfig {
 	public enum KeyStoreInstanceType {
 		JKS, JCEKS, PKCS12, PKCS11, DKS, BCFKS
