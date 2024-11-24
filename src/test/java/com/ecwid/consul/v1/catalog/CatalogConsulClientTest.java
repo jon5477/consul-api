@@ -18,16 +18,12 @@ import com.pszymczyk.consul.infrastructure.Ports;
 class CatalogConsulClientTest {
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-
 	private CatalogConsulClient consulClient = new CatalogConsulClient("localhost", port);
 
 	@BeforeEach
 	void setUp() {
-		consul = ConsulStarterBuilder.consulStarter()
-			.withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-			.withHttpPort(port)
-			.build()
-			.start();
+		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
+				.withHttpPort(port).build().start();
 	}
 
 	@AfterEach
@@ -43,6 +39,4 @@ class CatalogConsulClientTest {
 		// We should find only one node – this
 		assertEquals(1, response.getValue().size());
 	}
-
-
 }

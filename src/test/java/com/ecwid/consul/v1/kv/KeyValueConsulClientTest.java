@@ -13,12 +13,9 @@ import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
 
 class KeyValueConsulClientTest {
-
 	private static final Random rnd = new Random();
-
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-
 	private KeyValueConsulClient consulClient = new KeyValueConsulClient("localhost", port);
 
 	@BeforeEach
@@ -92,5 +89,4 @@ class KeyValueConsulClientTest {
 		// Make sure all keys have been deleted
 		Assertions.assertNull(consulClient.getKVKeysOnly(testKeyPrefix).getValue());
 	}
-
 }
