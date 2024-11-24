@@ -537,7 +537,7 @@ public class ConsulClient implements
 
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthChecksForService(String serviceName, HealthChecksForServiceRequest healthChecksForServiceRequest)}
-	 *
+	 */
 	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<com.ecwid.consul.v1.health.model.Check>> getHealthChecksForService(String serviceName, QueryParams queryParams) {
