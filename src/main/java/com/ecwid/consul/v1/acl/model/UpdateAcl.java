@@ -15,7 +15,7 @@ public final class UpdateAcl {
 	@JsonProperty("AccessorID")
 	private String accessorId;
 	@JsonProperty("SecretID")
-	private String secretId;
+	private CharSequence secretId;
 	@JsonProperty("Description")
 	private String description;
 	@JsonProperty("Policies")
@@ -39,11 +39,11 @@ public final class UpdateAcl {
 		this.accessorId = accessorId;
 	}
 
-	public final String getSecretId() {
+	public final CharSequence getSecretId() {
 		return secretId;
 	}
 
-	public final void setSecretId(String secretId) {
+	public final void setSecretId(CharSequence secretId) {
 		this.secretId = secretId;
 	}
 
@@ -127,9 +127,8 @@ public final class UpdateAcl {
 
 	@Override
 	public final String toString() {
-		return "UpdateAcl [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
-				+ ", policies=" + policies + ", roles=" + roles + ", serviceIdentities=" + serviceIdentities
-				+ ", nodeIdentities=" + nodeIdentities + ", local=" + local + ", expirationTime=" + expirationTime
-				+ "]";
+		return "UpdateAcl [accessorId=" + accessorId + ", description=" + description + ", policies=" + policies
+				+ ", roles=" + roles + ", serviceIdentities=" + serviceIdentities + ", nodeIdentities=" + nodeIdentities
+				+ ", local=" + local + ", expirationTime=" + expirationTime + "]";
 	}
 }

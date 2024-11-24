@@ -51,8 +51,7 @@ class AclConsulClientTest {
 		newAcl.setSecretId("c604a178-e102-af3a-cbd8-8febf4b26468");
 		newAcl.setDescription("Test ACL Token");
 		Response<AclToken> response = aclClient.aclCreate(ACL_MASTER_TOKEN, newAcl);
-		AclToken createdAcl = response.getValue();
-		return createdAcl;
+		return response.getValue();
 	}
 
 	@Test

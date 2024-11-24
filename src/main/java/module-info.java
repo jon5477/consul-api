@@ -5,7 +5,6 @@ module com.ecwid.consul.api {
 	exports com.ecwid.consul.v1;
 	exports com.ecwid.consul.v1.acl;
 	exports com.ecwid.consul.v1.acl.model;
-	exports com.ecwid.consul.v1.acl.model.legacy;
 	exports com.ecwid.consul.v1.agent;
 	exports com.ecwid.consul.v1.agent.model;
 	exports com.ecwid.consul.v1.catalog;
@@ -30,7 +29,6 @@ module com.ecwid.consul.api {
 	opens com.ecwid.consul.v1;
 	opens com.ecwid.consul.v1.acl;
 	opens com.ecwid.consul.v1.acl.model;
-	opens com.ecwid.consul.v1.acl.model.legacy;
 	opens com.ecwid.consul.v1.agent;
 	opens com.ecwid.consul.v1.agent.model;
 	opens com.ecwid.consul.v1.catalog;

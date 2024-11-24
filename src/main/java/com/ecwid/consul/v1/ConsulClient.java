@@ -394,7 +394,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogNodes(CatalogNodesRequest catalogNodesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<Node>> getCatalogNodes(QueryParams queryParams) {
 		return catalogClient.getCatalogNodes(queryParams);
@@ -408,7 +408,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams) {
 		return catalogClient.getCatalogServices(queryParams);
@@ -417,7 +417,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, String token) {
 		return catalogClient.getCatalogServices(queryParams, token);
@@ -431,7 +431,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams) {
 		return catalogClient.getCatalogService(serviceName, queryParams);
@@ -440,7 +440,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams) {
 		return catalogClient.getCatalogService(serviceName, tag, queryParams);
@@ -449,7 +449,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams, String token) {
 		return catalogClient.getCatalogService(serviceName, queryParams, token);
@@ -458,7 +458,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams, String token) {
 		return catalogClient.getCatalogService(serviceName, tag, queryParams, token);
@@ -467,7 +467,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tags, QueryParams queryParams, String token) {
 		return catalogClient.getCatalogService(serviceName, tags, queryParams, token);
@@ -507,7 +507,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #eventList(EventListRequest eventListRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<Event>> eventList(QueryParams queryParams) {
 		return eventClient.eventList(queryParams);
@@ -516,7 +516,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #eventList(EventListRequest eventListRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<Event>> eventList(String event, QueryParams queryParams) {
 		return eventClient.eventList(event, queryParams);
@@ -537,8 +537,8 @@ public class ConsulClient implements
 
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthChecksForService(String serviceName, HealthChecksForServiceRequest healthChecksForServiceRequest)}
-	 */
-	@Deprecated
+	 *
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<com.ecwid.consul.v1.health.model.Check>> getHealthChecksForService(String serviceName, QueryParams queryParams) {
 		return healthClient.getHealthChecksForService(serviceName, queryParams);
@@ -552,7 +552,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing, QueryParams queryParams) {
 		return healthClient.getHealthServices(serviceName, onlyPassing, queryParams);
@@ -561,7 +561,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing, QueryParams queryParams) {
 		return healthClient.getHealthServices(serviceName, tag, onlyPassing, queryParams);
@@ -570,7 +570,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing, QueryParams queryParams, String token) {
 		return healthClient.getHealthServices(serviceName, onlyPassing, queryParams, token);
@@ -579,7 +579,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing, QueryParams queryParams, String token) {
 		return healthClient.getHealthServices(serviceName, tag, onlyPassing, queryParams, token);
@@ -588,7 +588,7 @@ public class ConsulClient implements
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName, String[] tags, boolean onlyPassing, QueryParams queryParams, String token) {
 		return healthClient.getHealthServices(serviceName, tags, onlyPassing, queryParams, token);

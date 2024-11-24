@@ -139,9 +139,8 @@ public final class AclToken {
 
 	@Override
 	public final String toString() {
-		return "AclToken [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
-				+ ", policies=" + policies + ", templatedPolicies=" + templatedPolicies + ", local=" + local
-				+ ", createTime=" + createTime + ", hash=" + hash + ", createIndex=" + createIndex + ", modifyIndex="
-				+ modifyIndex + "]";
+		return "AclToken [accessorId=" + accessorId + ", description=" + description + ", policies=" + policies
+				+ ", templatedPolicies=" + templatedPolicies + ", local=" + local + ", createTime=" + createTime
+				+ ", hash=" + hash + ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + "]";
 	}
 }
