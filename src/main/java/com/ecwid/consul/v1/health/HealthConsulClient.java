@@ -59,6 +59,7 @@ public final class HealthConsulClient implements HealthClient {
 		}
 	}
 
+	@Deprecated(since = "1.4.7", forRemoval = true)
 	@Override
 	public Response<List<Check>> getHealthChecksForService(String serviceName, QueryParams queryParams) {
 		HealthChecksForServiceRequest request = HealthChecksForServiceRequest.newBuilder().setQueryParams(queryParams)
@@ -80,30 +81,35 @@ public final class HealthConsulClient implements HealthClient {
 		}
 	}
 
+	@Deprecated(since = "1.4.7", forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			boolean onlyPassing, QueryParams queryParams) {
 		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, null);
 	}
 
+	@Deprecated(since = "1.4.7", forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			boolean onlyPassing, QueryParams queryParams, String token) {
 		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, token);
 	}
 
+	@Deprecated(since = "1.4.7", forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			String tag, boolean onlyPassing, QueryParams queryParams) {
 		return getHealthServices(serviceName, tag, onlyPassing, queryParams, null);
 	}
 
+	@Deprecated(since = "1.4.7", forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			String tag, boolean onlyPassing, QueryParams queryParams, String token) {
 		return getHealthServices(serviceName, new String[] { tag }, onlyPassing, queryParams, token);
 	}
 
+	@Deprecated(since = "1.4.7", forRemoval = true)
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			String[] tags, boolean onlyPassing, QueryParams queryParams, String token) {
