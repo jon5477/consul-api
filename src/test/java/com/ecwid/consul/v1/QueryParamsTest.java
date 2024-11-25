@@ -3,6 +3,7 @@ package com.ecwid.consul.v1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
@@ -70,7 +71,7 @@ class QueryParamsTest {
 
 		// Then
 		assertEquals(EXPECTED_DATACENTER, queryParams.get("dc"));
-		assertNull(queryParams.get(EXPECTED_MODE.name().toLowerCase()));
+		assertNull(queryParams.get(EXPECTED_MODE.name().toLowerCase(Locale.ROOT)));
 		assertEquals(Utils.toSecondsString(EXPECTED_WAIT), queryParams.get("wait"));
 		assertEquals(String.valueOf(EXPECTED_INDEX), queryParams.get("index"));
 		assertEquals(EXPECTED_NEAR, queryParams.get("near"));

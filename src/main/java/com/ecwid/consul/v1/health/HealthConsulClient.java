@@ -1,6 +1,7 @@
 package com.ecwid.consul.v1.health;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -73,7 +74,7 @@ public final class HealthConsulClient implements HealthClient {
 
 	@Override
 	public Response<List<Check>> getHealthChecksState(Check.CheckStatus checkStatus, QueryParams queryParams) {
-		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase();
+		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase(Locale.ROOT);
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/state/" + status, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);

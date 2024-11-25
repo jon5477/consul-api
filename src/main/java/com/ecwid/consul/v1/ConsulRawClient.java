@@ -12,6 +12,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -122,7 +123,7 @@ public final class ConsulRawClient {
 	private ConsulRawClient(Builder b, HttpTransport httpTransport) {
 		this.httpTransport = httpTransport;
 		// check if the agentHost has a scheme or not
-		String agentHostLc = b.agentHost.toLowerCase();
+		String agentHostLc = b.agentHost.toLowerCase(Locale.ROOT);
 		String agentHostUrl;
 		if (!agentHostLc.startsWith("https://") && !agentHostLc.startsWith("http://")) {
 			// no scheme in host, use default 'http'

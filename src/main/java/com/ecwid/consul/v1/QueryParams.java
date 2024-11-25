@@ -1,6 +1,7 @@
 package com.ecwid.consul.v1;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -124,7 +125,7 @@ public final class QueryParams implements QueryParameters {
 			params.put("dc", datacenter);
 		}
 		if (consistencyMode != ConsistencyMode.DEFAULT) {
-			params.put(consistencyMode.name().toLowerCase(), null);
+			params.put(consistencyMode.name().toLowerCase(Locale.ROOT), null);
 		}
 		if (waitTime != -1) {
 			params.put("wait", Utils.toSecondsString(waitTime));
