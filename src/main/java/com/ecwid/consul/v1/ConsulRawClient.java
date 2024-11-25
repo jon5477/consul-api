@@ -194,8 +194,8 @@ public final class ConsulRawClient {
 	public HttpResponse makePutRequest(Request request) {
 		URI uri = buildURI(request.getEndpoint(), request);
 		HttpRequest.Builder reqBuilder = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request));
-		if (request.getBinaryContent() != null) {
-			reqBuilder.setContent(request.getBinaryContent());
+		if (request.getContent() != null) {
+			reqBuilder.setContent(request.getContent());
 		}
 		HttpRequest httpRequest = reqBuilder.build();
 		return httpTransport.makePutRequest(httpRequest);
@@ -204,7 +204,7 @@ public final class ConsulRawClient {
 	public HttpResponse makeDeleteRequest(Request request) {
 		URI uri = buildURI(request.getEndpoint(), request);
 		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request))
-				.setContent(request.getBinaryContent()).build();
+				.setContent(request.getContent()).build();
 		return httpTransport.makeDeleteRequest(httpRequest);
 	}
 

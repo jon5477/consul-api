@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.SingleQueryParameters;
@@ -227,10 +228,13 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentServiceRegister(NewService newService, CharSequence token) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
-				.setBinaryContent(JsonFactory.toBytes(newService)).setToken(Utils.charSequenceToArray(token)).build();
-		HttpResponse httpResponse = rawClient.makePutRequest(request);
+	public Response<Void> agentServiceRegister(NewService newService, @Nullable CharSequence token) {
+		Request.Builder request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
+				.setContent(JsonFactory.toBytes(newService));
+		if (token != null) {
+			request.setToken(Utils.charSequenceToArray(token));
+		}
+		HttpResponse httpResponse = rawClient.makePutRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {

@@ -9,21 +9,16 @@ import com.ecwid.consul.QueryParameters;
 public final class Request implements QueryParameters {
 	private final String endpoint;
 	private final Map<String, String> queryParameters;
-	private final String content;
-	private final byte[] binaryContent;
+	private final byte[] content;
 	/**
 	 * The Consul token to use, specified as a char[] to prevent string pooling.
 	 */
 	private final char[] token;
 
 	private Request(Builder b) {
-		if (b.content != null && b.binaryContent != null) {
-			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
-		}
 		this.endpoint = b.endpoint;
 		this.queryParameters = b.queryParameters;
 		this.content = b.content;
-		this.binaryContent = b.binaryContent;
 		this.token = b.token;
 	}
 
@@ -36,13 +31,8 @@ public final class Request implements QueryParameters {
 		return Collections.unmodifiableMap(queryParameters);
 	}
 
-	@Deprecated(forRemoval = true) // It is better to keep content in binary form
-	public String getContent() {
+	public byte[] getContent() {
 		return content;
-	}
-
-	public byte[] getBinaryContent() {
-		return binaryContent;
 	}
 
 	public char[] getToken() {
@@ -54,8 +44,7 @@ public final class Request implements QueryParameters {
 	public static class Builder {
 		private String endpoint;
 		private final Map<String, String> queryParameters = new HashMap<>();
-		private String content;
-		private byte[] binaryContent;
+		private byte[] content;
 		private char[] token;
 
 		public static Builder newBuilder() {
@@ -79,19 +68,15 @@ public final class Request implements QueryParameters {
 
 		public Builder addQueryParameters(QueryParameters... queryParameters) {
 			for (QueryParameters params : queryParameters) {
-				this.queryParameters.putAll(params.getQueryParameters());
+				if (params != null) {
+					this.queryParameters.putAll(params.getQueryParameters());
+				}
 			}
 			return this;
 		}
 
-		@Deprecated(forRemoval = true)
-		public Builder setContent(String content) {
+		public Builder setContent(byte[] content) {
 			this.content = content;
-			return this;
-		}
-
-		public Builder setBinaryContent(byte[] binaryContent) {
-			this.binaryContent = binaryContent;
 			return this;
 		}
 

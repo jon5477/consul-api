@@ -35,7 +35,7 @@ public final class AclConsulClient implements AclClient {
 	@Override
 	public Response<AclToken> aclCreate(char[] token, NewAcl newAcl) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token")
-				.setBinaryContent(JsonFactory.toBytes(newAcl)).setToken(token).build();
+				.setContent(JsonFactory.toBytes(newAcl)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
@@ -73,7 +73,7 @@ public final class AclConsulClient implements AclClient {
 	@Override
 	public Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId)
-				.setBinaryContent(JsonFactory.toBytes(updateAcl)).setToken(token).build();
+				.setContent(JsonFactory.toBytes(updateAcl)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
@@ -95,7 +95,7 @@ public final class AclConsulClient implements AclClient {
 			objNode.put("Description", description);
 		}
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId + "/clone")
-				.setBinaryContent(JsonFactory.toBytes(objNode)).setToken(token).build();
+				.setContent(JsonFactory.toBytes(objNode)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);

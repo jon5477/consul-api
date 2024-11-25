@@ -23,6 +23,11 @@ class ConsulRawClientTest {
 	private static final String EXPECTED_AGENT_ADDRESS_NO_PATH = "http://" + HOST + ":" + PORT + ENDPOINT;
 	private static final String EXPECTED_AGENT_ADDRESS = "http://" + HOST + ":" + PORT + "/" + PATH + ENDPOINT;
 
+	@SuppressWarnings("unchecked")
+	private static <T> HttpClientResponseHandler<T> anyResponseHandler() {
+		return (HttpClientResponseHandler<T>) any(HttpClientResponseHandler.class);
+	}
+
 	@Test
 	void verifyDefaultUrl() throws Exception {
 		// Given
@@ -34,7 +39,7 @@ class ConsulRawClientTest {
 
 		// Then
 		ArgumentCaptor<HttpUriRequest> calledUri = ArgumentCaptor.forClass(HttpUriRequest.class);
-		verify(httpClient).execute(calledUri.capture(), any(HttpClientResponseHandler.class));
+		verify(httpClient).execute(calledUri.capture(), anyResponseHandler());
 		assertEquals(EXPECTED_AGENT_ADDRESS_NO_PATH, calledUri.getValue().getUri().toString());
 	}
 
@@ -50,7 +55,7 @@ class ConsulRawClientTest {
 
 		// Then
 		ArgumentCaptor<HttpUriRequest> calledUri = ArgumentCaptor.forClass(HttpUriRequest.class);
-		verify(httpClient).execute(calledUri.capture(), any(HttpClientResponseHandler.class));
+		verify(httpClient).execute(calledUri.capture(), anyResponseHandler());
 		assertEquals(EXPECTED_AGENT_ADDRESS, calledUri.getValue().getUri().toString());
 	}
 }

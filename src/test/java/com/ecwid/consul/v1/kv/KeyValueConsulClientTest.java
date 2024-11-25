@@ -32,7 +32,7 @@ class KeyValueConsulClientTest {
 	}
 
 	@Test
-	void testSetKVBinaryValue() throws Exception {
+	void testSetKVBinaryValue() {
 		final String testKey = "test_key";
 		final byte[] testValue = new byte[100];
 		rnd.nextBytes(testValue);
@@ -46,7 +46,7 @@ class KeyValueConsulClientTest {
 	}
 
 	@Test
-	void testDeleteKvValue() throws Exception {
+	void testDeleteKvValue() {
 		final String testKey = "test_key";
 		final String testValue = "test_value";
 
@@ -65,7 +65,7 @@ class KeyValueConsulClientTest {
 	}
 
 	@Test
-	void testDeleteKvValues() throws Exception {
+	void testDeleteKvValues() {
 		final String testKeyPrefix = "test_key";
 		final String testValue = "test_value";
 

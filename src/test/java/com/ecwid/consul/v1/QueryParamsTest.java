@@ -15,7 +15,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class QueryParamsTest {
 	@Test
-	public void queryParamsBuilder_ShouldReturnAllDefaults_WhenNoValuesAdded() {
+	void queryParamsBuilder_ShouldReturnAllDefaults_WhenNoValuesAdded() {
 		// Given
 		final ConsistencyMode EXPECTED_MODE = ConsistencyMode.DEFAULT;
 		final long EXPECTED_INDEX = -1;
@@ -34,7 +34,7 @@ class QueryParamsTest {
 	}
 
 	@Test
-	public void queryParamsBuilder_ShouldReturnQueryParams_WithCorrectValuesApplied() {
+	void queryParamsBuilder_ShouldReturnQueryParams_WithCorrectValuesApplied() {
 		// Given
 		final String EXPECTED_DATACENTER = "testDC";
 		final ConsistencyMode EXPECTED_MODE = ConsistencyMode.CONSISTENT;
@@ -55,7 +55,7 @@ class QueryParamsTest {
 	}
 
 	@Test
-	public void queryParamsToUrlParameters_ShouldContainSetQueryParams_WithCorrectValuesApplied() {
+	void queryParamsToUrlParameters_ShouldContainSetQueryParams_WithCorrectValuesApplied() {
 		// Given
 		final String EXPECTED_DATACENTER = "testDC";
 		final ConsistencyMode EXPECTED_MODE = ConsistencyMode.CONSISTENT;
@@ -72,7 +72,7 @@ class QueryParamsTest {
 		assertEquals(EXPECTED_DATACENTER, queryParams.get("dc"));
 		assertNull(queryParams.get(EXPECTED_MODE.name().toLowerCase()));
 		assertEquals(Utils.toSecondsString(EXPECTED_WAIT), queryParams.get("wait"));
-		assertEquals(EXPECTED_INDEX, queryParams.get("index"));
+		assertEquals(String.valueOf(EXPECTED_INDEX), queryParams.get("index"));
 		assertEquals(EXPECTED_NEAR, queryParams.get("near"));
 	}
 

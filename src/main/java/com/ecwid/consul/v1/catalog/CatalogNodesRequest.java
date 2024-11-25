@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.v1.QueryParams;
 
-public final class CatalogNodesRequest implements ConsulRequest {
+public final class CatalogNodesRequest implements QueryParameters {
 	private final String datacenter;
 	private final String near;
 	private final Map<String, String> nodeMeta;

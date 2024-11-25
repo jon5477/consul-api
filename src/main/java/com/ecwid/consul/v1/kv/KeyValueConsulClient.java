@@ -29,7 +29,6 @@ import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.SingleQueryParameters;
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -299,7 +298,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 	public Response<Boolean> setKVBinaryValue(String key, byte[] value, char[] token, PutParams putParams,
 			QueryParams queryParams) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
-				.addQueryParameters(queryParams, putParams).setBinaryContent(value).build();
+				.addQueryParameters(queryParams, putParams).setContent(value).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);

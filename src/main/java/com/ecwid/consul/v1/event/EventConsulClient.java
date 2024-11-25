@@ -7,7 +7,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;

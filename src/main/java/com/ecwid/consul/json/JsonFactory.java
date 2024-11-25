@@ -47,15 +47,6 @@ public final class JsonFactory {
 		}
 	}
 
-	@Deprecated(forRemoval = true)
-	public static String toJson(Object src) {
-		try {
-			return OBJ_MAPPER.writeValueAsString(src);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Unable to serialize object to JSON", e);
-		}
-	}
-
 	/**
 	 * Serializes the given {@link JsonNode} into JSON as a {@code byte[]}.
 	 * 
@@ -124,24 +115,6 @@ public final class JsonFactory {
 		Objects.requireNonNull(node, "node cannot be null");
 		try {
 			return OBJ_MAPPER.treeToValue(node, type);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
-		}
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T> T fromJson(String content, TypeReference<T> type) {
-		try {
-			return OBJ_MAPPER.readValue(content, type);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
-		}
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T> T fromJson(String content, Class<T> type) {
-		try {
-			return OBJ_MAPPER.readValue(content, type);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(DESERIALIZE_ERROR, e);
 		}

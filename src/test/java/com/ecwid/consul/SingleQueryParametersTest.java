@@ -9,18 +9,15 @@ import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class SingleQueryParametersTest {
-
+class SingleQueryParametersTest {
 	@Test
-	public void testToUrlParameters() {
+	void testToUrlParameters() {
 		QueryParameters parameters = new SingleQueryParameters("key");
-		assertEquals(Collections.singletonList("key"), parameters.getQueryParameters());
-
+		assertEquals(Collections.singletonMap("key", null), parameters.getQueryParameters());
 		parameters = new SingleQueryParameters("key", "value");
-		assertEquals(Collections.singletonList("key=value"), parameters.getQueryParameters());
-
+		assertEquals(Collections.singletonMap("key", "value"), parameters.getQueryParameters());
 		parameters = new SingleQueryParameters("key", "value value");
-		assertEquals(Collections.singletonList("key=value+value"), parameters.getQueryParameters());
+		assertEquals(Collections.singletonMap("key", "value value"), parameters.getQueryParameters());
 	}
 
 	@Nested
