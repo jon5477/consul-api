@@ -65,6 +65,10 @@ public final class DefaultHttpsTransport extends AbstractHttpTransport {
 		this.httpClient = httpClient;
 	}
 
+	public DefaultHttpsTransport(SSLContext sslCtx, HttpClient httpClient2, HttpAsyncClient asyncHttpClient) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	protected HttpClient getHttpClient() {
 		return httpClient;

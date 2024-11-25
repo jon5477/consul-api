@@ -25,10 +25,12 @@ public class Utils {
 		return arr;
 	}
 
+	@Deprecated(forRemoval = true)
 	public static String encodeValue(String value) {
 		return URLEncoder.encode(value, StandardCharsets.UTF_8);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static String encodeUrl(String str) {
 		try {
 			URL url = new URL(str);
@@ -78,6 +80,6 @@ public class Utils {
 		if (path != null && !path.trim().isEmpty()) {
 			agentPath = "/" + path;
 		}
-		return String.format("%s:%d%s", host, port, agentPath);
+		return host + ":" + port + agentPath;
 	}
 }

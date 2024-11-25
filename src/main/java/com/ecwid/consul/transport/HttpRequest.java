@@ -1,5 +1,6 @@
 package com.ecwid.consul.transport;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 import org.apache.hc.core5.http.ContentType;
 
 public final class HttpRequest {
-	private final String url;
+	private final URI uri;
 	private final Map<String, String> headers;
 	private final char[] token;
 	private final byte[] content;
@@ -18,15 +19,15 @@ public final class HttpRequest {
 	private final String contentType;
 
 	private HttpRequest(Builder b) {
-		this.url = b.url;
+		this.uri = b.uri;
 		this.headers = b.headers;
 		this.token = b.token;
 		this.content = b.content;
 		this.contentType = b.contentType;
 	}
 
-	public String getUrl() {
-		return url;
+	public URI getURI() {
+		return uri;
 	}
 
 	public Map<String, String> getHeaders() {
@@ -48,7 +49,7 @@ public final class HttpRequest {
 	// ---------------------------------------
 	// Builder
 	public static final class Builder {
-		private String url;
+		private URI uri;
 		private Map<String, String> headers = new HashMap<>();
 		private char[] token;
 		private byte[] content;
@@ -58,8 +59,8 @@ public final class HttpRequest {
 			return new Builder();
 		}
 
-		public Builder setUrl(String url) {
-			this.url = url;
+		public Builder setURI(URI uri) {
+			this.uri = uri;
 			return this;
 		}
 

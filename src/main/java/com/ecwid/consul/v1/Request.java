@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 
 public final class Request {
 	private final String endpoint;
-	private final List<UrlParameters> urlParameters;
+	private final List<QueryParameters> queryParameters;
 	private final String content;
 	private final byte[] binaryContent;
 	/**
@@ -22,7 +22,7 @@ public final class Request {
 			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
 		}
 		this.endpoint = b.endpoint;
-		this.urlParameters = b.urlParameters;
+		this.queryParameters = b.urlParameters;
 		this.content = b.content;
 		this.binaryContent = b.binaryContent;
 		this.token = b.token;
@@ -32,8 +32,8 @@ public final class Request {
 		return endpoint;
 	}
 
-	public List<UrlParameters> getUrlParameters() {
-		return urlParameters;
+	public List<QueryParameters> getQueryParameters() {
+		return queryParameters;
 	}
 
 	@Deprecated(forRemoval = true) // It is better to keep content in binary form
@@ -53,7 +53,7 @@ public final class Request {
 	// Builder
 	public static class Builder {
 		private String endpoint;
-		private List<UrlParameters> urlParameters = new ArrayList<>();
+		private List<QueryParameters> urlParameters = new ArrayList<>();
 		private String content;
 		private byte[] binaryContent;
 		private char[] token;
@@ -67,17 +67,17 @@ public final class Request {
 			return this;
 		}
 
-		public Builder addUrlParameters(Collection<UrlParameters> urlParameters) {
+		public Builder addUrlParameters(Collection<QueryParameters> urlParameters) {
 			this.urlParameters.addAll(urlParameters);
 			return this;
 		}
 
-		public Builder addUrlParameters(UrlParameters... urlParameters) {
+		public Builder addUrlParameters(QueryParameters... urlParameters) {
 			this.urlParameters.addAll(Arrays.asList(urlParameters));
 			return this;
 		}
 
-		public Builder addUrlParameter(UrlParameters urlParameter) {
+		public Builder addUrlParameter(QueryParameters urlParameter) {
 			this.urlParameters.add(urlParameter);
 			return this;
 		}

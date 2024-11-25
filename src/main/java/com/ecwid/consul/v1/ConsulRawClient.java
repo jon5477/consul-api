@@ -1,11 +1,23 @@
 package com.ecwid.consul.v1;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
+import javax.net.ssl.SSLContext;
+
+import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.net.URIBuilder;
 
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.DefaultHttpTransport;
 import com.ecwid.consul.transport.DefaultHttpsTransport;
@@ -26,13 +38,18 @@ public class ConsulRawClient {
 	private static final HttpTransport DEFAULT_HTTP_TRANSPORT = new DefaultHttpTransport();
 
 	private final HttpTransport httpTransport;
-	private final String agentAddress;
+	private final URL agentAddress;
+	private final AtomicReference<char[]> token = new AtomicReference<>();
 
 	public static final class Builder {
 		private String agentHost;
 		private int agentPort;
 		private String agentPath;
-		private HttpTransport httpTransport;
+		// Allow clients to specify their own SSL Context
+		private SSLContext sslCtx;
+		// Allow clients to specify their own Apache HTTP Clients
+		private HttpClient httpClient;
+		private HttpAsyncClient asyncHttpClient;
 
 		public static ConsulRawClient.Builder builder() {
 			return new ConsulRawClient.Builder();
@@ -42,7 +59,6 @@ public class ConsulRawClient {
 			this.agentHost = DEFAULT_HOST;
 			this.agentPort = DEFAULT_PORT;
 			this.agentPath = DEFAULT_PATH;
-			this.httpTransport = DEFAULT_HTTP_TRANSPORT;
 		}
 
 		public Builder setHost(String host) {
@@ -60,17 +76,27 @@ public class ConsulRawClient {
 			return this;
 		}
 
-		public Builder setTlsConfig(TLSConfig tlsConfig) {
-			this.httpTransport = new DefaultHttpsTransport(tlsConfig);
+		public Builder setSSLContext(SSLContext sslCtx) {
+			this.sslCtx = sslCtx;
 			return this;
 		}
 
 		public Builder setHttpClient(HttpClient httpClient) {
-			this.httpTransport = new DefaultHttpTransport(httpClient);
+			this.httpClient = httpClient;
+			return this;
+		}
+
+		public Builder setAsyncHttpClient(HttpAsyncClient asyncHttpClient) {
+			this.asyncHttpClient = asyncHttpClient;
 			return this;
 		}
 
 		public ConsulRawClient build() {
+			// The HTTP transport is determined by the presence of an SSL context
+			HttpTransport httpTransport = sslCtx != null
+					? new DefaultHttpsTransport(sslCtx, httpClient, asyncHttpClient)
+					: new DefaultHttpTransport(httpClient, asyncHttpClient);
+
 			return new ConsulRawClient(httpTransport, agentHost, agentPort, agentPath);
 		}
 	}
@@ -79,6 +105,7 @@ public class ConsulRawClient {
 		this(DEFAULT_HOST);
 	}
 
+	@Deprecated(forRemoval = true)
 	public ConsulRawClient(TLSConfig tlsConfig) {
 		this(DEFAULT_HOST, tlsConfig);
 	}
@@ -87,6 +114,7 @@ public class ConsulRawClient {
 		this(agentHost, DEFAULT_PORT);
 	}
 
+	@Deprecated(forRemoval = true)
 	public ConsulRawClient(String agentHost, TLSConfig tlsConfig) {
 		this(agentHost, DEFAULT_PORT, tlsConfig);
 	}
@@ -99,18 +127,22 @@ public class ConsulRawClient {
 		this(DEFAULT_HOST, httpClient);
 	}
 
+	@Deprecated(forRemoval = true)
 	public ConsulRawClient(String agentHost, HttpClient httpClient) {
 		this(new DefaultHttpTransport(httpClient), agentHost, DEFAULT_PORT, DEFAULT_PATH);
 	}
 
+	@Deprecated(forRemoval = true)
 	public ConsulRawClient(String agentHost, int agentPort, HttpClient httpClient) {
 		this(new DefaultHttpTransport(httpClient), agentHost, agentPort, DEFAULT_PATH);
 	}
 
+	@Deprecated(forRemoval = true)
 	public ConsulRawClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
 		this(new DefaultHttpsTransport(tlsConfig), agentHost, agentPort, DEFAULT_PATH);
 	}
 
+	@Deprecated(forRemoval = true)
 	public ConsulRawClient(HttpClient httpClient, String host, int port, String path) {
 		this(new DefaultHttpTransport(httpClient), host, port, path);
 	}
@@ -118,44 +150,77 @@ public class ConsulRawClient {
 	// hidden constructor, for tests
 	ConsulRawClient(HttpTransport httpTransport, String agentHost, int agentPort, String path) {
 		this.httpTransport = httpTransport;
-		// check that agentHost has scheme or not
-		String agentHostLowercase = agentHost.toLowerCase();
-		if (!agentHostLowercase.startsWith("https://") && !agentHostLowercase.startsWith("http://")) {
+		// check if the agentHost has a scheme or not
+		String agentHostLc = agentHost.toLowerCase();
+		String agentHostUrl;
+		if (!agentHostLc.startsWith("https://") && !agentHostLc.startsWith("http://")) {
 			// no scheme in host, use default 'http'
-			agentHost = "http://" + agentHost;
+			agentHostUrl = "http://" + agentHost;
+		} else {
+			agentHostUrl = agentHost;
 		}
-		this.agentAddress = Utils.assembleAgentAddress(agentHost, agentPort, path);
+		try {
+			this.agentAddress = new URL(Utils.assembleAgentAddress(agentHostUrl, agentPort, path));
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	public HttpResponse makeGetRequest(String endpoint, UrlParameters... urlParams) {
+	public char[] getToken() {
+		char[] token = this.token.get();
+		return Arrays.copyOf(token, token.length); // defensive copy
+	}
+
+	public void setToken(char[] token) {
+		if (token != null) {
+			this.token.set(Arrays.copyOf(token, token.length)); // defensive copy
+		} else {
+			this.token.set(null);
+		}
+	}
+
+	private char[] getConsulToken(Request request) {
+		char[] consulToken = null;
+		if (request != null) {
+			consulToken = request.getToken();
+		}
+		if (consulToken == null) {
+			consulToken = token.get();
+		}
+		return consulToken;
+	}
+
+	public HttpResponse makeGetRequest(String endpoint, QueryParameters... urlParams) {
 		return makeGetRequest(endpoint, Arrays.asList(urlParams));
 	}
 
-	public HttpResponse makeGetRequest(String endpoint, List<UrlParameters> urlParams) {
-		String url = prepareUrl(agentAddress + endpoint);
-		url = Utils.generateUrl(url, urlParams);
-		HttpRequest request = HttpRequest.Builder.newBuilder().setUrl(url).build();
+	public HttpResponse makeGetRequest(String endpoint, List<QueryParameters> queryParams) {
+		URI uri = buildURI(endpoint, queryParams);
+		HttpRequest request = HttpRequest.Builder.newBuilder().setURI(uri).setToken(token.get()).build();
 		return httpTransport.makeGetRequest(request);
 	}
 
 	public HttpResponse makeGetRequest(Request request) {
-		String url = prepareUrl(agentAddress + request.getEndpoint());
-		url = Utils.generateUrl(url, request.getUrlParameters());
-		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url).setToken(request.getToken()).build();
+		URI uri = buildURI(request.getEndpoint(), request.getQueryParameters());
+		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request))
+				.build();
 		return httpTransport.makeGetRequest(httpRequest);
 	}
 
-	public HttpResponse makePutRequest(String endpoint, String content, UrlParameters... urlParams) {
-		String url = prepareUrl(agentAddress + endpoint);
-		url = Utils.generateUrl(url, urlParams);
-		HttpRequest request = HttpRequest.Builder.newBuilder().setUrl(url).setContent(content).build();
+	public HttpResponse makePutRequest(String endpoint, String content, QueryParameters... queryParams) {
+		return makePutRequest(endpoint, content, Arrays.asList(queryParams));
+	}
+
+	public HttpResponse makePutRequest(String endpoint, String content, List<QueryParameters> queryParams) {
+		URI uri = buildURI(endpoint, queryParams);
+		HttpRequest request = HttpRequest.Builder.newBuilder().setURI(uri).setToken(token.get()).setContent(content)
+				.build();
 		return httpTransport.makePutRequest(request);
 	}
 
 	public HttpResponse makePutRequest(Request request) {
-		String url = prepareUrl(agentAddress + request.getEndpoint());
-		url = Utils.generateUrl(url, request.getUrlParameters());
-		HttpRequest.Builder reqBuilder = HttpRequest.Builder.newBuilder().setUrl(url).setToken(request.getToken());
+		URI uri = buildURI(request.getEndpoint(), request.getQueryParameters());
+		HttpRequest.Builder reqBuilder = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request));
 		if (request.getBinaryContent() != null) {
 			reqBuilder.setContent(request.getBinaryContent());
 		}
@@ -164,21 +229,29 @@ public class ConsulRawClient {
 	}
 
 	public HttpResponse makeDeleteRequest(Request request) {
-		String url = prepareUrl(agentAddress + request.getEndpoint());
-		url = Utils.generateUrl(url, request.getUrlParameters());
-		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setUrl(url).setToken(request.getToken())
+		URI uri = buildURI(request.getEndpoint(), request.getQueryParameters());
+		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request))
 				.setContent(request.getBinaryContent()).build();
 		return httpTransport.makeDeleteRequest(httpRequest);
 	}
 
-	@Deprecated(forRemoval = true)
-	private String prepareUrl(String url) {
-		if (url.contains(" ")) {
-			// temp hack for old clients who did manual encoding and just use %20
-			// TODO: Remove it in 2.0
-			return Utils.encodeUrl(url);
-		} else {
-			return url;
+	/**
+	 * Creates a full {@link URI} to the Consul API endpoint.
+	 * 
+	 * @param endpoint    The Consul API endpoint to use.
+	 * @param queryParams The query parameters to include.
+	 * @return The {@link URI} to the Consul API endpoint including query
+	 *         parameters.
+	 */
+	private URI buildURI(String endpoint, List<QueryParameters> queryParams) {
+		try {
+			List<NameValuePair> nvps = queryParams.stream().flatMap(e -> e.getQueryParameters().entrySet().stream())
+					.map(e -> new BasicNameValuePair(e.getKey(), e.getValue())).collect(Collectors.toList());
+			return new URIBuilder().setScheme(agentAddress.getProtocol()).setUserInfo(agentAddress.getUserInfo())
+					.setHost(agentAddress.getHost()).setPort(agentAddress.getPort())
+					.setPath(agentAddress.getPath() + endpoint).addParameters(nvps).build();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }
