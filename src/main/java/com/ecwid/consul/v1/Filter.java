@@ -141,7 +141,7 @@ public class Filter implements QueryParameters {
 
 	@Override
 	public Map<String, String> getQueryParameters() {
-		return Collections.singletonMap("filter", toEncodedString());
+		return Collections.singletonMap("filter", toString());
 	}
 
 	@Override
