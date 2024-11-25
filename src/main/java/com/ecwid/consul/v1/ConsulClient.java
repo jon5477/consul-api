@@ -389,97 +389,14 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 		return catalogClient.getCatalogDatacenters();
 	}
 
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogNodes(CatalogNodesRequest catalogNodesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<Node>> getCatalogNodes(QueryParams queryParams) {
-		return catalogClient.getCatalogNodes(queryParams);
-	}
-
 	@Override
 	public Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest) {
 		return catalogClient.getCatalogNodes(catalogNodesRequest);
 	}
 
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams) {
-		return catalogClient.getCatalogServices(queryParams);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token) {
-		return catalogClient.getCatalogServices(queryParams, token);
-	}
-
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
 		return catalogClient.getCatalogServices(catalogServicesRequest);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams) {
-		return catalogClient.getCatalogService(serviceName, queryParams);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams) {
-		return catalogClient.getCatalogService(serviceName, tag, queryParams);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams,
-			CharSequence token) {
-		return catalogClient.getCatalogService(serviceName, queryParams, token);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams,
-			CharSequence token) {
-		return catalogClient.getCatalogService(serviceName, tag, queryParams, token);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tags, QueryParams queryParams,
-			CharSequence token) {
-		return catalogClient.getCatalogService(serviceName, tags, queryParams, token);
 	}
 
 	@Override

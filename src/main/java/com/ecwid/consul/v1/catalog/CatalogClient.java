@@ -31,77 +31,15 @@ public interface CatalogClient {
 
 	// -------------------------------------------------------------------------------
 
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogNodes(CatalogNodesRequest catalogNodesRequest)}
-	 */
-	@Deprecated
-	Response<List<Node>> getCatalogNodes(QueryParams queryParams);
-
 	Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest);
 
 	// -------------------------------------------------------------------------------
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
-	 */
-	@Deprecated
-	Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams);
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
-	 */
-	@Deprecated
-	Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token);
 
 	Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest);
 
 	// -------------------------------------------------------------------------------
 
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated
-	Response<List<CatalogService>> getCatalogService(String serviceName,
-			QueryParams queryParams);
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated
-	Response<List<CatalogService>> getCatalogService(String serviceName, String tag,
-			QueryParams queryParams);
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated
-	Response<List<CatalogService>> getCatalogService(String serviceName,
-			QueryParams queryParams, CharSequence token);
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated
-	Response<List<CatalogService>> getCatalogService(String serviceName, String tag,
-			QueryParams queryParams, CharSequence token);
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
-	 */
-	@Deprecated
-	Response<List<CatalogService>> getCatalogService(String serviceName,
-			String[] tags, QueryParams queryParams, CharSequence token);
-
-	Response<List<CatalogService>> getCatalogService(String serviceName,
-			CatalogServiceRequest catalogServiceRequest);
+	Response<List<CatalogService>> getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest);
 
 	// -------------------------------------------------------------------------------
 

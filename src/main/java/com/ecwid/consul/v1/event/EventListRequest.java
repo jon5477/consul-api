@@ -13,16 +13,13 @@ public final class EventListRequest implements QueryParameters {
 	private final String service;
 	private final String tag;
 	private final QueryParams queryParams;
-	private final String token;
 
-	private EventListRequest(String name, String node, String service, String tag, QueryParams queryParams,
-			String token) {
+	private EventListRequest(String name, String node, String service, String tag, QueryParams queryParams) {
 		this.name = name;
 		this.node = node;
 		this.service = service;
 		this.tag = tag;
 		this.queryParams = queryParams;
-		this.token = token;
 	}
 
 	public String getName() {
@@ -45,17 +42,12 @@ public final class EventListRequest implements QueryParameters {
 		return queryParams;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
 	public static class Builder {
 		private String name;
 		private String node;
 		private String service;
 		private String tag;
 		private QueryParams queryParams;
-		private String token;
 
 		public Builder setName(String name) {
 			this.name = name;
@@ -82,13 +74,8 @@ public final class EventListRequest implements QueryParameters {
 			return this;
 		}
 
-		public Builder setToken(String token) {
-			this.token = token;
-			return this;
-		}
-
 		public EventListRequest build() {
-			return new EventListRequest(name, node, service, tag, queryParams, token);
+			return new EventListRequest(name, node, service, tag, queryParams);
 		}
 	}
 
@@ -114,9 +101,6 @@ public final class EventListRequest implements QueryParameters {
 		if (queryParams != null) {
 			params.putAll(queryParams.getQueryParameters());
 		}
-		if (token != null) {
-			params.put("token", token);
-		}
 		return params;
 	}
 
@@ -131,11 +115,11 @@ public final class EventListRequest implements QueryParameters {
 		EventListRequest that = (EventListRequest) o;
 		return Objects.equals(name, that.name) && Objects.equals(node, that.node)
 				&& Objects.equals(service, that.service) && Objects.equals(tag, that.tag)
-				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
+				&& Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, node, service, tag, queryParams, token);
+		return Objects.hash(name, node, service, tag, queryParams);
 	}
 }

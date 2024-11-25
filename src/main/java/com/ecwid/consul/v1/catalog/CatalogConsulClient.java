@@ -82,12 +82,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<List<Node>> getCatalogNodes(QueryParams queryParams) {
-		CatalogNodesRequest request = CatalogNodesRequest.newBuilder().setQueryParams(queryParams).build();
-		return getCatalogNodes(request);
-	}
-
-	@Override
 	public Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/catalog/nodes")
 				.addQueryParameters(catalogNodesRequest.getQueryParameters()).build();
@@ -101,17 +95,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams) {
-		return getCatalogServices(queryParams, null);
-	}
-
-	@Override
-	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token) {
-		CatalogServicesRequest request = CatalogServicesRequest.newBuilder().setQueryParams(queryParams).build();
-		return getCatalogServices(request);
-	}
-
-	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
@@ -120,38 +103,6 @@ public final class CatalogConsulClient implements CatalogClient {
 		} else {
 			throw new OperationException(httpResponse);
 		}
-	}
-
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams) {
-		return getCatalogService(serviceName, (String) null, queryParams, null);
-	}
-
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams,
-			CharSequence token) {
-		return getCatalogService(serviceName, (String) null, queryParams, token);
-	}
-
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams) {
-		return getCatalogService(serviceName, tag, queryParams, null);
-	}
-
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams,
-			CharSequence token) {
-		return getCatalogService(serviceName, new String[] { tag }, queryParams, null);
-	}
-
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tag, QueryParams queryParams,
-			CharSequence token) {
-		CatalogServiceRequest request = new CatalogServiceRequest.Builder().setQueryParams(queryParams).build();
-		return getCatalogService(serviceName, request);
 	}
 
 	@Override

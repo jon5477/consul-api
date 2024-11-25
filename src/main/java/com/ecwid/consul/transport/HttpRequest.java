@@ -1,7 +1,6 @@
 package com.ecwid.consul.transport;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,20 +78,8 @@ public final class HttpRequest {
 			return this;
 		}
 
-		/**
-		 * This has been deprecated in favor of {@link #setContent(byte[])}.
-		 * 
-		 * @param content The string based content to set.
-		 * @return This {@link Builder} instance for chaining.
-		 */
-		@Deprecated(forRemoval = true)
-		public Builder setContent(String content) {
-			this.content = content != null ? content.getBytes(StandardCharsets.UTF_8) : null;
-			return this;
-		}
-
-		public Builder setContent(byte[] binaryContent) {
-			this.content = binaryContent;
+		public Builder setContent(byte[] content) {
+			this.content = content;
 			return this;
 		}
 
