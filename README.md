@@ -1,7 +1,7 @@
 Hashicorp Consul API Java Client
 ================================
 This is a Java client for consuming from the Hashicorp Consul API (http://consul.io)
-Supports all API endpoints (http://www.consul.io/docs/agent/http.html), all consistency modes and parameters (tags, datacenters etc.)
+Supports all API endpoints (https://developer.hashicorp.com/consul/api-docs), all consistency modes and parameters (tags, datacenters etc.)
 
 For additional information such as how to use this client, please refer to the Wiki page.
 
