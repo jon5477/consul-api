@@ -25,6 +25,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class AgentConsulClient implements AgentClient {
+	private static final TypeReference<Map<String, Check>> CHECK_MAP_TYPE_REF = new TypeReference<Map<String, Check>>() {
+	};
+	private static final TypeReference<Map<String, Service>> SERVICE_MAP_TYPE_REF = new TypeReference<Map<String, Service>>() {
+	};
+	private static final TypeReference<List<Member>> MEMBER_LIST_TYPE_REF = new TypeReference<List<Member>>() {
+	};
 	private final ConsulRawClient rawClient;
 
 	public AgentConsulClient(ConsulRawClient rawClient) {
@@ -59,9 +65,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<Map<String, Check>> getAgentChecks() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/checks");
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, Check> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, Check>>() {
-					});
+			Map<String, Check> value = JsonFactory.toPOJO(httpResponse.getContent(), CHECK_MAP_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -72,9 +76,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<Map<String, Service>> getAgentServices() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/services");
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, Service> agentServices = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, Service>>() {
-					});
+			Map<String, Service> agentServices = JsonFactory.toPOJO(httpResponse.getContent(), SERVICE_MAP_TYPE_REF);
 			return new Response<>(agentServices, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -85,8 +87,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<List<Member>> getAgentMembers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/members");
 		if (httpResponse.getStatusCode() == 200) {
-			List<Member> members = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Member>>() {
-			});
+			List<Member> members = JsonFactory.toPOJO(httpResponse.getContent(), MEMBER_LIST_TYPE_REF);
 			return new Response<>(members, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -99,10 +100,10 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Self> getAgentSelf(String token) {
+	public Response<Self> getAgentSelf(CharSequence token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/self", tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
-			Self self = JsonFactory.fromJson(httpResponse.getContent(), Self.class);
+			Self self = JsonFactory.toPOJO(httpResponse.getContent(), Self.class);
 			return new Response<>(self, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -155,7 +156,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentCheckRegister(NewCheck newCheck, String token) {
+	public Response<Void> agentCheckRegister(NewCheck newCheck, CharSequence token) {
 		String json = JsonFactory.toJson(newCheck);
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
@@ -171,7 +172,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentCheckDeregister(String checkId, String token) {
+	public Response<Void> agentCheckDeregister(String checkId, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/deregister/" + checkId, "",
 				tokenParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -192,7 +193,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentCheckPass(String checkId, String note, String token) {
+	public Response<Void> agentCheckPass(String checkId, String note, CharSequence token) {
 		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/pass/" + checkId, "", noteParameter,
 				tokenParameter);
@@ -214,7 +215,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentCheckWarn(String checkId, String note, String token) {
+	public Response<Void> agentCheckWarn(String checkId, String note, CharSequence token) {
 		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/warn/" + checkId, "", noteParameter,
 				tokenParameter);
@@ -236,7 +237,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentCheckFail(String checkId, String note, String token) {
+	public Response<Void> agentCheckFail(String checkId, String note, CharSequence token) {
 		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/fail/" + checkId, "", noteParameter,
 				tokenParameter);
@@ -253,7 +254,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentServiceRegister(NewService newService, String token) {
+	public Response<Void> agentServiceRegister(NewService newService, CharSequence token) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
 				.setBinaryContent(JsonFactory.toBytes(newService)).setToken(Utils.charSequenceToArray(token)).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
@@ -270,7 +271,7 @@ public final class AgentConsulClient implements AgentClient {
 	}
 
 	@Override
-	public Response<Void> agentServiceDeregister(String serviceId, String token) {
+	public Response<Void> agentServiceDeregister(String serviceId, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/deregister/" + serviceId, "",
 				tokenParam);
 		if (httpResponse.getStatusCode() == 200) {

@@ -17,6 +17,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class EventConsulClient implements EventClient {
+	private static final TypeReference<List<Event>> EVENT_LIST_TYPE_REF = new TypeReference<List<Event>>() {
+	};
 	private final ConsulRawClient rawClient;
 
 	public EventConsulClient(ConsulRawClient rawClient) {
@@ -48,7 +50,7 @@ public final class EventConsulClient implements EventClient {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams,
 				queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			Event value = JsonFactory.fromJson(httpResponse.getContent(), Event.class);
+			Event value = JsonFactory.toPOJO(httpResponse.getContent(), Event.class);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -70,8 +72,7 @@ public final class EventConsulClient implements EventClient {
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Event> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Event>>() {
-			});
+			List<Event> value = JsonFactory.toPOJO(httpResponse.getContent(), EVENT_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

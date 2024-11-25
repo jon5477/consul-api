@@ -22,6 +22,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class CatalogConsulClient implements CatalogClient {
+	private static final TypeReference<List<String>> STRING_LIST_TYPE_REF = new TypeReference<List<String>>() {
+	};
+	private static final TypeReference<List<Node>> NODE_LIST_TYPE_REF = new TypeReference<List<Node>>() {
+	};
+	private static final TypeReference<Map<String, List<String>>> MAP_LIST_STRING_TYPE_REF = new TypeReference<Map<String, List<String>>>() {
+	};
+	private static final TypeReference<List<CatalogService>> CATALOG_LIST_TYPE_REF = new TypeReference<List<CatalogService>>() {
+	};
 	private final ConsulRawClient rawClient;
 
 	public CatalogConsulClient(ConsulRawClient rawClient) {
@@ -58,7 +66,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, String token) {
+	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token) {
 		String json = JsonFactory.toJson(catalogRegistration);
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
@@ -74,7 +82,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, String token) {
+	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token) {
 		String json = JsonFactory.toJson(catalogDeregistration);
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
@@ -88,8 +96,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<List<String>> getCatalogDatacenters() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/datacenters");
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<String>>() {
-			});
+			List<String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -108,8 +115,7 @@ public final class CatalogConsulClient implements CatalogClient {
 				.addQueryParameters(catalogNodesRequest.getQueryParameters()).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Node> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Node>>() {
-			});
+			List<Node> value = JsonFactory.toPOJO(httpResponse.getContent(), NODE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -122,7 +128,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, String token) {
+	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token) {
 		CatalogServicesRequest request = CatalogServicesRequest.newBuilder().setQueryParams(queryParams).setToken(token)
 				.build();
 		return getCatalogServices(request);
@@ -132,9 +138,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, List<String>> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, List<String>>>() {
-					});
+			Map<String, List<String>> value = JsonFactory.toPOJO(httpResponse.getContent(), MAP_LIST_STRING_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -142,32 +146,29 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			QueryParams queryParams) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams) {
 		return getCatalogService(serviceName, (String) null, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			QueryParams queryParams, String token) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams, CharSequence token) {
 		return getCatalogService(serviceName, (String) null, queryParams, token);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			String tag, QueryParams queryParams) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams) {
 		return getCatalogService(serviceName, tag, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			String tag, QueryParams queryParams, String token) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams,
+			CharSequence token) {
 		return getCatalogService(serviceName, new String[] { tag }, queryParams, null);
 	}
 
 	@Override
-	public Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			String[] tag, QueryParams queryParams, String token) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tag, QueryParams queryParams,
+			CharSequence token) {
 		CatalogServiceRequest request = CatalogServiceRequest.newBuilder().setTags(tag).setQueryParams(queryParams)
 				.setToken(token).build();
 		return getCatalogService(serviceName, request);
@@ -179,10 +180,7 @@ public final class CatalogConsulClient implements CatalogClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName,
 				catalogServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<com.ecwid.consul.v1.catalog.model.CatalogService> value = JsonFactory.fromJson(
-					httpResponse.getContent(),
-					new TypeReference<List<com.ecwid.consul.v1.catalog.model.CatalogService>>() {
-					});
+			List<CatalogService> value = JsonFactory.toPOJO(httpResponse.getContent(), CATALOG_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -193,7 +191,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<CatalogNode> getCatalogNode(String nodeName, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			CatalogNode catalogNode = JsonFactory.fromJson(httpResponse.getContent(), CatalogNode.class);
+			CatalogNode catalogNode = JsonFactory.toPOJO(httpResponse.getContent(), CatalogNode.class);
 			return new Response<>(catalogNode, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

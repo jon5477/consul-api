@@ -14,6 +14,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class StatusConsulClient implements StatusClient {
+	private static final TypeReference<List<String>> STRING_LIST_TYPE_REF = new TypeReference<List<String>>() {
+	};
 	private final ConsulRawClient rawClient;
 
 	public StatusConsulClient(ConsulRawClient rawClient) {
@@ -48,7 +50,7 @@ public final class StatusConsulClient implements StatusClient {
 	public Response<String> getStatusLeader() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/leader");
 		if (httpResponse.getStatusCode() == 200) {
-			String value = JsonFactory.fromJson(httpResponse.getContent(), String.class);
+			String value = JsonFactory.toPOJO(httpResponse.getContent(), String.class);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -59,9 +61,7 @@ public final class StatusConsulClient implements StatusClient {
 	public Response<List<String>> getStatusPeers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/peers");
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<String>>() {
-					});
+			List<String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

@@ -2,6 +2,7 @@ package com.ecwid.consul.v1;
 
 import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.transport.HttpResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -10,10 +11,11 @@ public final class OperationException extends ConsulException {
 	private static final long serialVersionUID = 7189026270432209391L;
 	private final int statusCode;
 	private final String statusMessage;
-	private final String statusContent;
+	private final JsonNode statusContent;
 
-	public OperationException(int statusCode, String statusMessage, String statusContent) {
-		super("OperationException(statusCode=" + statusCode + ", statusMessage='" + statusMessage + "', statusContent='" + statusContent + "')");
+	public OperationException(int statusCode, String statusMessage, JsonNode statusContent) {
+		super("OperationException(statusCode=" + statusCode + ", statusMessage='" + statusMessage + "', statusContent='"
+				+ statusContent + "')");
 		this.statusCode = statusCode;
 		this.statusMessage = statusMessage;
 		this.statusContent = statusContent;
@@ -31,16 +33,13 @@ public final class OperationException extends ConsulException {
 		return statusMessage;
 	}
 
-	public String getStatusContent() {
+	public JsonNode getStatusContent() {
 		return statusContent;
 	}
 
 	@Override
 	public String toString() {
-		return "OperationException{" +
-				"statusCode=" + statusCode +
-				", statusMessage='" + statusMessage + '\'' +
-				", statusContent='" + statusContent + '\'' +
-				'}';
+		return "OperationException{" + "statusCode=" + statusCode + ", statusMessage='" + statusMessage + '\''
+				+ ", statusContent='" + statusContent + '\'' + '}';
 	}
 }

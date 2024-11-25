@@ -8,6 +8,7 @@ import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.catalog.model.CatalogDeregistration;
 import com.ecwid.consul.v1.catalog.model.CatalogNode;
 import com.ecwid.consul.v1.catalog.model.CatalogRegistration;
+import com.ecwid.consul.v1.catalog.model.CatalogService;
 import com.ecwid.consul.v1.catalog.model.Node;
 
 /**
@@ -16,13 +17,13 @@ import com.ecwid.consul.v1.catalog.model.Node;
 public interface CatalogClient {
 	Response<Void> catalogRegister(CatalogRegistration catalogRegistration);
 
-	Response<Void> catalogRegister(CatalogRegistration catalogRegistration, String token);
+	Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token);
 
 	// -------------------------------------------------------------------------------
 
 	Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration);
 
-	Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, String token);
+	Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token);
 
 	// -------------------------------------------------------------------------------
 
@@ -53,7 +54,7 @@ public interface CatalogClient {
 	 *             {@link #getCatalogServices(CatalogServicesRequest catalogServicesRequest)}
 	 */
 	@Deprecated
-	Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, String token);
+	Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token);
 
 	Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest);
 
@@ -64,7 +65,7 @@ public interface CatalogClient {
 	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
 	@Deprecated
-	Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+	Response<List<CatalogService>> getCatalogService(String serviceName,
 			QueryParams queryParams);
 
 	/**
@@ -72,7 +73,7 @@ public interface CatalogClient {
 	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
 	@Deprecated
-	Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, String tag,
+	Response<List<CatalogService>> getCatalogService(String serviceName, String tag,
 			QueryParams queryParams);
 
 	/**
@@ -80,26 +81,26 @@ public interface CatalogClient {
 	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
 	@Deprecated
-	Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			QueryParams queryParams, String token);
+	Response<List<CatalogService>> getCatalogService(String serviceName,
+			QueryParams queryParams, CharSequence token);
 
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use
 	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
 	@Deprecated
-	Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName, String tag,
-			QueryParams queryParams, String token);
+	Response<List<CatalogService>> getCatalogService(String serviceName, String tag,
+			QueryParams queryParams, CharSequence token);
 
 	/**
 	 * @deprecated This method will be removed in consul-api 2.0. Use
 	 *             {@link #getCatalogService(String serviceName, CatalogServiceRequest catalogServiceRequest)}
 	 */
 	@Deprecated
-	Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
-			String[] tags, QueryParams queryParams, String token);
+	Response<List<CatalogService>> getCatalogService(String serviceName,
+			String[] tags, QueryParams queryParams, CharSequence token);
 
-	Response<List<com.ecwid.consul.v1.catalog.model.CatalogService>> getCatalogService(String serviceName,
+	Response<List<CatalogService>> getCatalogService(String serviceName,
 			CatalogServiceRequest catalogServiceRequest);
 
 	// -------------------------------------------------------------------------------

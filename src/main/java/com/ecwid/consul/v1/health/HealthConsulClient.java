@@ -51,7 +51,7 @@ public final class HealthConsulClient implements HealthClient {
 	public Response<List<Check>> getHealthChecksForNode(String nodeName, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
+			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<Check>>() {
 			});
 			return new Response<>(value, httpResponse);
 		} else {
@@ -72,7 +72,7 @@ public final class HealthConsulClient implements HealthClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
 				healthChecksForServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
+			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<Check>>() {
 			});
 			return new Response<>(value, httpResponse);
 		} else {
@@ -118,7 +118,7 @@ public final class HealthConsulClient implements HealthClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/service/" + serviceName,
 				healthServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<HealthService> value = JsonFactory.fromJson(httpResponse.getContent(),
+			List<HealthService> value = JsonFactory.toPOJO(httpResponse.getContent(),
 					new TypeReference<List<HealthService>>() {
 					});
 			return new Response<>(value, httpResponse);
@@ -137,7 +137,7 @@ public final class HealthConsulClient implements HealthClient {
 		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase();
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/state/" + status, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
+			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<Check>>() {
 			});
 			return new Response<>(value, httpResponse);
 		} else {

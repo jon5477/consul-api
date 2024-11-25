@@ -49,6 +49,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
  *
  */
 public final class KeyValueConsulClient implements KeyValueClient {
+	private static final TypeReference<List<GetBinaryValue>> BINARY_VALUE_LIST_TYPE_REF = new TypeReference<List<GetBinaryValue>>() {
+	};
+	private static final TypeReference<List<String>> STRING_LIST_TYPE_REF = new TypeReference<List<String>>() {
+	};
 	private static final String API_KV_PREFIX = "/v1/kv/";
 	private static final SingleQueryParameters RECURSE_QUERY_PARAM = new SingleQueryParameters("recurse");
 	private final ConsulRawClient rawClient;
@@ -102,7 +106,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetValue> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
+			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
 			});
 			if (value.isEmpty()) {
 				return new Response<>(null, httpResponse);
@@ -139,9 +143,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetBinaryValue> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<GetBinaryValue>>() {
-					});
+			List<GetBinaryValue> value = JsonFactory.toPOJO(httpResponse.getContent(), BINARY_VALUE_LIST_TYPE_REF);
 			if (value.isEmpty()) {
 				return new Response<>(null, httpResponse);
 			} else if (value.size() == 1) {
@@ -177,7 +179,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetValue> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
+			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
 			});
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
@@ -208,9 +210,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetBinaryValue> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<GetBinaryValue>>() {
-					});
+			List<GetBinaryValue> value = JsonFactory.toPOJO(httpResponse.getContent(), BINARY_VALUE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
 			return new Response<>(null, httpResponse);
@@ -243,8 +243,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(keysParam, separatorParam, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<String>>() {
-			});
+			List<String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
 			return new Response<>(null, httpResponse);
@@ -285,7 +284,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams, putParams).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			boolean result = JsonFactory.fromJson(httpResponse.getContent(), boolean.class);
+			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -324,7 +323,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams, putParams).setBinaryContent(value).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			boolean result = JsonFactory.fromJson(httpResponse.getContent(), boolean.class);
+			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

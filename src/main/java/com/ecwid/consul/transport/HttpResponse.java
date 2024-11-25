@@ -1,18 +1,23 @@
 package com.ecwid.consul.transport;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class HttpResponse {
 	private final int statusCode;
 	private final String statusMessage;
-	private final String content;
+	private final JsonNode content;
 	private final Long consulIndex;
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;
 
-	public HttpResponse(int statusCode, String statusMessage, String content, Long consulIndex,
-			Boolean consulKnownLeader, Long consulLastContact) {
+	public HttpResponse(int statusCode, @NonNull String statusMessage, @Nullable JsonNode content,
+			@Nullable Long consulIndex, @Nullable Boolean consulKnownLeader, @Nullable Long consulLastContact) {
 		this.statusCode = statusCode;
 		this.statusMessage = statusMessage;
 		this.content = content;
@@ -25,22 +30,31 @@ public final class HttpResponse {
 		return statusCode;
 	}
 
+	public boolean isSuccess() {
+		return statusCode == 200;
+	}
+
+	@NonNull
 	public String getStatusMessage() {
 		return statusMessage;
 	}
 
-	public String getContent() {
+	@Nullable
+	public JsonNode getContent() {
 		return content;
 	}
 
+	@Nullable
 	public Long getConsulIndex() {
 		return consulIndex;
 	}
 
+	@Nullable
 	public Boolean isConsulKnownLeader() {
 		return consulKnownLeader;
 	}
 
+	@Nullable
 	public Long getConsulLastContact() {
 		return consulLastContact;
 	}

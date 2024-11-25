@@ -18,6 +18,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class SessionConsulClient implements SessionClient {
+	private static final TypeReference<List<Session>> SESSION_LIST_TYPE_REF = new TypeReference<List<Session>>() {
+	};
+	private static final TypeReference<Map<String, String>> STRING_MAP_TYPE_REF = new TypeReference<Map<String, String>>() {
+	};
 	private final ConsulRawClient rawClient;
 
 	public SessionConsulClient(ConsulRawClient rawClient) {
@@ -46,9 +50,7 @@ public final class SessionConsulClient implements SessionClient {
 		String json = JsonFactory.toJson(newSession);
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/create", json, queryParams, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, String> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, String>>() {
-					});
+			Map<String, String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_MAP_TYPE_REF);
 			return new Response<>(value.get("ID"), httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -80,9 +82,7 @@ public final class SessionConsulClient implements SessionClient {
 	public Response<Session> getSessionInfo(String session, QueryParams queryParams, String token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/info/" + session, queryParams, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			if (value == null || value.isEmpty()) {
 				return new Response<>(null, httpResponse);
 			} else if (value.size() == 1) {
@@ -104,9 +104,7 @@ public final class SessionConsulClient implements SessionClient {
 	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams, String token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/node/" + node, queryParams, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -122,9 +120,7 @@ public final class SessionConsulClient implements SessionClient {
 	public Response<List<Session>> getSessionList(QueryParams queryParams, String token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/list", queryParams, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -140,9 +136,7 @@ public final class SessionConsulClient implements SessionClient {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/renew/" + session, "", queryParams,
 				tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			if (value.size() == 1) {
 				return new Response<>(value.get(0), httpResponse);
 			} else {

@@ -38,7 +38,7 @@ public final class QueryConsulClient implements QueryClient {
 	public Response<QueryExecution> executePreparedQuery(String uuid, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/query/" + uuid + "/execute", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			QueryExecution queryExecution = JsonFactory.fromJson(httpResponse.getContent(), QueryExecution.class);
+			QueryExecution queryExecution = JsonFactory.toPOJO(httpResponse.getContent(), QueryExecution.class);
 			return new Response<>(queryExecution, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

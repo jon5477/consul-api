@@ -1,9 +1,13 @@
 package com.ecwid.consul.transport;
 
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse;
 import org.apache.hc.core5.concurrent.FutureCallback;
+
+import com.ecwid.consul.json.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A {@link FutureCallback} implementation that converts a
@@ -25,12 +29,16 @@ final class SimpleHttpResponseCompletableFutureCallback implements FutureCallbac
 	public final void completed(SimpleHttpResponse result) {
 		int statusCode = result.getCode();
 		String statusMessage = result.getReasonPhrase();
-		String content = result.getBody().getBodyText();
 		Long consulIndex = AbstractHttpTransport.parseUnsignedLong(result.getFirstHeader("X-Consul-Index"));
 		Boolean consulKnownLeader = AbstractHttpTransport.parseBoolean(result.getFirstHeader("X-Consul-Knownleader"));
 		Long consulLastContact = AbstractHttpTransport.parseUnsignedLong(result.getFirstHeader("X-Consul-Lastcontact"));
-		cf.complete(new HttpResponse(statusCode, statusMessage, content, consulIndex, consulKnownLeader,
-				consulLastContact));
+		try {
+			JsonNode content = JsonFactory.toJsonNode(result.getBodyBytes());
+			cf.complete(new HttpResponse(statusCode, statusMessage, content, consulIndex, consulKnownLeader,
+					consulLastContact));
+		} catch (IOException e) {
+			cf.completeExceptionally(e);
+		}
 	}
 
 	@Override

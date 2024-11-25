@@ -19,6 +19,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Jon Huang (jon5477)
  */
 public final class AclConsulClient implements AclClient {
+	private static final TypeReference<List<AclToken>> TOKEN_LIST_TYPE_REF = new TypeReference<List<AclToken>>() {
+	};
 	private static final String API_TOKEN_PREFIX = "/v1/acl/token/";
 	private final ConsulRawClient rawClient;
 
@@ -56,7 +58,7 @@ public final class AclConsulClient implements AclClient {
 				.setBinaryContent(JsonFactory.toBytes(newAcl)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -69,7 +71,7 @@ public final class AclConsulClient implements AclClient {
 				.build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -81,7 +83,7 @@ public final class AclConsulClient implements AclClient {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + "self").setToken(token).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -94,7 +96,7 @@ public final class AclConsulClient implements AclClient {
 				.setBinaryContent(JsonFactory.toBytes(updateAcl)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -107,7 +109,7 @@ public final class AclConsulClient implements AclClient {
 				.setBinaryContent("{}".getBytes(StandardCharsets.UTF_8)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.fromJson(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -132,9 +134,7 @@ public final class AclConsulClient implements AclClient {
 				.addQueryParameters(req.getQueryParameters()).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<AclToken> aclTokens = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<AclToken>>() {
-					});
+			List<AclToken> aclTokens = JsonFactory.toPOJO(httpResponse.getContent(), TOKEN_LIST_TYPE_REF);
 			return new Response<>(aclTokens, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

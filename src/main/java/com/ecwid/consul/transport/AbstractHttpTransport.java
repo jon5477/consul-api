@@ -1,8 +1,8 @@
 package com.ecwid.consul.transport;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -19,15 +19,17 @@ import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.http.message.HeaderGroup;
-import org.apache.hc.core5.util.Timeout;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ecwid.consul.ConsulException;
+import com.ecwid.consul.json.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Abstract HTTP transport code that interfaces with Apache HTTP Client 5.x.
@@ -45,15 +47,6 @@ import com.ecwid.consul.ConsulException;
  */
 abstract class AbstractHttpTransport implements HttpTransport {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpTransport.class);
-	static final int DEFAULT_MAX_CONNECTIONS = 1000;
-	static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 500;
-	static final Timeout DEFAULT_CONNECTION_TIMEOUT = Timeout.ofSeconds(10);
-	/**
-	 * 10 minutes for read timeout due to blocking queries timeout
-	 * 
-	 * @see https://www.consul.io/api/index.html#blocking-queries
-	 */
-	static final Timeout DEFAULT_READ_TIMEOUT = Timeout.ofMinutes(10);
 
 	@Override
 	public final HttpResponse makeGetRequest(HttpRequest request) {
@@ -62,12 +55,16 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		return executeRequest(httpGet);
 	}
 
+	@SuppressWarnings("resource") // closing ByteArrayEntity is a no-op
 	@Override
 	public final HttpResponse makePutRequest(HttpRequest request) {
 		HttpPut httpPut = new HttpPut(request.getURI());
 		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
 		if (request.getContent() != null) {
-			httpPut.setEntity(new ByteArrayEntity(request.getContent(), null));
+			String cType = request.getContentType();
+			// Assume content type is JSON unless it is explicitly set
+			ContentType contentType = cType != null ? ContentType.parse(cType) : ContentType.APPLICATION_JSON;
+			httpPut.setEntity(new ByteArrayEntity(request.getContent(), contentType));
 		}
 		return executeRequest(httpPut);
 	}
@@ -91,9 +88,9 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		SimpleHttpRequest httpPut = SimpleRequestBuilder.put(request.getURI()).build();
 		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
 		if (request.getContent() != null) {
-			String mimeType = request.getContentType();
-			// Assume this is JSON unless it is explicitly set
-			ContentType contentType = mimeType != null ? ContentType.parse(mimeType) : ContentType.APPLICATION_JSON;
+			String cType = request.getContentType();
+			// Assume content type is JSON unless it is explicitly set
+			ContentType contentType = cType != null ? ContentType.parse(cType) : ContentType.APPLICATION_JSON;
 			httpPut.setBody(request.getContent(), contentType);
 		}
 		return executeAsyncRequest(httpPut);
@@ -122,13 +119,22 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	 */
 	protected abstract HttpAsyncClient getAsyncHttpClient();
 
-	private HttpResponse executeRequest(HttpUriRequest httpRequest) {
+	private HttpResponse executeRequest(@NonNull HttpUriRequest httpRequest) {
 		logRequest(httpRequest);
 		try {
 			return getHttpClient().execute(httpRequest, response -> {
 				int statusCode = response.getCode();
 				String statusMessage = response.getReasonPhrase();
-				String content = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+				JsonNode content = null;
+				try (HttpEntity entity = response.getEntity()) {
+					if (entity != null && ContentType.APPLICATION_JSON.getMimeType().equals(entity.getContentType())) {
+						try (InputStream is = entity.getContent()) {
+							if (is != null) {
+								content = JsonFactory.toJsonNode(is);
+							}
+						}
+					}
+				}
 				Long consulIndex = parseUnsignedLong(response.getFirstHeader("X-Consul-Index"));
 				Boolean consulKnownLeader = parseBoolean(response.getFirstHeader("X-Consul-Knownleader"));
 				Long consulLastContact = parseUnsignedLong(response.getFirstHeader("X-Consul-Lastcontact"));
@@ -140,7 +146,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		}
 	}
 
-	private CompletableFuture<HttpResponse> executeAsyncRequest(SimpleHttpRequest httpRequest) {
+	private CompletableFuture<HttpResponse> executeAsyncRequest(@NonNull SimpleHttpRequest httpRequest) {
 		logRequest(httpRequest);
 		SimpleHttpResponseCompletableFutureCallback callback = new SimpleHttpResponseCompletableFutureCallback();
 		getAsyncHttpClient().execute(SimpleRequestProducer.create(httpRequest), SimpleResponseConsumer.create(), null,
