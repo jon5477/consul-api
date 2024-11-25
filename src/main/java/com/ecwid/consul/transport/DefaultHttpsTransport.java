@@ -2,6 +2,7 @@ package com.ecwid.consul.transport;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
@@ -67,5 +68,11 @@ public final class DefaultHttpsTransport extends AbstractHttpTransport {
 	@Override
 	protected HttpClient getHttpClient() {
 		return httpClient;
+	}
+
+	@Override
+	protected HttpAsyncClient getAsyncHttpClient() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

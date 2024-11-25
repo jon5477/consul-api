@@ -1,5 +1,11 @@
 package com.ecwid.consul.transport;
 
+import javax.net.ssl.SSLContext;
+
+/**
+ * @deprecated This class has been deprecated in favor of passing
+ *             {@link SSLContext} directly when building the client.
+ */
 @Deprecated(forRemoval = true)
 public final class TLSConfig {
 	public enum KeyStoreInstanceType {

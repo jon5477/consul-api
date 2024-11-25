@@ -2,6 +2,7 @@ package com.ecwid.consul.transport;
 
 import java.util.Objects;
 
+import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -35,5 +36,11 @@ public final class DefaultHttpTransport extends AbstractHttpTransport {
 	@Override
 	protected HttpClient getHttpClient() {
 		return httpClient;
+	}
+
+	@Override
+	protected HttpAsyncClient getAsyncHttpClient() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
