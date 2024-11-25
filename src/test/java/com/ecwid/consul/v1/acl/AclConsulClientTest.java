@@ -37,7 +37,7 @@ class AclConsulClientTest {
 				+ "      \"initial_management\": \"" + new String(ACL_MASTER_TOKEN) + "\"\n" + "    }\n" + "  },\n"
 				+ "  \"primary_datacenter\": \"dc-test\",\n" + "  \"datacenter\": \"dc-test\"\n" + "}";
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withHttpPort(port).withCustomConfig(customConfiguration).build().start();
+				.withHttpPort(port).withCustomConfig(customConfiguration).withWaitTimeout(90).build().start();
 	}
 
 	@AfterEach

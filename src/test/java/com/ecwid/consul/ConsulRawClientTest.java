@@ -16,7 +16,7 @@ import com.ecwid.consul.v1.QueryParams;
 
 class ConsulRawClientTest {
 	private static final String ENDPOINT = "/any/endpoint";
-	private static final QueryParams EMPTY_QUERY_PARAMS = QueryParams.Builder.builder().build();
+	private static final QueryParams EMPTY_QUERY_PARAMS = new QueryParams.Builder().build();
 	private static final String HOST = "host";
 	private static final int PORT = 8888;
 	private static final String PATH = "path";

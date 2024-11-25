@@ -25,7 +25,7 @@ class CatalogConsulClientTest {
 	@BeforeEach
 	void setUp() {
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withHttpPort(port).build().start();
+				.withHttpPort(port).withWaitTimeout(60).build().start();
 	}
 
 	@AfterEach

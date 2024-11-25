@@ -12,17 +12,13 @@ import com.ecwid.consul.Utils;
  */
 public final class QueryParams implements QueryParameters {
 	public static final class Builder {
-		public static Builder builder() {
-			return new Builder();
-		}
-
 		private String datacenter;
 		private ConsistencyMode consistencyMode;
 		private long waitTime;
 		private long index;
 		private String near;
 
-		private Builder() {
+		public Builder() {
 			this.datacenter = null;
 			this.consistencyMode = ConsistencyMode.DEFAULT;
 			this.waitTime = -1;

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.Utils;
-import com.ecwid.consul.v1.QueryParams.Builder;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -23,7 +22,7 @@ class QueryParamsTest {
 		final String EXPECTED_NEAR = null;
 
 		// When
-		QueryParams actual = Builder.builder().build();
+		QueryParams actual = new QueryParams.Builder().build();
 
 		// Then
 		assertNull(actual.getDatacenter());
@@ -43,8 +42,9 @@ class QueryParamsTest {
 		final String EXPECTED_NEAR = "_agent";
 
 		// When
-		QueryParams actual = Builder.builder().setDatacenter(EXPECTED_DATACENTER).setConsistencyMode(EXPECTED_MODE)
-				.setWaitTime(EXPECTED_WAIT_TIME).setIndex(EXPECTED_INDEX).setNear(EXPECTED_NEAR).build();
+		QueryParams actual = new QueryParams.Builder().setDatacenter(EXPECTED_DATACENTER)
+				.setConsistencyMode(EXPECTED_MODE).setWaitTime(EXPECTED_WAIT_TIME).setIndex(EXPECTED_INDEX)
+				.setNear(EXPECTED_NEAR).build();
 
 		// Then
 		assertEquals(actual.getDatacenter(), EXPECTED_DATACENTER);
@@ -64,7 +64,7 @@ class QueryParamsTest {
 		final String EXPECTED_NEAR = "_agent";
 
 		// When
-		Map<String, String> queryParams = Builder.builder().setDatacenter(EXPECTED_DATACENTER)
+		Map<String, String> queryParams = new QueryParams.Builder().setDatacenter(EXPECTED_DATACENTER)
 				.setConsistencyMode(EXPECTED_MODE).setWaitTime(EXPECTED_WAIT).setIndex(EXPECTED_INDEX)
 				.setNear(EXPECTED_NEAR).build().getQueryParameters();
 

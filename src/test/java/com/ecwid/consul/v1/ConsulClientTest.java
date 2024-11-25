@@ -32,7 +32,7 @@ class ConsulClientTest {
 				+ "      \"key_file\": \"" + certRootPath + "/key.key\",\n" + "      \"cert_file\": \"" + certRootPath
 				+ "/key.crt\"\n" + "    }\n" + "  }\n" + "}\n";
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withCustomConfig(customConfiguration).build().start();
+				.withCustomConfig(customConfiguration).withWaitTimeout(60).build().start();
 	}
 
 	@AfterEach
