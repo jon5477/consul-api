@@ -21,6 +21,7 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.NoopUserTokenHandler;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
@@ -155,7 +156,8 @@ public final class ClientUtils {
 		Objects.requireNonNull(conMgr, "connection manager cannot be null");
 		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();
 		HttpClientBuilder hcBuilder = HttpClientBuilder.create().setConnectionManager(conMgr)
-				.setDefaultRequestConfig(reqCfg);
+				.setDefaultRequestConfig(reqCfg).useSystemProperties()
+				.setUserTokenHandler(NoopUserTokenHandler.INSTANCE);
 		return hcBuilder.build();
 	}
 
@@ -170,7 +172,8 @@ public final class ClientUtils {
 		Objects.requireNonNull(conMgr, "connection manager cannot be null");
 		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();
 		HttpAsyncClientBuilder asyncHttpClientBuilder = HttpAsyncClientBuilder.create().setConnectionManager(conMgr)
-				.setDefaultRequestConfig(reqCfg).useSystemProperties();
+				.setDefaultRequestConfig(reqCfg).useSystemProperties()
+				.setUserTokenHandler(NoopUserTokenHandler.INSTANCE);
 		return asyncHttpClientBuilder.build();
 	}
 }

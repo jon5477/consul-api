@@ -98,9 +98,9 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<Void> agentSetMaintenance(boolean maintenanceEnabled, String reason) {
 		QueryParameters maintenanceParameter = new SingleQueryParameters("enable",
 				Boolean.toString(maintenanceEnabled));
-		QueryParameters reasonParamenter = reason != null ? new SingleQueryParameters("reason", reason) : null;
+		QueryParameters reasonParameter = reason != null ? new SingleQueryParameters("reason", reason) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/maintenance", null, maintenanceParameter,
-				reasonParamenter);
+				reasonParameter);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {

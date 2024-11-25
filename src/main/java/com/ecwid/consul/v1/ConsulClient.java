@@ -548,76 +548,10 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 		return healthClient.getHealthChecksForNode(nodeName, queryParams);
 	}
 
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getHealthChecksForService(String serviceName, HealthChecksForServiceRequest healthChecksForServiceRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<com.ecwid.consul.v1.health.model.Check>> getHealthChecksForService(String serviceName,
-			QueryParams queryParams) {
-		return healthClient.getHealthChecksForService(serviceName, queryParams);
-	}
-
 	@Override
 	public Response<List<com.ecwid.consul.v1.health.model.Check>> getHealthChecksForService(String serviceName,
 			HealthChecksForServiceRequest healthChecksForServiceRequest) {
 		return healthClient.getHealthChecksForService(serviceName, healthChecksForServiceRequest);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing,
-			QueryParams queryParams) {
-		return healthClient.getHealthServices(serviceName, onlyPassing, queryParams);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing,
-			QueryParams queryParams) {
-		return healthClient.getHealthServices(serviceName, tag, onlyPassing, queryParams);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing,
-			QueryParams queryParams, String token) {
-		return healthClient.getHealthServices(serviceName, onlyPassing, queryParams, token);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing,
-			QueryParams queryParams, String token) {
-		return healthClient.getHealthServices(serviceName, tag, onlyPassing, queryParams, token);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #getHealthServices(String serviceName, HealthServicesRequest healthServicesRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, String[] tags, boolean onlyPassing,
-			QueryParams queryParams, String token) {
-		return healthClient.getHealthServices(serviceName, tags, onlyPassing, queryParams, token);
 	}
 
 	@Override

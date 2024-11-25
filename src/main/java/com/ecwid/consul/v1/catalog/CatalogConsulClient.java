@@ -133,22 +133,24 @@ public final class CatalogConsulClient implements CatalogClient {
 		return getCatalogService(serviceName, (String) null, queryParams, token);
 	}
 
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams) {
 		return getCatalogService(serviceName, tag, queryParams, null);
 	}
 
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams,
 			CharSequence token) {
 		return getCatalogService(serviceName, new String[] { tag }, queryParams, null);
 	}
 
+	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tag, QueryParams queryParams,
 			CharSequence token) {
-		CatalogServiceRequest request = CatalogServiceRequest.newBuilder().setTags(tag).setQueryParams(queryParams)
-				.build();
+		CatalogServiceRequest request = new CatalogServiceRequest.Builder().setQueryParams(queryParams).build();
 		return getCatalogService(serviceName, request);
 	}
 

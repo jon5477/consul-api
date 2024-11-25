@@ -41,13 +41,6 @@ public final class HealthConsulClient implements HealthClient {
 	}
 
 	@Override
-	public Response<List<Check>> getHealthChecksForService(String serviceName, QueryParams queryParams) {
-		HealthChecksForServiceRequest request = HealthChecksForServiceRequest.newBuilder().setQueryParams(queryParams)
-				.build();
-		return getHealthChecksForService(serviceName, request);
-	}
-
-	@Override
 	public Response<List<Check>> getHealthChecksForService(String serviceName,
 			HealthChecksForServiceRequest healthChecksForServiceRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
@@ -58,38 +51,6 @@ public final class HealthConsulClient implements HealthClient {
 		} else {
 			throw new OperationException(httpResponse);
 		}
-	}
-
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing,
-			QueryParams queryParams) {
-		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, null);
-	}
-
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing,
-			QueryParams queryParams, String token) {
-		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, token);
-	}
-
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing,
-			QueryParams queryParams) {
-		return getHealthServices(serviceName, tag, onlyPassing, queryParams, null);
-	}
-
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing,
-			QueryParams queryParams, String token) {
-		return getHealthServices(serviceName, new String[] { tag }, onlyPassing, queryParams, token);
-	}
-
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName, String[] tags, boolean onlyPassing,
-			QueryParams queryParams, String token) {
-		HealthServicesRequest request = HealthServicesRequest.newBuilder().setTags(tags).setPassing(onlyPassing)
-				.setQueryParams(queryParams).setToken(token).build();
-		return getHealthServices(serviceName, request);
 	}
 
 	@Override
