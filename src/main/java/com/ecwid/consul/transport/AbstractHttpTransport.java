@@ -5,14 +5,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-import org.apache.hc.client5.http.async.HttpAsyncClient;
-import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
-import org.apache.hc.client5.http.async.methods.SimpleRequestBuilder;
-import org.apache.hc.client5.http.async.methods.SimpleRequestProducer;
-import org.apache.hc.client5.http.async.methods.SimpleResponseConsumer;
-import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPut;
@@ -38,7 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * The following modifications were made from the original APL 2.0 code:
  * <ul>
  * <li>Migration from Apache HTTPClient 4.x to 5.x</li>
- * <li>Added support for {@link AsyncHttpClient}</li>
+ * <li>Added code for {@link AsyncHttpClient}</li>
  * </ul>
  * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -76,48 +69,32 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		return executeRequest(httpDelete);
 	}
 
-	@Override
-	public final CompletableFuture<HttpResponse> makeAsyncGetRequest(HttpRequest request) {
-		SimpleHttpRequest httpGet = SimpleRequestBuilder.get(request.getURI()).build();
-		addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
-		return executeAsyncRequest(httpGet);
-	}
+//	@Override
+//	public final CompletableFuture<HttpResponse> makeAsyncGetRequest(HttpRequest request) {
+//		SimpleHttpRequest httpGet = SimpleRequestBuilder.get(request.getURI()).build();
+//		addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
+//		return executeAsyncRequest(httpGet);
+//	}
 
-	@Override
-	public final CompletableFuture<HttpResponse> makeAsyncPutRequest(HttpRequest request) {
-		SimpleHttpRequest httpPut = SimpleRequestBuilder.put(request.getURI()).build();
-		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
-		if (request.getContent() != null) {
-			String cType = request.getContentType();
-			// Assume content type is JSON unless it is explicitly set
-			ContentType contentType = cType != null ? ContentType.parse(cType) : ContentType.APPLICATION_JSON;
-			httpPut.setBody(request.getContent(), contentType);
-		}
-		return executeAsyncRequest(httpPut);
-	}
+//	@Override
+//	public final CompletableFuture<HttpResponse> makeAsyncPutRequest(HttpRequest request) {
+//		SimpleHttpRequest httpPut = SimpleRequestBuilder.put(request.getURI()).build();
+//		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
+//		if (request.getContent() != null) {
+//			String cType = request.getContentType();
+//			// Assume content type is JSON unless it is explicitly set
+//			ContentType contentType = cType != null ? ContentType.parse(cType) : ContentType.APPLICATION_JSON;
+//			httpPut.setBody(request.getContent(), contentType);
+//		}
+//		return executeAsyncRequest(httpPut);
+//	}
 
-	@Override
-	public final CompletableFuture<HttpResponse> makeAsyncDeleteRequest(HttpRequest request) {
-		SimpleHttpRequest httpDelete = SimpleRequestBuilder.delete(request.getURI()).build();
-		addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
-		return executeAsyncRequest(httpDelete);
-	}
-
-	/**
-	 * Provides a synchronous HTTP client instance. Subclasses should override this
-	 * method and provide a ready-to-use {@link HttpClient} instance.
-	 *
-	 * @return A ready-to-use {@link HttpClient} instance.
-	 */
-	protected abstract HttpClient getHttpClient();
-
-	/**
-	 * Provides an asynchronous HTTP client instance. Subclasses should override
-	 * this method and provide a ready-to-use {@link HttpAsyncClient} instance.
-	 * 
-	 * @return A ready-to-use {@link HttpAsyncClient} instance.
-	 */
-	protected abstract HttpAsyncClient getAsyncHttpClient();
+//	@Override
+//	public final CompletableFuture<HttpResponse> makeAsyncDeleteRequest(HttpRequest request) {
+//		SimpleHttpRequest httpDelete = SimpleRequestBuilder.delete(request.getURI()).build();
+//		addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
+//		return executeAsyncRequest(httpDelete);
+//	}
 
 	private HttpResponse executeRequest(@NonNull HttpUriRequest httpRequest) {
 		logRequest(httpRequest);
@@ -146,13 +123,13 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		}
 	}
 
-	private CompletableFuture<HttpResponse> executeAsyncRequest(@NonNull SimpleHttpRequest httpRequest) {
-		logRequest(httpRequest);
-		SimpleHttpResponseCompletableFutureCallback callback = new SimpleHttpResponseCompletableFutureCallback();
-		getAsyncHttpClient().execute(SimpleRequestProducer.create(httpRequest), SimpleResponseConsumer.create(), null,
-				null, callback);
-		return callback.getCompletableFuture();
-	}
+//	private CompletableFuture<HttpResponse> executeAsyncRequest(@NonNull SimpleHttpRequest httpRequest) {
+//		logRequest(httpRequest);
+//		SimpleHttpResponseCompletableFutureCallback callback = new SimpleHttpResponseCompletableFutureCallback();
+//		getAsyncHttpClient().execute(SimpleRequestProducer.create(httpRequest), SimpleResponseConsumer.create(), null,
+//				null, callback);
+//		return callback.getCompletableFuture();
+//	}
 
 	static Long parseUnsignedLong(Header header) {
 		if (header != null) {

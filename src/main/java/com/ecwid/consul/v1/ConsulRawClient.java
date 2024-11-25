@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import javax.net.ssl.SSLContext;
-
-import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
@@ -20,6 +18,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
+import com.ecwid.consul.transport.ClientUtils;
 import com.ecwid.consul.transport.DefaultHttpTransport;
 import com.ecwid.consul.transport.DefaultHttpsTransport;
 import com.ecwid.consul.transport.HttpRequest;
@@ -30,14 +29,10 @@ import com.ecwid.consul.transport.TLSConfig;
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public class ConsulRawClient {
+public final class ConsulRawClient {
 	public static final String DEFAULT_HOST = "localhost";
 	public static final int DEFAULT_PORT = 8500;
 	public static final String DEFAULT_PATH = "";
-
-	// one real HTTP client for all instances
-	private static final HttpTransport DEFAULT_HTTP_TRANSPORT = new DefaultHttpTransport();
-
 	private final HttpTransport httpTransport;
 	private final URL agentAddress;
 	private final AtomicReference<char[]> token = new AtomicReference<>();
@@ -46,11 +41,9 @@ public class ConsulRawClient {
 		private String agentHost;
 		private int agentPort;
 		private String agentPath;
-		// Allow clients to specify their own SSL Context
-		private SSLContext sslCtx;
-		// Allow clients to specify their own Apache HTTP Clients
+		// Allow clients to specify their own Apache HTTP Client configuration
+		private HttpClientConnectionManager connectionManager;
 		private HttpClient httpClient;
-		private HttpAsyncClient asyncHttpClient;
 
 		public static ConsulRawClient.Builder builder() {
 			return new ConsulRawClient.Builder();
@@ -77,8 +70,8 @@ public class ConsulRawClient {
 			return this;
 		}
 
-		public Builder setSSLContext(SSLContext sslCtx) {
-			this.sslCtx = sslCtx;
+		public Builder setConnectionManager(HttpClientConnectionManager connectionManager) {
+			this.connectionManager = connectionManager;
 			return this;
 		}
 
@@ -87,17 +80,8 @@ public class ConsulRawClient {
 			return this;
 		}
 
-		public Builder setAsyncHttpClient(HttpAsyncClient asyncHttpClient) {
-			this.asyncHttpClient = asyncHttpClient;
-			return this;
-		}
-
 		public ConsulRawClient build() {
-			// The HTTP transport is determined by the presence of an SSL context
-			HttpTransport httpTransport = sslCtx != null
-					? new DefaultHttpsTransport(sslCtx, httpClient, asyncHttpClient)
-					: new DefaultHttpTransport(httpClient, asyncHttpClient);
-
+			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(connectionManager, httpClient);
 			return new ConsulRawClient(httpTransport, agentHost, agentPort, agentPath);
 		}
 	}
@@ -148,7 +132,7 @@ public class ConsulRawClient {
 		this(new DefaultHttpTransport(httpClient), host, port, path);
 	}
 
-	// hidden constructor, for tests
+	// hidden constructor, for unit tests
 	ConsulRawClient(HttpTransport httpTransport, String agentHost, int agentPort, String path) {
 		this.httpTransport = httpTransport;
 		// check if the agentHost has a scheme or not

@@ -16,6 +16,7 @@ import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.util.Timeout;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Provides utility functions for interfacing with Apache HTTP Client 5.x.
@@ -50,6 +51,26 @@ public final class ClientUtils {
 	private static final Timeout DEFAULT_READ_TIMEOUT = Timeout.ofMinutes(10);
 
 	private ClientUtils() {
+		// static utility class
+	}
+
+	public static DefaultHttpTransport createDefaultHttpTransport() {
+		PoolingHttpClientConnectionManager connectionManager = ClientUtils.createPoolingConnectionManager();
+		HttpClient httpClient = ClientUtils.createHttpClient(connectionManager);
+		return new DefaultHttpTransport(connectionManager, httpClient);
+	}
+
+	public static DefaultHttpTransport createDefaultHttpTransport(
+			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient) {
+		HttpClientConnectionManager conMgr = connectionManager;
+		if (conMgr == null) {
+			conMgr = ClientUtils.createPoolingConnectionManager();
+		}
+		HttpClient hc = httpClient;
+		if (hc == null) {
+			hc = ClientUtils.createHttpClient(conMgr);
+		}
+		return new DefaultHttpTransport(conMgr, hc);
 	}
 
 	public static PoolingHttpClientConnectionManager createPoolingConnectionManager() {

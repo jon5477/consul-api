@@ -1,13 +1,22 @@
 package com.ecwid.consul.transport;
 
-import javax.net.ssl.SSLContext;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 
 /**
- * @deprecated This class has been deprecated in favor of passing
- *             {@link SSLContext} directly when building the client.
+ * Allows specification of the keystore and truststores for handling the SSL
+ * context.
+ * 
+ * @deprecated This class has been deprecated in favor of passing SSL
+ *             configuration options directly on the
+ *             {@link PoolingHttpClientConnectionManager}
+ * 
+ * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ *
  */
-@Deprecated(forRemoval = true)
+@Deprecated(since = "2.0.0", forRemoval = true)
 public final class TLSConfig {
+	@Deprecated(since = "2.0.0", forRemoval = true)
 	public enum KeyStoreInstanceType {
 		JKS, JCEKS, PKCS12, PKCS11, DKS, BCFKS
 	}
