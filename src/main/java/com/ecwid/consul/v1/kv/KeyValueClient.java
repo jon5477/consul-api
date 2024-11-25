@@ -37,6 +37,7 @@ import com.ecwid.consul.v1.kv.model.PutParams;
  * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
+ *
  */
 public interface KeyValueClient {
 	Response<GetValue> getKVValue(String key);

@@ -1,6 +1,8 @@
 package com.ecwid.consul.v1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.ecwid.consul.UrlParameters;
@@ -15,16 +17,15 @@ public final class Request {
 	 */
 	private final char[] token;
 
-	private Request(String endpoint, List<UrlParameters> urlParameters, String content, byte[] binaryContent,
-			char[] token) {
-		if (content != null && binaryContent != null) {
+	private Request(Builder b) {
+		if (b.content != null && b.binaryContent != null) {
 			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
 		}
-		this.endpoint = endpoint;
-		this.urlParameters = urlParameters;
-		this.content = content;
-		this.binaryContent = binaryContent;
-		this.token = token;
+		this.endpoint = b.endpoint;
+		this.urlParameters = b.urlParameters;
+		this.content = b.content;
+		this.binaryContent = b.binaryContent;
+		this.token = b.token;
 	}
 
 	public String getEndpoint() {
@@ -35,7 +36,7 @@ public final class Request {
 		return urlParameters;
 	}
 
-	@Deprecated // It is better to keep content in binary form
+	@Deprecated(forRemoval = true) // It is better to keep content in binary form
 	public String getContent() {
 		return content;
 	}
@@ -66,8 +67,13 @@ public final class Request {
 			return this;
 		}
 
-		public Builder addUrlParameters(List<UrlParameters> urlParameters) {
+		public Builder addUrlParameters(Collection<UrlParameters> urlParameters) {
 			this.urlParameters.addAll(urlParameters);
+			return this;
+		}
+
+		public Builder addUrlParameters(UrlParameters... urlParameters) {
+			this.urlParameters.addAll(Arrays.asList(urlParameters));
 			return this;
 		}
 
@@ -76,7 +82,7 @@ public final class Request {
 			return this;
 		}
 
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public Builder setContent(String content) {
 			this.content = content;
 			return this;
@@ -87,19 +93,13 @@ public final class Request {
 			return this;
 		}
 
-		@Deprecated
-		public Builder setToken(String token) {
-			this.token = token != null ? token.toCharArray() : null;
-			return this;
-		}
-
 		public Builder setToken(char[] token) {
 			this.token = token;
 			return this;
 		}
 
 		public Request build() {
-			return new Request(endpoint, urlParameters, content, binaryContent, token);
+			return new Request(this);
 		}
 	}
 }

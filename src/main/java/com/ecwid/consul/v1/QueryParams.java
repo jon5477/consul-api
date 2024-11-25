@@ -96,9 +96,9 @@ public final class QueryParams implements UrlParameters {
 		this(null, ConsistencyMode.DEFAULT, waitTime, index);
 	}
 
-    public QueryParams(String datacenter, long waitTime, long index) {
+	public QueryParams(String datacenter, long waitTime, long index) {
 		this(datacenter, ConsistencyMode.DEFAULT, waitTime, index, null);
-    }
+	}
 
 	public String getDatacenter() {
 		return datacenter;
@@ -122,7 +122,7 @@ public final class QueryParams implements UrlParameters {
 
 	@Override
 	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 
 		// add basic params
 		if (datacenter != null) {
@@ -157,11 +157,8 @@ public final class QueryParams implements UrlParameters {
 			return false;
 		}
 		QueryParams that = (QueryParams) o;
-		return waitTime == that.waitTime &&
-			index == that.index &&
-			Objects.equals(datacenter, that.datacenter) &&
-			consistencyMode == that.consistencyMode &&
-			Objects.equals(near, that.near);
+		return waitTime == that.waitTime && index == that.index && Objects.equals(datacenter, that.datacenter)
+				&& consistencyMode == that.consistencyMode && Objects.equals(near, that.near);
 	}
 
 	@Override

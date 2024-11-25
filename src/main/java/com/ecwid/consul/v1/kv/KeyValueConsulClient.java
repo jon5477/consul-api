@@ -46,8 +46,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
+ *
  */
 public final class KeyValueConsulClient implements KeyValueClient {
+	private static final String API_KV_PREFIX = "/v1/kv/";
+	private static final UrlParameters RECURSE_QUERY_PARAM = new SingleUrlParameters("recurse");
 	private final ConsulRawClient rawClient;
 
 	public KeyValueConsulClient(ConsulRawClient rawClient) {
@@ -95,8 +98,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<GetValue> getKVValue(String key, char[] token, QueryParams queryParams) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + key).addUrlParameter(queryParams)
-				.setToken(token).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
+				.addUrlParameter(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<GetValue> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
@@ -132,8 +135,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<GetBinaryValue> getKVBinaryValue(String key, char[] token, QueryParams queryParams) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + key).addUrlParameter(queryParams)
-				.setToken(token).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
+				.addUrlParameter(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<GetBinaryValue> value = JsonFactory.fromJson(httpResponse.getContent(),
@@ -170,9 +173,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<List<GetValue>> getKVValues(String keyPrefix, char[] token, QueryParams queryParams) {
-		UrlParameters recurseParam = new SingleUrlParameters("recurse");
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + keyPrefix).addUrlParameter(recurseParam)
-				.addUrlParameter(queryParams).setToken(token).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + keyPrefix).setToken(token)
+				.addUrlParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<GetValue> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
@@ -202,9 +204,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, char[] token, QueryParams queryParams) {
-		UrlParameters recurseParam = new SingleUrlParameters("recurse");
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + keyPrefix).addUrlParameter(recurseParam)
-				.addUrlParameter(queryParams).setToken(token).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + keyPrefix).setToken(token)
+				.addUrlParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<GetBinaryValue> value = JsonFactory.fromJson(httpResponse.getContent(),
@@ -238,9 +239,9 @@ public final class KeyValueConsulClient implements KeyValueClient {
 			QueryParams queryParams) {
 		UrlParameters keysParam = new SingleUrlParameters("keys");
 		UrlParameters separatorParam = separator != null ? new SingleUrlParameters("separator", separator) : null;
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/kv/" + keyPrefix, keysParam, separatorParam,
-				tokenParam, queryParams);
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + keyPrefix).setToken(token)
+				.addUrlParameters(keysParam, separatorParam, queryParams).build();
+		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<String> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<String>>() {
 			});
@@ -269,7 +270,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<Boolean> setKVValue(String key, String value, QueryParams queryParams) {
-		return setKVValue(key, value, null, null, queryParams);
+		return setKVValue(key, value, (char[]) null, null, queryParams);
 	}
 
 	@Override
@@ -280,9 +281,9 @@ public final class KeyValueConsulClient implements KeyValueClient {
 	@Override
 	public Response<Boolean> setKVValue(String key, String value, char[] token, PutParams putParams,
 			QueryParams queryParams) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/kv/" + key, value, putParams, tokenParam,
-				queryParams);
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
+				.addUrlParameters(queryParams, putParams).build();
+		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			boolean result = JsonFactory.fromJson(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
@@ -319,8 +320,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 	@Override
 	public Response<Boolean> setKVBinaryValue(String key, byte[] value, char[] token, PutParams putParams,
 			QueryParams queryParams) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + key).setToken(token)
-				.addUrlParameter(queryParams).addUrlParameter(putParams).setBinaryContent(value).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
+				.addUrlParameters(queryParams, putParams).setBinaryContent(value).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			boolean result = JsonFactory.fromJson(httpResponse.getContent(), boolean.class);
@@ -347,7 +348,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<Void> deleteKVValue(String key, char[] token, QueryParams queryParams) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + key).setToken(token)
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
 				.addUrlParameter(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
@@ -374,9 +375,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 
 	@Override
 	public Response<Void> deleteKVValues(String key, char[] token, QueryParams queryParams) {
-		UrlParameters recurseParam = new SingleUrlParameters("recurse");
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/kv/" + key).setToken(token)
-				.addUrlParameter(recurseParam).addUrlParameter(queryParams).build();
+		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
+				.addUrlParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);

@@ -174,6 +174,7 @@ public class ConsulRawClient {
 		return httpTransport.makeDeleteRequest(httpRequest);
 	}
 
+	@Deprecated(forRemoval = true)
 	private String prepareUrl(String url) {
 		if (url.contains(" ")) {
 			// temp hack for old clients who did manual encoding and just use %20

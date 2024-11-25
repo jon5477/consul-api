@@ -50,7 +50,7 @@ public class PutParams implements UrlParameters {
 
 	@Override
 	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 
 		if (flags != 0) {
 			params.add("flags=" + flags);
@@ -77,10 +77,9 @@ public class PutParams implements UrlParameters {
 			return false;
 		}
 		PutParams putParams = (PutParams) o;
-		return flags == putParams.flags &&
-			Objects.equals(cas, putParams.cas) &&
-			Objects.equals(acquireSession, putParams.acquireSession) &&
-			Objects.equals(releaseSession, putParams.releaseSession);
+		return flags == putParams.flags && Objects.equals(cas, putParams.cas)
+				&& Objects.equals(acquireSession, putParams.acquireSession)
+				&& Objects.equals(releaseSession, putParams.releaseSession);
 	}
 
 	@Override

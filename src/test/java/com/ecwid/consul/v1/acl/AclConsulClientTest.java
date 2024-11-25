@@ -40,7 +40,7 @@ class AclConsulClientTest {
 	}
 
 	@AfterEach
-	public void cleanup() throws Exception {
+	public void cleanup() {
 		consul.close();
 	}
 
@@ -101,8 +101,9 @@ class AclConsulClientTest {
 	@Test
 	void should_delete_acl_token() {
 		AclToken token = createTestToken();
-		aclClient.aclDelete(ACL_MASTER_TOKEN, token.getAccessorId());
-		assertThrows(OperationException.class, () -> aclClient.aclRead(ACL_MASTER_TOKEN, token.getAccessorId()));
+		String accessorId = token.getAccessorId();
+		aclClient.aclDelete(ACL_MASTER_TOKEN, accessorId);
+		assertThrows(OperationException.class, () -> aclClient.aclRead(ACL_MASTER_TOKEN, accessorId));
 	}
 
 	@Test
