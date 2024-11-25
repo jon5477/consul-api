@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
 import com.ecwid.consul.Utils;
+import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.acl.model.AclToken;
@@ -27,7 +28,7 @@ class AclConsulClientTest {
 	private static final char[] ACL_MASTER_TOKEN = "mastertoken".toCharArray();
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-	private AclClient aclClient = new AclConsulClient("localhost", port);
+	private AclClient aclClient = new AclConsulClient(new ConsulRawClient.Builder("localhost", port).build());
 
 	@BeforeEach
 	public void setup() {

@@ -1,13 +1,21 @@
 package com.ecwid.consul.v1;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLContext;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
@@ -39,8 +47,7 @@ public final class ConsulRawClient {
 		private String agentHost;
 		private int agentPort;
 		private String agentPath;
-		// Still allow legacy TLSConfig for now
-		private TLSConfig tlsConfig;
+		private SSLContext sslCtx;
 		// Allow clients to specify their own Apache HTTP Client configuration
 		private HttpClientConnectionManager connectionManager;
 		private HttpClient httpClient;
@@ -74,8 +81,25 @@ public final class ConsulRawClient {
 			return this;
 		}
 
+		/**
+		 * Sets the {@link TLSConfig} option for the Consul client. This will be used to
+		 * automatically create the {@link SSLContext}.
+		 * 
+		 * @param tlsConfig The {@link TLSConfig} option for the Consul client
+		 * @return This {@link Builder} instance for method chaining.
+		 */
 		public Builder setTlsConfig(TLSConfig tlsConfig) {
-			this.tlsConfig = tlsConfig;
+			try {
+				this.sslCtx = ClientUtils.createSSLContext(tlsConfig);
+			} catch (UnrecoverableKeyException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException
+					| CertificateException | IOException e) {
+				throw new RuntimeException(e);
+			}
+			return this;
+		}
+
+		public Builder setSSLContext(SSLContext sslCtx) {
+			this.sslCtx = sslCtx;
 			return this;
 		}
 
@@ -90,8 +114,7 @@ public final class ConsulRawClient {
 		}
 
 		public ConsulRawClient build() {
-			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(connectionManager, httpClient,
-					tlsConfig);
+			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(connectionManager, httpClient, sslCtx);
 			return new ConsulRawClient(this, httpTransport);
 		}
 	}

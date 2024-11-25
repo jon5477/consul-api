@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.v1.ConsulRawClient;
 import com.pszymczyk.consul.ConsulProcess;
 import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
@@ -16,15 +17,13 @@ class KeyValueConsulClientTest {
 	private static final Random rnd = new Random();
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-	private KeyValueConsulClient consulClient = new KeyValueConsulClient("localhost", port);
+	private KeyValueConsulClient consulClient = new KeyValueConsulClient(
+			new ConsulRawClient.Builder("localhost", port).build());
 
 	@BeforeEach
 	void setUp() {
-		consul = ConsulStarterBuilder.consulStarter()
-			.withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-			.withHttpPort(port)
-			.build()
-			.start();
+		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
+				.withHttpPort(port).build().start();
 	}
 
 	@AfterEach

@@ -1,6 +1,22 @@
 package com.ecwid.consul.transport;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Objects;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
@@ -13,10 +29,15 @@ import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.client5.http.ssl.TrustSelfSignedStrategy;
 import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.Timeout;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
 
 /**
  * Provides utility functions for interfacing with Apache HTTP Client 5.x.
@@ -54,6 +75,43 @@ public final class ClientUtils {
 		// static utility class
 	}
 
+	/**
+	 * Creates an {@link SSLContext} from the given {@link TLSConfig}. This is
+	 * provided to interoperate with legacy code.
+	 * 
+	 * @param tlsConfig
+	 * @return The created {@link SSLContext} from the given {@link TLSConfig}
+	 * @throws KeyStoreException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws CertificateException
+	 * @throws UnrecoverableKeyException
+	 * @throws KeyManagementException
+	 */
+	public static SSLContext createSSLContext(@NonNull TLSConfig tlsConfig)
+			throws KeyStoreException, FileNotFoundException, IOException, NoSuchAlgorithmException,
+			CertificateException, UnrecoverableKeyException, KeyManagementException {
+		Objects.requireNonNull(tlsConfig, "TLS configuration cannot be null");
+		KeyStore clientStore = KeyStore.getInstance(tlsConfig.getKeyStoreInstanceType().name());
+		try (FileInputStream fis = new FileInputStream(tlsConfig.getCertificatePath())) {
+			clientStore.load(fis, tlsConfig.getCertificatePassword());
+		}
+		KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+		kmf.init(clientStore, tlsConfig.getCertificatePassword());
+		KeyManager[] kms = kmf.getKeyManagers();
+		KeyStore trustStore = KeyStore.getInstance(KeyStoreInstanceType.JKS.name());
+		try (FileInputStream fis = new FileInputStream(tlsConfig.getKeyStorePath())) {
+			trustStore.load(fis, tlsConfig.getKeyStorePassword());
+		}
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		tmf.init(trustStore);
+		TrustManager[] tms = tmf.getTrustManagers();
+		SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(new TrustSelfSignedStrategy()).build();
+		sslContext.init(kms, tms, new SecureRandom());
+		return sslContext;
+	}
+
 	public static DefaultHttpTransport createDefaultHttpTransport() {
 		PoolingHttpClientConnectionManager connectionManager = ClientUtils.createPoolingConnectionManager();
 		HttpClient httpClient = ClientUtils.createHttpClient(connectionManager);
@@ -61,17 +119,11 @@ public final class ClientUtils {
 	}
 
 	public static DefaultHttpTransport createDefaultHttpTransport(
-			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient) {
-		return createDefaultHttpTransport(connectionManager, httpClient, null);
-	}
-
-	public static DefaultHttpTransport createDefaultHttpTransport(
 			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient,
-			@Nullable TLSConfig tlsConfig) {
-		// TODO Pass the TLSConfig options to the connection manager
+			@Nullable SSLContext sslCtx) {
 		HttpClientConnectionManager conMgr = connectionManager;
 		if (conMgr == null) {
-			conMgr = ClientUtils.createPoolingConnectionManager();
+			conMgr = ClientUtils.createPoolingConnectionManager(sslCtx);
 		}
 		HttpClient hc = httpClient;
 		if (hc == null) {
@@ -85,6 +137,17 @@ public final class ClientUtils {
 		PoolingHttpClientConnectionManagerBuilder conMgrBuilder = PoolingHttpClientConnectionManagerBuilder.create()
 				.setMaxConnTotal(DEFAULT_MAX_CONNECTIONS).setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS)
 				.setDefaultSocketConfig(sockCfg);
+		return conMgrBuilder.build();
+	}
+
+	public static PoolingHttpClientConnectionManager createPoolingConnectionManager(@Nullable SSLContext sslCtx) {
+		SocketConfig sockCfg = SocketConfig.custom().setSoTimeout(DEFAULT_READ_TIMEOUT).build();
+		PoolingHttpClientConnectionManagerBuilder conMgrBuilder = PoolingHttpClientConnectionManagerBuilder.create()
+				.setMaxConnTotal(DEFAULT_MAX_CONNECTIONS).setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS)
+				.setDefaultSocketConfig(sockCfg);
+		if (sslCtx != null) {
+			conMgrBuilder.setTlsSocketStrategy(new DefaultClientTlsStrategy(sslCtx));
+		}
 		return conMgrBuilder.build();
 	}
 

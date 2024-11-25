@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.catalog.model.Node;
 import com.pszymczyk.consul.ConsulProcess;
@@ -18,7 +19,8 @@ import com.pszymczyk.consul.infrastructure.Ports;
 class CatalogConsulClientTest {
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-	private CatalogConsulClient consulClient = new CatalogConsulClient("localhost", port);
+	private CatalogConsulClient consulClient = new CatalogConsulClient(
+			new ConsulRawClient.Builder("localhost", port).build());
 
 	@BeforeEach
 	void setUp() {
