@@ -99,10 +99,6 @@ public final class HealthServicesRequest implements QueryParameters {
 		}
 	}
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
-
 	@Override
 	public Map<String, String> getQueryParameters() {
 		Map<String, String> params = new HashMap<>();

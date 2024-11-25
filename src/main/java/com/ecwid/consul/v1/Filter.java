@@ -220,7 +220,6 @@ public class Filter implements QueryParameters {
 		public String toString() {
 			return representation;
 		}
-
 	}
 
 	private static class Leaf {

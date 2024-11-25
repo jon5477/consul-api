@@ -9,8 +9,8 @@ public class ConsulTestConstants {
 	 * 1.4.0 2018 - Legacy ACL was deprecated
 	 * 1.6.0 2019
 	 * 1.11.0 2021 - Legacy ACL was removed
-	 * 1.16.1
-	 * 1.18.1
+	 * 1.16.1 2023
+	 * 1.18.1 2024
 	 */
 	public static final String CONSUL_VERSION = "1.18.1";
 }

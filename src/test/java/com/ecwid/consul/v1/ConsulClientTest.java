@@ -51,7 +51,6 @@ class ConsulClientTest {
 	@Test
 	void agentHttpsTest() throws Exception {
 		String host = "https://localhost";
-		// TODO make https random port in consul
 		int httpsPort = randomHttpsPort;
 		String path = "src/test/resources/ssl";
 		String certRootPath = new File(path).getAbsolutePath().replace('\\', '/');
