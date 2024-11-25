@@ -36,12 +36,12 @@ class ConsulClientTest {
 	}
 
 	@AfterEach
-	public void cleanup() throws Exception {
+	public void cleanup() {
 		consul.close();
 	}
 
 	@Test
-	void agentHttpTest() throws Exception {
+	void agentHttpTest() {
 		String host = "http://localhost";
 		int port = consul.getHttpPort();
 		ConsulClient consulClient = new ConsulClient(host, port);
@@ -49,7 +49,7 @@ class ConsulClientTest {
 	}
 
 	@Test
-	void agentHttpsTest() throws Exception {
+	void agentHttpsTest() {
 		String host = "https://localhost";
 		int httpsPort = randomHttpsPort;
 		String path = "src/test/resources/ssl";

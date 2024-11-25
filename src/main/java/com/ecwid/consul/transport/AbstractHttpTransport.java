@@ -17,6 +17,7 @@ import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.http.message.HeaderGroup;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,7 +132,8 @@ abstract class AbstractHttpTransport implements HttpTransport {
 //		return callback.getCompletableFuture();
 //	}
 
-	static Long parseUnsignedLong(Header header) {
+	@Nullable
+	static Long parseUnsignedLong(@Nullable Header header) {
 		if (header != null) {
 			String value = header.getValue();
 			if (value != null) {
@@ -145,7 +147,8 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		return null;
 	}
 
-	static Boolean parseBoolean(Header header) {
+	@Nullable
+	static Boolean parseBoolean(@Nullable Header header) {
 		if (header != null) {
 			if ("true".equals(header.getValue())) {
 				return true;

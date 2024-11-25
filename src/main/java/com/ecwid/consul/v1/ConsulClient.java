@@ -431,26 +431,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 		return eventClient.eventFire(event, payload, eventParams, queryParams);
 	}
 
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #eventList(EventListRequest eventListRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<Event>> eventList(QueryParams queryParams) {
-		return eventClient.eventList(queryParams);
-	}
-
-	/**
-	 * @deprecated This method will be removed in consul-api 2.0. Use
-	 *             {@link #eventList(EventListRequest eventListRequest)}
-	 */
-	@Deprecated(forRemoval = true)
-	@Override
-	public Response<List<Event>> eventList(String event, QueryParams queryParams) {
-		return eventClient.eventList(event, queryParams);
-	}
-
 	@Override
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
 		return eventClient.eventList(eventListRequest);
