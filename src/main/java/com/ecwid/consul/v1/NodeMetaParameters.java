@@ -1,13 +1,13 @@
 package com.ecwid.consul.v1;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 
-public final class NodeMetaParameters implements UrlParameters {
+@Deprecated(forRemoval = true)
+public final class NodeMetaParameters implements QueryParameters {
 	private final Map<String, String> nodeMeta;
 
 	public NodeMetaParameters(Map<String, String> nodeMeta) {
@@ -15,16 +15,17 @@ public final class NodeMetaParameters implements UrlParameters {
 	}
 
 	@Override
-	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<>();
-		if (nodeMeta != null) {
-			String key = "node-meta";
-			for (Map.Entry<String, String> entry : nodeMeta.entrySet()) {
-				String value = entry.getKey() + ":" + entry.getValue();
-				params.add(key + "=" + value);
-			}
-		}
-		return params;
+	public Map<String, String> getQueryParameters() {
+//		List<String> params = new ArrayList<>();
+//		if (nodeMeta != null) {
+//			String key = "node-meta";
+//			for (Map.Entry<String, String> entry : nodeMeta.entrySet()) {
+//				String value = entry.getKey() + ":" + entry.getValue();
+//				params.add(key + "=" + value);
+//			}
+//		}
+//		return params;
+		return Collections.emptyMap();
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.ecwid.consul.transport;
 
-import java.io.Closeable;
 import java.util.concurrent.CompletableFuture;
 
 /**

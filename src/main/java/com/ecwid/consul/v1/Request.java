@@ -1,15 +1,14 @@
 package com.ecwid.consul.v1;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ecwid.consul.QueryParameters;
 
-public final class Request {
+public final class Request implements QueryParameters {
 	private final String endpoint;
-	private final List<QueryParameters> queryParameters;
+	private final Map<String, String> queryParameters;
 	private final String content;
 	private final byte[] binaryContent;
 	/**
@@ -22,7 +21,7 @@ public final class Request {
 			throw new IllegalArgumentException("You should set only content or binaryContent, not both.");
 		}
 		this.endpoint = b.endpoint;
-		this.queryParameters = b.urlParameters;
+		this.queryParameters = b.queryParameters;
 		this.content = b.content;
 		this.binaryContent = b.binaryContent;
 		this.token = b.token;
@@ -32,8 +31,9 @@ public final class Request {
 		return endpoint;
 	}
 
-	public List<QueryParameters> getQueryParameters() {
-		return queryParameters;
+	@Override
+	public Map<String, String> getQueryParameters() {
+		return Collections.unmodifiableMap(queryParameters);
 	}
 
 	@Deprecated(forRemoval = true) // It is better to keep content in binary form
@@ -53,7 +53,7 @@ public final class Request {
 	// Builder
 	public static class Builder {
 		private String endpoint;
-		private List<QueryParameters> urlParameters = new ArrayList<>();
+		private final Map<String, String> queryParameters = new HashMap<>();
 		private String content;
 		private byte[] binaryContent;
 		private char[] token;
@@ -67,18 +67,20 @@ public final class Request {
 			return this;
 		}
 
-		public Builder addUrlParameters(Collection<QueryParameters> urlParameters) {
-			this.urlParameters.addAll(urlParameters);
+		public Builder addQueryParameter(String key, String value) {
+			this.queryParameters.put(key, value);
 			return this;
 		}
 
-		public Builder addUrlParameters(QueryParameters... urlParameters) {
-			this.urlParameters.addAll(Arrays.asList(urlParameters));
+		public Builder addQueryParameters(Map<String, String> queryParameters) {
+			this.queryParameters.putAll(queryParameters);
 			return this;
 		}
 
-		public Builder addUrlParameter(QueryParameters urlParameter) {
-			this.urlParameters.add(urlParameter);
+		public Builder addQueryParameters(QueryParameters... queryParameters) {
+			for (QueryParameters params : queryParameters) {
+				this.queryParameters.putAll(params.getQueryParameters());
+			}
 			return this;
 		}
 

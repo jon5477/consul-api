@@ -1,24 +1,21 @@
 package com.ecwid.consul.v1.health;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.v1.NodeMetaParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.v1.QueryParams;
 
-public final class HealthChecksForServiceRequest implements ConsulRequest {
+public final class HealthChecksForServiceRequest implements QueryParameters {
 	private final String datacenter;
 	private final String near;
 	private final Map<String, String> nodeMeta;
 	private final QueryParams queryParams;
 
-	public HealthChecksForServiceRequest(String datacenter, String near, Map<String, String> nodeMeta, QueryParams queryParams) {
+	public HealthChecksForServiceRequest(String datacenter, String near, Map<String, String> nodeMeta,
+			QueryParams queryParams) {
 		this.datacenter = datacenter;
 		this.near = near;
 		this.nodeMeta = nodeMeta;
@@ -80,25 +77,17 @@ public final class HealthChecksForServiceRequest implements ConsulRequest {
 	}
 
 	@Override
-	public List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
-
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (datacenter != null) {
-			params.add(new SingleUrlParameters("dc", datacenter));
+			params.put("dc", datacenter);
 		}
-
 		if (near != null) {
-			params.add(new SingleUrlParameters("near", near));
+			params.put("near", near);
 		}
-
-		if (nodeMeta != null) {
-			params.add(new NodeMetaParameters(nodeMeta));
-		}
-
 		if (queryParams != null) {
-			params.add(queryParams);
+			params.putAll(queryParams.getQueryParameters());
 		}
-
 		return params;
 	}
 
@@ -111,10 +100,8 @@ public final class HealthChecksForServiceRequest implements ConsulRequest {
 			return false;
 		}
 		HealthChecksForServiceRequest that = (HealthChecksForServiceRequest) o;
-		return Objects.equals(datacenter, that.datacenter) &&
-			Objects.equals(near, that.near) &&
-			Objects.equals(nodeMeta, that.nodeMeta) &&
-			Objects.equals(queryParams, that.queryParams);
+		return Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
+				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override

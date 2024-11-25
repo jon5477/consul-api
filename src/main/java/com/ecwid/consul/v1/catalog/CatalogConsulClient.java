@@ -3,8 +3,6 @@ package com.ecwid.consul.v1.catalog;
 import java.util.List;
 import java.util.Map;
 
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.TLSConfig;
@@ -62,7 +60,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, String token) {
 		String json = JsonFactory.toJson(catalogRegistration);
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -79,7 +76,6 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, String token) {
 		String json = JsonFactory.toJson(catalogDeregistration);
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -92,9 +88,8 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<List<String>> getCatalogDatacenters() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/datacenters");
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<String>>() {
-					});
+			List<String> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<String>>() {
+			});
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -110,8 +105,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/catalog/nodes")
-				.addUrlParameters(catalogNodesRequest.asUrlParameters())
-				.build();
+				.addQueryParameters(catalogNodesRequest.getQueryParameters()).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Node> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Node>>() {
@@ -136,8 +130,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services",
-				catalogServicesRequest.asUrlParameters());
+		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			Map<String, List<String>> value = JsonFactory.fromJson(httpResponse.getContent(),
 					new TypeReference<Map<String, List<String>>>() {
@@ -184,10 +177,11 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<List<CatalogService>> getCatalogService(String serviceName,
 			CatalogServiceRequest catalogServiceRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName,
-				catalogServiceRequest.asUrlParameters());
+				catalogServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			List<com.ecwid.consul.v1.catalog.model.CatalogService> value = JsonFactory.fromJson(
-					httpResponse.getContent(), new TypeReference<List<com.ecwid.consul.v1.catalog.model.CatalogService>>() {
+					httpResponse.getContent(),
+					new TypeReference<List<com.ecwid.consul.v1.catalog.model.CatalogService>>() {
 					});
 			return new Response<>(value, httpResponse);
 		} else {

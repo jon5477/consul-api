@@ -1,7 +1,6 @@
 package com.ecwid.consul;
 
-import java.util.List;
-
-public interface ConsulRequest {
-	List<UrlParameters> asUrlParameters();
+@Deprecated(forRemoval = true)
+public interface ConsulRequest extends QueryParameters {
+	//
 }

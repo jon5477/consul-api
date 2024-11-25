@@ -1,18 +1,14 @@
 package com.ecwid.consul.v1.catalog;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.v1.NodeMetaParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.v1.QueryParams;
 
-public final class CatalogServicesRequest implements ConsulRequest {
+public final class CatalogServicesRequest implements QueryParameters {
 	private final String datacenter;
 	private final Map<String, String> nodeMeta;
 	private final QueryParams queryParams;
@@ -85,16 +81,13 @@ public final class CatalogServicesRequest implements ConsulRequest {
 	}
 
 	@Override
-	public List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (datacenter != null) {
-			params.add(new SingleUrlParameters("dc", datacenter));
-		}
-		if (nodeMeta != null) {
-			params.add(new NodeMetaParameters(nodeMeta));
+			params.put("dc", datacenter);
 		}
 		if (queryParams != null) {
-			params.add(queryParams);
+			params.putAll(queryParams.getQueryParameters());
 		}
 		return params;
 	}

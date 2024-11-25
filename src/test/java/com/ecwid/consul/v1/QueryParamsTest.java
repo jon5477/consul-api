@@ -1,11 +1,9 @@
 package com.ecwid.consul.v1;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,13 +43,8 @@ public class QueryParamsTest {
 		final String EXPECTED_NEAR = "_agent";
 
 		// When
-		QueryParams actual = Builder.builder()
-				.setDatacenter(EXPECTED_DATACENTER)
-				.setConsistencyMode(EXPECTED_MODE)
-				.setWaitTime(EXPECTED_WAIT_TIME)
-				.setIndex(EXPECTED_INDEX)
-				.setNear(EXPECTED_NEAR)
-				.build();
+		QueryParams actual = Builder.builder().setDatacenter(EXPECTED_DATACENTER).setConsistencyMode(EXPECTED_MODE)
+				.setWaitTime(EXPECTED_WAIT_TIME).setIndex(EXPECTED_INDEX).setNear(EXPECTED_NEAR).build();
 
 		// Then
 		assertEquals(actual.getDatacenter(), EXPECTED_DATACENTER);
@@ -71,21 +64,16 @@ public class QueryParamsTest {
 		final String EXPECTED_NEAR = "_agent";
 
 		// When
-		List<String> urlParameters = Builder.builder()
-				.setDatacenter(EXPECTED_DATACENTER)
-				.setConsistencyMode(EXPECTED_MODE)
-				.setWaitTime(EXPECTED_WAIT)
-				.setIndex(EXPECTED_INDEX)
-				.setNear(EXPECTED_NEAR)
-				.build()
-				.toUrlParameters();
+		Map<String, String> queryParams = Builder.builder().setDatacenter(EXPECTED_DATACENTER)
+				.setConsistencyMode(EXPECTED_MODE).setWaitTime(EXPECTED_WAIT).setIndex(EXPECTED_INDEX)
+				.setNear(EXPECTED_NEAR).build().getQueryParameters();
 
 		// Then
-		assertThat(urlParameters, hasItem("dc=" + EXPECTED_DATACENTER));
-		assertThat(urlParameters, hasItem(EXPECTED_MODE.name().toLowerCase()));
-		assertThat(urlParameters, hasItem("wait=" + Utils.toSecondsString(EXPECTED_WAIT)));
-		assertThat(urlParameters, hasItem("index=" + EXPECTED_INDEX));
-		assertThat(urlParameters, hasItem("near=" + EXPECTED_NEAR));
+		assertEquals(EXPECTED_DATACENTER, queryParams.get("dc"));
+		assertNull(queryParams.get(EXPECTED_MODE.name().toLowerCase()));
+		assertEquals(Utils.toSecondsString(EXPECTED_WAIT), queryParams.get("wait"));
+		assertEquals(EXPECTED_INDEX, queryParams.get("index"));
+		assertEquals(EXPECTED_NEAR, queryParams.get("near"));
 	}
 
 	@Nested

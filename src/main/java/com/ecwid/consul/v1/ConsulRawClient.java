@@ -167,8 +167,8 @@ public class ConsulRawClient {
 	}
 
 	public char[] getToken() {
-		char[] token = this.token.get();
-		return Arrays.copyOf(token, token.length); // defensive copy
+		char[] arr = this.token.get();
+		return Arrays.copyOf(arr, arr.length); // defensive copy
 	}
 
 	public void setToken(char[] token) {
@@ -190,36 +190,36 @@ public class ConsulRawClient {
 		return consulToken;
 	}
 
-	public HttpResponse makeGetRequest(String endpoint, QueryParameters... urlParams) {
-		return makeGetRequest(endpoint, Arrays.asList(urlParams));
-	}
-
-	public HttpResponse makeGetRequest(String endpoint, List<QueryParameters> queryParams) {
+	public HttpResponse makeGetRequest(String endpoint, QueryParameters... queryParams) {
 		URI uri = buildURI(endpoint, queryParams);
 		HttpRequest request = HttpRequest.Builder.newBuilder().setURI(uri).setToken(token.get()).build();
 		return httpTransport.makeGetRequest(request);
 	}
 
+	public HttpResponse makeGetRequest(String endpoint, List<QueryParameters> queryParams) {
+		return makeGetRequest(endpoint, queryParams.toArray(QueryParameters[]::new));
+	}
+
 	public HttpResponse makeGetRequest(Request request) {
-		URI uri = buildURI(request.getEndpoint(), request.getQueryParameters());
+		URI uri = buildURI(request.getEndpoint(), request);
 		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request))
 				.build();
 		return httpTransport.makeGetRequest(httpRequest);
 	}
 
 	public HttpResponse makePutRequest(String endpoint, String content, QueryParameters... queryParams) {
-		return makePutRequest(endpoint, content, Arrays.asList(queryParams));
-	}
-
-	public HttpResponse makePutRequest(String endpoint, String content, List<QueryParameters> queryParams) {
 		URI uri = buildURI(endpoint, queryParams);
 		HttpRequest request = HttpRequest.Builder.newBuilder().setURI(uri).setToken(token.get()).setContent(content)
 				.build();
 		return httpTransport.makePutRequest(request);
 	}
 
+	public HttpResponse makePutRequest(String endpoint, String content, List<QueryParameters> queryParams) {
+		return makePutRequest(endpoint, content, queryParams.toArray(QueryParameters[]::new));
+	}
+
 	public HttpResponse makePutRequest(Request request) {
-		URI uri = buildURI(request.getEndpoint(), request.getQueryParameters());
+		URI uri = buildURI(request.getEndpoint(), request);
 		HttpRequest.Builder reqBuilder = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request));
 		if (request.getBinaryContent() != null) {
 			reqBuilder.setContent(request.getBinaryContent());
@@ -229,7 +229,7 @@ public class ConsulRawClient {
 	}
 
 	public HttpResponse makeDeleteRequest(Request request) {
-		URI uri = buildURI(request.getEndpoint(), request.getQueryParameters());
+		URI uri = buildURI(request.getEndpoint(), request);
 		HttpRequest httpRequest = HttpRequest.Builder.newBuilder().setURI(uri).setToken(getConsulToken(request))
 				.setContent(request.getBinaryContent()).build();
 		return httpTransport.makeDeleteRequest(httpRequest);
@@ -243,9 +243,10 @@ public class ConsulRawClient {
 	 * @return The {@link URI} to the Consul API endpoint including query
 	 *         parameters.
 	 */
-	private URI buildURI(String endpoint, List<QueryParameters> queryParams) {
+	private URI buildURI(String endpoint, QueryParameters... queryParams) {
 		try {
-			List<NameValuePair> nvps = queryParams.stream().flatMap(e -> e.getQueryParameters().entrySet().stream())
+			List<NameValuePair> nvps = Arrays.stream(queryParams)
+					.flatMap(e -> e.getQueryParameters().entrySet().stream())
 					.map(e -> new BasicNameValuePair(e.getKey(), e.getValue())).collect(Collectors.toList());
 			return new URIBuilder().setScheme(agentAddress.getProtocol()).setUserInfo(agentAddress.getUserInfo())
 					.setHost(agentAddress.getHost()).setPort(agentAddress.getPort())

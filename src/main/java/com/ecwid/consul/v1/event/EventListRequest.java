@@ -1,15 +1,13 @@
 package com.ecwid.consul.v1.event;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.v1.QueryParams;
 
-public final class EventListRequest implements ConsulRequest {
+public final class EventListRequest implements QueryParameters {
 	private final String name;
 	private final String node;
 	private final String service;
@@ -99,25 +97,25 @@ public final class EventListRequest implements ConsulRequest {
 	}
 
 	@Override
-	public List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (name != null) {
-			params.add(new SingleUrlParameters("name", name));
+			params.put("name", name);
 		}
 		if (node != null) {
-			params.add(new SingleUrlParameters("node", node));
+			params.put("node", node);
 		}
 		if (service != null) {
-			params.add(new SingleUrlParameters("service", service));
+			params.put("service", service);
 		}
 		if (tag != null) {
-			params.add(new SingleUrlParameters("tag", tag));
+			params.put("tag", tag);
 		}
 		if (queryParams != null) {
-			params.add(queryParams);
+			params.putAll(queryParams.getQueryParameters());
 		}
 		if (token != null) {
-			params.add(new SingleUrlParameters("token", token));
+			params.put("token", token);
 		}
 		return params;
 	}

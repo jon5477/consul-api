@@ -3,8 +3,8 @@ package com.ecwid.consul.v1.agent;
 import java.util.List;
 import java.util.Map;
 
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.SingleQueryParameters;
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
@@ -100,7 +100,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Self> getAgentSelf(String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/self", tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
 			Self self = JsonFactory.fromJson(httpResponse.getContent(), Self.class);
@@ -117,8 +116,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentSetMaintenance(boolean maintenanceEnabled, String reason) {
-		UrlParameters maintenanceParameter = new SingleUrlParameters("enable", Boolean.toString(maintenanceEnabled));
-		UrlParameters reasonParamenter = reason != null ? new SingleUrlParameters("reason", reason) : null;
+		QueryParameters maintenanceParameter = new SingleQueryParameters("enable",
+				Boolean.toString(maintenanceEnabled));
+		QueryParameters reasonParamenter = reason != null ? new SingleQueryParameters("reason", reason) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/maintenance", "", maintenanceParameter,
 				reasonParamenter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -130,7 +130,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentJoin(String address, boolean wan) {
-		UrlParameters wanParams = wan ? new SingleUrlParameters("wan", "1") : null;
+		QueryParameters wanParams = wan ? new SingleQueryParameters("wan", "1") : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/join/" + address, "", wanParams);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -156,7 +156,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckRegister(NewCheck newCheck, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
 		String json = JsonFactory.toJson(newCheck);
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register", json, tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
@@ -173,7 +172,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckDeregister(String checkId, String token) {
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/deregister/" + checkId, "",
 				tokenParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -195,8 +193,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckPass(String checkId, String note, String token) {
-		UrlParameters noteParameter = note != null ? new SingleUrlParameters("note", note) : null;
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
+		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/pass/" + checkId, "", noteParameter,
 				tokenParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -218,8 +215,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckWarn(String checkId, String note, String token) {
-		UrlParameters noteParameter = note != null ? new SingleUrlParameters("note", note) : null;
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
+		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/warn/" + checkId, "", noteParameter,
 				tokenParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -241,8 +237,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckFail(String checkId, String note, String token) {
-		UrlParameters noteParameter = note != null ? new SingleUrlParameters("note", note) : null;
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
+		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/fail/" + checkId, "", noteParameter,
 				tokenParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -276,7 +271,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceDeregister(String serviceId, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/deregister/" + serviceId, "",
 				tokenParam);
 		if (httpResponse.getStatusCode() == 200) {
@@ -293,8 +287,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceSetMaintenance(String serviceId, boolean maintenanceEnabled, String reason) {
-		UrlParameters maintenanceParameter = new SingleUrlParameters("enable", Boolean.toString(maintenanceEnabled));
-		UrlParameters reasonParameter = reason != null ? new SingleUrlParameters("reason", reason) : null;
+		QueryParameters maintenanceParameter = new SingleQueryParameters("enable",
+				Boolean.toString(maintenanceEnabled));
+		QueryParameters reasonParameter = reason != null ? new SingleQueryParameters("reason", reason) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/maintenance/" + serviceId, "",
 				maintenanceParameter, reasonParameter);
 		if (httpResponse.getStatusCode() == 200) {

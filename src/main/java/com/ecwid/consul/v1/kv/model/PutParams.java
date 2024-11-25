@@ -1,16 +1,15 @@
 package com.ecwid.consul.v1.kv.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.Utils;
+import com.ecwid.consul.QueryParameters;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public class PutParams implements UrlParameters {
+public class PutParams implements QueryParameters {
 	private long flags;
 	private Long cas;
 	private String acquireSession;
@@ -49,22 +48,20 @@ public class PutParams implements UrlParameters {
 	}
 
 	@Override
-	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<>();
-
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (flags != 0) {
-			params.add("flags=" + flags);
+			params.put("flags", String.valueOf(flags));
 		}
 		if (cas != null) {
-			params.add("cas=" + cas);
+			params.put("cas", String.valueOf(cas));
 		}
 		if (acquireSession != null) {
-			params.add("acquire=" + Utils.encodeValue(acquireSession));
+			params.put("acquire", acquireSession);
 		}
 		if (releaseSession != null) {
-			params.add("release=" + Utils.encodeValue(releaseSession));
+			params.put("release", releaseSession);
 		}
-
 		return params;
 	}
 

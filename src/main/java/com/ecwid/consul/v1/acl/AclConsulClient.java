@@ -129,7 +129,7 @@ public final class AclConsulClient implements AclClient {
 	@Override
 	public Response<List<AclToken>> aclList(char[] token, AclTokensRequest req) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/tokens")
-				.addUrlParameters(req.asUrlParameters()).setToken(token).build();
+				.addQueryParameters(req.getQueryParameters()).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<AclToken> aclTokens = JsonFactory.fromJson(httpResponse.getContent(),

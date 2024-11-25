@@ -1,20 +1,15 @@
 package com.ecwid.consul.v1.health;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.v1.NodeMetaParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.v1.QueryParams;
-import com.ecwid.consul.v1.TagsParameters;
 
-public final class HealthServicesRequest implements ConsulRequest {
+public final class HealthServicesRequest implements QueryParameters {
 	private final String datacenter;
 	private final String near;
 	private final String[] tags;
@@ -173,44 +168,25 @@ public final class HealthServicesRequest implements ConsulRequest {
 	}
 
 	@Override
-	public List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
-
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (datacenter != null) {
-			params.add(new SingleUrlParameters("dc", datacenter));
+			params.put("dc", datacenter);
 		}
-
 		if (near != null) {
-			params.add(new SingleUrlParameters("near", near));
+			params.put("near", near);
 		}
-
-		// TODO Specifying tags here is deprecated since Consul 1.9.x
-		// Use filter with the Service.Tags selector instead.
-		if (tags != null) {
-			params.add(new TagsParameters(tags));
-		}
-
-		// TODO Specifying node-meta here is deprecated since Consul 1.9.x
-		// Use filter with the Node.Meta selector instead.
-		if (nodeMeta != null) {
-			params.add(new NodeMetaParameters(nodeMeta));
-		}
-
-		// Allow a very basic form of filtering for now
+		// TODO Create a filter class
 		if (filter != null) {
-			params.add(new SingleUrlParameters("filter", filter));
+			params.put("filter", filter);
 		}
-
-		params.add(new SingleUrlParameters("passing", String.valueOf(passing)));
-
+		params.put("passing", String.valueOf(passing));
 		if (queryParams != null) {
-			params.add(queryParams);
+			params.putAll(queryParams.getQueryParameters());
 		}
-
 		if (token != null) {
-			params.add(new SingleUrlParameters("token", token));
+			params.put("token", token);
 		}
-
 		return params;
 	}
 

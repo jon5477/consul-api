@@ -70,7 +70,7 @@ public final class HealthConsulClient implements HealthClient {
 	public Response<List<Check>> getHealthChecksForService(String serviceName,
 			HealthChecksForServiceRequest healthChecksForServiceRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
-				healthChecksForServiceRequest.asUrlParameters());
+				healthChecksForServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
 			});
@@ -81,32 +81,32 @@ public final class HealthConsulClient implements HealthClient {
 	}
 
 	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			boolean onlyPassing, QueryParams queryParams) {
+	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing,
+			QueryParams queryParams) {
 		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, null);
 	}
 
 	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			boolean onlyPassing, QueryParams queryParams, String token) {
+	public Response<List<HealthService>> getHealthServices(String serviceName, boolean onlyPassing,
+			QueryParams queryParams, String token) {
 		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, token);
 	}
 
 	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			String tag, boolean onlyPassing, QueryParams queryParams) {
+	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing,
+			QueryParams queryParams) {
 		return getHealthServices(serviceName, tag, onlyPassing, queryParams, null);
 	}
 
 	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			String tag, boolean onlyPassing, QueryParams queryParams, String token) {
+	public Response<List<HealthService>> getHealthServices(String serviceName, String tag, boolean onlyPassing,
+			QueryParams queryParams, String token) {
 		return getHealthServices(serviceName, new String[] { tag }, onlyPassing, queryParams, token);
 	}
 
 	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			String[] tags, boolean onlyPassing, QueryParams queryParams, String token) {
+	public Response<List<HealthService>> getHealthServices(String serviceName, String[] tags, boolean onlyPassing,
+			QueryParams queryParams, String token) {
 		HealthServicesRequest request = HealthServicesRequest.newBuilder().setTags(tags).setPassing(onlyPassing)
 				.setQueryParams(queryParams).setToken(token).build();
 		return getHealthServices(serviceName, request);
@@ -116,7 +116,7 @@ public final class HealthConsulClient implements HealthClient {
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			HealthServicesRequest healthServicesRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/service/" + serviceName,
-				healthServicesRequest.asUrlParameters());
+				healthServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			List<HealthService> value = JsonFactory.fromJson(httpResponse.getContent(),
 					new TypeReference<List<HealthService>>() {

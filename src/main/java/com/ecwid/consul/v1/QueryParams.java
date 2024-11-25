@@ -1,16 +1,16 @@
 package com.ecwid.consul.v1;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public final class QueryParams implements UrlParameters {
+public final class QueryParams implements QueryParameters {
 	public static final class Builder {
 		public static Builder builder() {
 			return new Builder();
@@ -121,30 +121,24 @@ public final class QueryParams implements UrlParameters {
 	}
 
 	@Override
-	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<>();
-
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		// add basic params
 		if (datacenter != null) {
-			params.add("dc=" + Utils.encodeValue(datacenter));
+			params.put("dc", datacenter);
 		}
-
 		if (consistencyMode != ConsistencyMode.DEFAULT) {
-			params.add(consistencyMode.name().toLowerCase());
+			params.put(consistencyMode.name().toLowerCase(), null);
 		}
-
 		if (waitTime != -1) {
-			params.add("wait=" + Utils.toSecondsString(waitTime));
+			params.put("wait", Utils.toSecondsString(waitTime));
 		}
-
 		if (index != -1) {
-			params.add("index=" + Long.toUnsignedString(index));
+			params.put("index", Long.toUnsignedString(index));
 		}
-
 		if (near != null) {
-			params.add("near=" + Utils.encodeValue(near));
+			params.put("near", near);
 		}
-
 		return params;
 	}
 

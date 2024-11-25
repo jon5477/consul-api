@@ -1,23 +1,20 @@
 package com.ecwid.consul.v1.catalog;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.v1.NodeMetaParameters;
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.v1.QueryParams;
-import com.ecwid.consul.v1.TagsParameters;
 
-public final class CatalogServiceRequest implements ConsulRequest {
+public final class CatalogServiceRequest implements QueryParameters {
 	private final String datacenter;
+	@Deprecated(forRemoval = true)
 	private final String[] tags;
 	private final String near;
+	@Deprecated(forRemoval = true)
 	private final Map<String, String> nodeMeta;
 	private final QueryParams queryParams;
 	private final String token;
@@ -121,22 +118,16 @@ public final class CatalogServiceRequest implements ConsulRequest {
 	}
 
 	@Override
-	public List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (datacenter != null) {
-			params.add(new SingleUrlParameters("dc", datacenter));
-		}
-		if (tags != null) {
-			params.add(new TagsParameters(tags));
+			params.put("dc", datacenter);
 		}
 		if (near != null) {
-			params.add(new SingleUrlParameters("near", near));
-		}
-		if (nodeMeta != null) {
-			params.add(new NodeMetaParameters(nodeMeta));
+			params.put("near", near);
 		}
 		if (queryParams != null) {
-			params.add(queryParams);
+			params.putAll(queryParams.getQueryParameters());
 		}
 		return params;
 	}

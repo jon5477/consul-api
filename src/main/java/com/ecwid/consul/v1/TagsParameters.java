@@ -1,12 +1,13 @@
 package com.ecwid.consul.v1;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 
-public final class TagsParameters implements UrlParameters {
+@Deprecated(forRemoval = true)
+public final class TagsParameters implements QueryParameters {
 	private final String[] tags;
 
 	public TagsParameters(String[] tags) {
@@ -14,17 +15,15 @@ public final class TagsParameters implements UrlParameters {
 	}
 
 	@Override
-	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<>();
-
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (tags != null) {
 			for (String tag : tags) {
 				if (tag != null) {
-					params.add("tag=" + tag);
+					params.put("tag", tag);
 				}
 			}
 		}
-
 		return params;
 	}
 

@@ -57,14 +57,14 @@ abstract class AbstractHttpTransport implements HttpTransport {
 
 	@Override
 	public final HttpResponse makeGetRequest(HttpRequest request) {
-		HttpGet httpGet = new HttpGet(request.getUrl());
+		HttpGet httpGet = new HttpGet(request.getURI());
 		addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
 		return executeRequest(httpGet);
 	}
 
 	@Override
 	public final HttpResponse makePutRequest(HttpRequest request) {
-		HttpPut httpPut = new HttpPut(request.getUrl());
+		HttpPut httpPut = new HttpPut(request.getURI());
 		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
 		if (request.getContent() != null) {
 			httpPut.setEntity(new ByteArrayEntity(request.getContent(), null));
@@ -74,21 +74,21 @@ abstract class AbstractHttpTransport implements HttpTransport {
 
 	@Override
 	public final HttpResponse makeDeleteRequest(HttpRequest request) {
-		HttpDelete httpDelete = new HttpDelete(request.getUrl());
+		HttpDelete httpDelete = new HttpDelete(request.getURI());
 		addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
 		return executeRequest(httpDelete);
 	}
 
 	@Override
 	public final CompletableFuture<HttpResponse> makeAsyncGetRequest(HttpRequest request) {
-		SimpleHttpRequest httpGet = SimpleRequestBuilder.get(request.getUrl()).build();
+		SimpleHttpRequest httpGet = SimpleRequestBuilder.get(request.getURI()).build();
 		addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
 		return executeAsyncRequest(httpGet);
 	}
 
 	@Override
 	public final CompletableFuture<HttpResponse> makeAsyncPutRequest(HttpRequest request) {
-		SimpleHttpRequest httpPut = SimpleRequestBuilder.put(request.getUrl()).build();
+		SimpleHttpRequest httpPut = SimpleRequestBuilder.put(request.getURI()).build();
 		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
 		if (request.getContent() != null) {
 			String mimeType = request.getContentType();
@@ -101,7 +101,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 
 	@Override
 	public final CompletableFuture<HttpResponse> makeAsyncDeleteRequest(HttpRequest request) {
-		SimpleHttpRequest httpDelete = SimpleRequestBuilder.delete(request.getUrl()).build();
+		SimpleHttpRequest httpDelete = SimpleRequestBuilder.delete(request.getURI()).build();
 		addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
 		return executeAsyncRequest(httpDelete);
 	}

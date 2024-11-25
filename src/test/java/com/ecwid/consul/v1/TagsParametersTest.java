@@ -1,8 +1,9 @@
 package com.ecwid.consul.v1;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 class TagsParametersTest {
 	@Nested

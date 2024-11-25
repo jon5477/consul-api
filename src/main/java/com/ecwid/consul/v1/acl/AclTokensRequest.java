@@ -1,17 +1,15 @@
 package com.ecwid.consul.v1.acl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
+import com.ecwid.consul.QueryParameters;
 
 /**
  * @author Jon Huang (jon5477)
  */
-public class AclTokensRequest implements ConsulRequest {
+public class AclTokensRequest implements QueryParameters {
 	private final String policy;
 	private final String role;
 	private final String serviceName;
@@ -79,25 +77,25 @@ public class AclTokensRequest implements ConsulRequest {
 	}
 
 	@Override
-	public final List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
+	public final Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (policy != null) {
-			params.add(new SingleUrlParameters("policy", policy));
+			params.put("policy", policy);
 		}
 		if (role != null) {
-			params.add(new SingleUrlParameters("role", role));
+			params.put("role", role);
 		}
 		if (serviceName != null) {
-			params.add(new SingleUrlParameters("servicename", serviceName));
+			params.put("servicename", serviceName);
 		}
 		if (authMethod != null) {
-			params.add(new SingleUrlParameters("authmethod", authMethod));
+			params.put("authmethod", authMethod);
 		}
 		if (authMethodNs != null) {
-			params.add(new SingleUrlParameters("authmethod-ns", authMethodNs));
+			params.put("authmethod-ns", authMethodNs);
 		}
 		if (ns != null) {
-			params.add(new SingleUrlParameters("ns", ns));
+			params.put("ns", ns);
 		}
 		return params;
 	}

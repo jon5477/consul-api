@@ -45,7 +45,8 @@ public final class EventConsulClient implements EventClient {
 
 	@Override
 	public Response<Event> eventFire(String event, String payload, EventParams eventParams, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams, queryParams);
+		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams,
+				queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			Event value = JsonFactory.fromJson(httpResponse.getContent(), Event.class);
 			return new Response<>(value, httpResponse);
@@ -61,16 +62,13 @@ public final class EventConsulClient implements EventClient {
 
 	@Override
 	public Response<List<Event>> eventList(String event, QueryParams queryParams) {
-		EventListRequest request = EventListRequest.newBuilder()
-				.setName(event)
-				.setQueryParams(queryParams)
-				.build();
+		EventListRequest request = EventListRequest.newBuilder().setName(event).setQueryParams(queryParams).build();
 		return eventList(request);
 	}
 
 	@Override
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest.asUrlParameters());
+		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Event> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Event>>() {
 			});
