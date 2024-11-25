@@ -19,6 +19,7 @@
 
 package com.ecwid.consul.v1.kv;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
@@ -259,7 +260,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 	public Response<Boolean> setKVValue(String key, String value, char[] token, PutParams putParams,
 			QueryParams queryParams) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
-				.addQueryParameters(queryParams, putParams).build();
+				.addQueryParameters(queryParams, putParams).setContent(value.getBytes(StandardCharsets.UTF_8)).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
