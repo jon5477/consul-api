@@ -2,12 +2,17 @@ package com.ecwid.consul.transport;
 
 import java.util.Objects;
 
+import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.util.Timeout;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -23,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @author Jon Huang
  *
  */
-public class ClientUtils {
+public final class ClientUtils {
 	/**
 	 * The default number of maximum connections in the pool.
 	 */
@@ -44,6 +49,9 @@ public class ClientUtils {
 	 */
 	private static final Timeout DEFAULT_READ_TIMEOUT = Timeout.ofMinutes(10);
 
+	private ClientUtils() {
+	}
+
 	public static PoolingHttpClientConnectionManager createPoolingConnectionManager() {
 		SocketConfig sockCfg = SocketConfig.custom().setSoTimeout(DEFAULT_READ_TIMEOUT).build();
 		PoolingHttpClientConnectionManagerBuilder conMgrBuilder = PoolingHttpClientConnectionManagerBuilder.create()
@@ -58,5 +66,20 @@ public class ClientUtils {
 		HttpClientBuilder hcBuilder = HttpClientBuilder.create().setConnectionManager(conMgr)
 				.setDefaultRequestConfig(reqCfg);
 		return hcBuilder.build();
+	}
+
+	public static PoolingAsyncClientConnectionManager createPoolingAsyncConnectionManager() {
+//		SocketConfig sockCfg = SocketConfig.custom().setSoTimeout(DEFAULT_READ_TIMEOUT).build();
+		PoolingAsyncClientConnectionManagerBuilder conMgrBuilder = PoolingAsyncClientConnectionManagerBuilder.create()
+				.setMaxConnTotal(DEFAULT_MAX_CONNECTIONS).setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS);
+		return conMgrBuilder.build();
+	}
+
+	public static HttpAsyncClient createAsyncHttpClient(@NonNull AsyncClientConnectionManager conMgr) {
+		Objects.requireNonNull(conMgr, "connection manager cannot be null");
+		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();
+		HttpAsyncClientBuilder asyncHttpClientBuilder = HttpAsyncClientBuilder.create().setConnectionManager(conMgr)
+				.setDefaultRequestConfig(reqCfg).useSystemProperties();
+		return asyncHttpClientBuilder.build();
 	}
 }

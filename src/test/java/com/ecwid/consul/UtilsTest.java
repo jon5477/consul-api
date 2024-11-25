@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class UtilsTest {
 	@Test
-	public void testToSecondsString() throws Exception {
+	public void testToSecondsString() {
 		assertEquals("1000s", Utils.toSecondsString(1000L));
 	}
 

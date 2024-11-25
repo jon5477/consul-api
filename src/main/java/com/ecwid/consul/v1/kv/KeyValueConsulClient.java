@@ -51,6 +51,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public final class KeyValueConsulClient implements KeyValueClient {
 	private static final TypeReference<List<GetBinaryValue>> BINARY_VALUE_LIST_TYPE_REF = new TypeReference<List<GetBinaryValue>>() {
 	};
+	private static final TypeReference<List<GetValue>> VALUE_LIST_TYPE_REF = new TypeReference<List<GetValue>>() {
+	};
 	private static final TypeReference<List<String>> STRING_LIST_TYPE_REF = new TypeReference<List<String>>() {
 	};
 	private static final String API_KV_PREFIX = "/v1/kv/";
@@ -106,8 +108,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
-			});
+			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), VALUE_LIST_TYPE_REF);
 			if (value.isEmpty()) {
 				return new Response<>(null, httpResponse);
 			} else if (value.size() == 1) {
@@ -179,8 +180,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), new TypeReference<List<GetValue>>() {
-			});
+			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), VALUE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
 			return new Response<>(null, httpResponse);

@@ -1,7 +1,9 @@
 package com.ecwid.consul.v1.acl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
@@ -14,6 +16,8 @@ import com.ecwid.consul.v1.acl.model.AclToken;
 import com.ecwid.consul.v1.acl.model.NewAcl;
 import com.ecwid.consul.v1.acl.model.UpdateAcl;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Jon Huang (jon5477)
@@ -104,9 +108,18 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<AclToken> aclClone(char[] token, String accessorId) {
+	public Response<AclToken> aclClone(char[] token, @NonNull String accessorId) {
+		return aclClone(token, accessorId, null);
+	}
+
+	@Override
+	public Response<AclToken> aclClone(char[] token, @NonNull String accessorId, @Nullable String description) {
+		ObjectNode objNode = JsonNodeFactory.instance.objectNode();
+		if (description != null) {
+			objNode.put("Description", description);
+		}
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId + "/clone")
-				.setBinaryContent("{}".getBytes(StandardCharsets.UTF_8)).setToken(token).build();
+				.setBinaryContent(JsonFactory.toBytes(objNode)).setToken(token).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);

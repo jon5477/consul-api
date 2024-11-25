@@ -12,14 +12,11 @@ public final class CatalogServicesRequest implements QueryParameters {
 	private final String datacenter;
 	private final Map<String, String> nodeMeta;
 	private final QueryParams queryParams;
-	private final String token;
 
-	public CatalogServicesRequest(String datacenter, Map<String, String> nodeMeta, QueryParams queryParams,
-			String token) {
+	public CatalogServicesRequest(String datacenter, Map<String, String> nodeMeta, QueryParams queryParams) {
 		this.datacenter = datacenter;
 		this.nodeMeta = nodeMeta;
 		this.queryParams = queryParams;
-		this.token = token;
 	}
 
 	public String getDatacenter() {
@@ -34,15 +31,10 @@ public final class CatalogServicesRequest implements QueryParameters {
 		return queryParams;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
 	public static class Builder {
 		private String datacenter;
 		private Map<String, String> nodeMeta;
 		private QueryParams queryParams;
-		private String token;
 
 		private Builder() {
 		}
@@ -66,13 +58,8 @@ public final class CatalogServicesRequest implements QueryParameters {
 			return this;
 		}
 
-		public Builder setToken(String token) {
-			this.token = token;
-			return this;
-		}
-
 		public CatalogServicesRequest build() {
-			return new CatalogServicesRequest(datacenter, nodeMeta, queryParams, token);
+			return new CatalogServicesRequest(datacenter, nodeMeta, queryParams);
 		}
 	}
 
@@ -102,11 +89,11 @@ public final class CatalogServicesRequest implements QueryParameters {
 		}
 		CatalogServicesRequest that = (CatalogServicesRequest) o;
 		return Objects.equals(datacenter, that.datacenter) && Objects.equals(nodeMeta, that.nodeMeta)
-				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
+				&& Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(datacenter, nodeMeta, queryParams, token);
+		return Objects.hash(datacenter, nodeMeta, queryParams);
 	}
 }

@@ -17,16 +17,14 @@ public final class CatalogServiceRequest implements QueryParameters {
 	@Deprecated(forRemoval = true)
 	private final Map<String, String> nodeMeta;
 	private final QueryParams queryParams;
-	private final String token;
 
 	private CatalogServiceRequest(String datacenter, String[] tags, String near, Map<String, String> nodeMeta,
-			QueryParams queryParams, String token) {
+			QueryParams queryParams) {
 		this.datacenter = datacenter;
 		this.tags = tags;
 		this.near = near;
 		this.nodeMeta = nodeMeta;
 		this.queryParams = queryParams;
-		this.token = token;
 	}
 
 	public String getDatacenter() {
@@ -53,17 +51,12 @@ public final class CatalogServiceRequest implements QueryParameters {
 		return queryParams;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
 	public static class Builder {
 		private String datacenter;
 		private String[] tags;
 		private String near;
 		private Map<String, String> nodeMeta;
 		private QueryParams queryParams;
-		private String token;
 
 		private Builder() {
 		}
@@ -103,13 +96,8 @@ public final class CatalogServiceRequest implements QueryParameters {
 			return this;
 		}
 
-		public Builder setToken(String token) {
-			this.token = token;
-			return this;
-		}
-
 		public CatalogServiceRequest build() {
-			return new CatalogServiceRequest(datacenter, tags, near, nodeMeta, queryParams, token);
+			return new CatalogServiceRequest(datacenter, tags, near, nodeMeta, queryParams);
 		}
 	}
 
@@ -143,12 +131,12 @@ public final class CatalogServiceRequest implements QueryParameters {
 		CatalogServiceRequest that = (CatalogServiceRequest) o;
 		return Objects.equals(datacenter, that.datacenter) && Arrays.equals(tags, that.tags)
 				&& Objects.equals(near, that.near) && Objects.equals(nodeMeta, that.nodeMeta)
-				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
+				&& Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(datacenter, near, nodeMeta, queryParams, token);
+		int result = Objects.hash(datacenter, near, nodeMeta, queryParams);
 		result = 31 * result + Arrays.hashCode(tags);
 		return result;
 	}

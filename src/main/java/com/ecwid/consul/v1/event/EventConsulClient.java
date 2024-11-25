@@ -46,7 +46,7 @@ public final class EventConsulClient implements EventClient {
 	}
 
 	@Override
-	public Response<Event> eventFire(String event, String payload, EventParams eventParams, QueryParams queryParams) {
+	public Response<Event> eventFire(String event, byte[] payload, EventParams eventParams, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams,
 				queryParams);
 		if (httpResponse.getStatusCode() == 200) {

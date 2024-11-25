@@ -3,6 +3,9 @@ package com.ecwid.consul.v1;
 import java.util.List;
 import java.util.Map;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.acl.AclClient;
@@ -191,8 +194,13 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<AclToken> aclClone(char[] token, String accessorId) {
+	public Response<AclToken> aclClone(char[] token, @NonNull String accessorId) {
 		return aclClient.aclClone(token, accessorId);
+	}
+
+	@Override
+	public Response<AclToken> aclClone(char[] token, @NonNull String accessorId, @Nullable String description) {
+		return aclClient.aclClone(token, accessorId, description);
 	}
 
 	@Override
@@ -229,7 +237,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Self> getAgentSelf(String token) {
+	public Response<Self> getAgentSelf(CharSequence token) {
 		return agentClient.getAgentSelf(token);
 	}
 
@@ -259,7 +267,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckRegister(NewCheck newCheck, String token) {
+	public Response<Void> agentCheckRegister(NewCheck newCheck, CharSequence token) {
 		return agentClient.agentCheckRegister(newCheck, token);
 	}
 
@@ -269,7 +277,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckDeregister(String checkId, String token) {
+	public Response<Void> agentCheckDeregister(String checkId, CharSequence token) {
 		return agentClient.agentCheckDeregister(checkId, token);
 	}
 
@@ -284,7 +292,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckPass(String checkId, String note, String token) {
+	public Response<Void> agentCheckPass(String checkId, String note, CharSequence token) {
 		return agentClient.agentCheckPass(checkId, note, token);
 	}
 
@@ -299,7 +307,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckWarn(String checkId, String note, String token) {
+	public Response<Void> agentCheckWarn(String checkId, String note, CharSequence token) {
 		return agentClient.agentCheckWarn(checkId, note, token);
 	}
 
@@ -314,7 +322,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckFail(String checkId, String note, String token) {
+	public Response<Void> agentCheckFail(String checkId, String note, CharSequence token) {
 		return agentClient.agentCheckFail(checkId, note, token);
 	}
 
@@ -324,7 +332,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentServiceRegister(NewService newService, String token) {
+	public Response<Void> agentServiceRegister(NewService newService, CharSequence token) {
 		return agentClient.agentServiceRegister(newService, token);
 	}
 
@@ -334,7 +342,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentServiceDeregister(String serviceId, String token) {
+	public Response<Void> agentServiceDeregister(String serviceId, CharSequence token) {
 		return agentClient.agentServiceDeregister(serviceId, token);
 	}
 
@@ -362,7 +370,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, String token) {
+	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token) {
 		return catalogClient.catalogRegister(catalogRegistration, token);
 	}
 
@@ -372,7 +380,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, String token) {
+	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token) {
 		return catalogClient.catalogDeregister(catalogDeregistration, token);
 	}
 
@@ -412,7 +420,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 */
 	@Deprecated(forRemoval = true)
 	@Override
-	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, String token) {
+	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token) {
 		return catalogClient.getCatalogServices(queryParams, token);
 	}
 
@@ -447,7 +455,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 */
 	@Deprecated(forRemoval = true)
 	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams, String token) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams,
+			CharSequence token) {
 		return catalogClient.getCatalogService(serviceName, queryParams, token);
 	}
 
@@ -458,7 +467,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String tag, QueryParams queryParams,
-			String token) {
+			CharSequence token) {
 		return catalogClient.getCatalogService(serviceName, tag, queryParams, token);
 	}
 
@@ -469,7 +478,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	@Deprecated(forRemoval = true)
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tags, QueryParams queryParams,
-			String token) {
+			CharSequence token) {
 		return catalogClient.getCatalogService(serviceName, tags, queryParams, token);
 	}
 
@@ -501,7 +510,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	// Event
 
 	@Override
-	public Response<Event> eventFire(String event, String payload, EventParams eventParams, QueryParams queryParams) {
+	public Response<Event> eventFire(String event, byte[] payload, EventParams eventParams, QueryParams queryParams) {
 		return eventClient.eventFire(event, payload, eventParams, queryParams);
 	}
 
@@ -851,7 +860,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, String token) {
+	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, CharSequence token) {
 		return sessionClient.sessionCreate(newSession, queryParams, token);
 	}
 
@@ -861,7 +870,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> sessionDestroy(String session, QueryParams queryParams, String token) {
+	public Response<Void> sessionDestroy(String session, QueryParams queryParams, CharSequence token) {
 		return sessionClient.sessionDestroy(session, queryParams, token);
 	}
 
@@ -871,7 +880,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Session> getSessionInfo(String session, QueryParams queryParams, String token) {
+	public Response<Session> getSessionInfo(String session, QueryParams queryParams, CharSequence token) {
 		return sessionClient.getSessionInfo(session, queryParams, token);
 	}
 
@@ -881,7 +890,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams, String token) {
+	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams, CharSequence token) {
 		return sessionClient.getSessionNode(node, queryParams, token);
 	}
 
@@ -891,7 +900,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<Session>> getSessionList(QueryParams queryParams, String token) {
+	public Response<List<Session>> getSessionList(QueryParams queryParams, CharSequence token) {
 		return sessionClient.getSessionList(queryParams, token);
 	}
 
@@ -901,7 +910,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Session> renewSession(String session, QueryParams queryParams, String token) {
+	public Response<Session> renewSession(String session, QueryParams queryParams, CharSequence token) {
 		return sessionClient.renewSession(session, queryParams, token);
 	}
 

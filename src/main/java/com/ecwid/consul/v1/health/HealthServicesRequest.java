@@ -97,7 +97,7 @@ public final class HealthServicesRequest implements QueryParameters {
 		 * @param tag The service tag to filter by.
 		 * @return This {@link Builder} instance for method chaining.
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public Builder setTag(String tag) {
 			this.tags = new String[] { tag };
 			return this;
@@ -111,7 +111,7 @@ public final class HealthServicesRequest implements QueryParameters {
 		 * @param tags The service tags to filter by.
 		 * @return This {@link Builder} instance for method chaining.
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public Builder setTags(String[] tags) {
 			this.tags = tags;
 			return this;
@@ -125,7 +125,7 @@ public final class HealthServicesRequest implements QueryParameters {
 		 * @param nodeMeta The node metadata to filter by.
 		 * @return This {@link Builder} instance for method chaining.
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public Builder setNodeMeta(Map<String, String> nodeMeta) {
 			this.nodeMeta = nodeMeta != null ? Collections.unmodifiableMap(nodeMeta) : null;
 			return this;

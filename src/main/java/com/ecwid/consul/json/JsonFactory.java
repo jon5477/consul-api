@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  * Provides utilities for serializing a POJO (Plain old Java Object) to JSON.
@@ -37,7 +38,7 @@ public final class JsonFactory {
 	 * @param src The POJO to serialize.
 	 * @return
 	 */
-	public static byte[] toBytes(Object src) {
+	public static byte[] toBytes(@NonNull Object src) {
 		Objects.requireNonNull(src, "object cannot be null");
 		try {
 			return OBJ_MAPPER.writeValueAsBytes(src);
@@ -56,13 +57,29 @@ public final class JsonFactory {
 	}
 
 	/**
+	 * Serializes the given {@link JsonNode} into JSON as a {@code byte[]}.
+	 * 
+	 * @param src The POJO to serialize.
+	 * @return
+	 */
+	public static byte[] toBytes(@NonNull JsonNode node) {
+		Objects.requireNonNull(node, "node cannot be null");
+		try {
+			ObjectWriter writer = OBJ_MAPPER.writer();
+			return writer.writeValueAsBytes(node);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Unable to serialize object to JSON", e);
+		}
+	}
+
+	/**
 	 * Reads a {@link JsonNode} from the given {@code byte[]}.
 	 * 
 	 * @param bytes The {@code byte[]} to read.
 	 * @return The parsed {@link JsonNode}.
 	 * @throws IOException If an exception occurs while reading.
 	 */
-	public static JsonNode toJsonNode(byte[] content) throws IOException {
+	public static JsonNode toJsonNode(@NonNull byte[] content) throws IOException {
 		return OBJ_MAPPER.readTree(content);
 	}
 

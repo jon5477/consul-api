@@ -2,6 +2,9 @@ package com.ecwid.consul.v1.acl;
 
 import java.util.List;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.acl.model.AclToken;
 import com.ecwid.consul.v1.acl.model.NewAcl;
@@ -22,7 +25,9 @@ public interface AclClient {
 
 	Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId);
 
-	Response<AclToken> aclClone(char[] token, String accessorId);
+	Response<AclToken> aclClone(char[] token, @NonNull String accessorId);
+
+	Response<AclToken> aclClone(char[] token, @NonNull String accessorId, @Nullable String description);
 
 	Response<Void> aclDelete(char[] token, String accessorId);
 

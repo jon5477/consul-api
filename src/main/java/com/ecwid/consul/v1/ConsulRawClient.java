@@ -16,6 +16,7 @@ import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
@@ -207,14 +208,16 @@ public class ConsulRawClient {
 		return httpTransport.makeGetRequest(httpRequest);
 	}
 
-	public HttpResponse makePutRequest(String endpoint, String content, QueryParameters... queryParams) {
+	public HttpResponse makePutRequest(String endpoint, @Nullable byte[] content, QueryParameters... queryParams) {
 		URI uri = buildURI(endpoint, queryParams);
-		HttpRequest request = HttpRequest.Builder.newBuilder().setURI(uri).setToken(token.get()).setContent(content)
-				.build();
-		return httpTransport.makePutRequest(request);
+		HttpRequest.Builder request = HttpRequest.Builder.newBuilder().setURI(uri).setToken(token.get());
+		if (content != null) {
+			request.setContent(content);
+		}
+		return httpTransport.makePutRequest(request.build());
 	}
 
-	public HttpResponse makePutRequest(String endpoint, String content, List<QueryParameters> queryParams) {
+	public HttpResponse makePutRequest(String endpoint, @Nullable byte[] content, List<QueryParameters> queryParams) {
 		return makePutRequest(endpoint, content, queryParams.toArray(QueryParameters[]::new));
 	}
 

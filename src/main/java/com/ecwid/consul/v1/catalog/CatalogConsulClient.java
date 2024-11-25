@@ -67,8 +67,8 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token) {
-		String json = JsonFactory.toJson(catalogRegistration);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register", json, tokenParam);
+		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register",
+				JsonFactory.toBytes(catalogRegistration));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -83,8 +83,8 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token) {
-		String json = JsonFactory.toJson(catalogDeregistration);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister", json, tokenParam);
+		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister",
+				JsonFactory.toBytes(catalogDeregistration));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -129,8 +129,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(QueryParams queryParams, CharSequence token) {
-		CatalogServicesRequest request = CatalogServicesRequest.newBuilder().setQueryParams(queryParams).setToken(token)
-				.build();
+		CatalogServicesRequest request = CatalogServicesRequest.newBuilder().setQueryParams(queryParams).build();
 		return getCatalogServices(request);
 	}
 
@@ -151,7 +150,8 @@ public final class CatalogConsulClient implements CatalogClient {
 	}
 
 	@Override
-	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams, CharSequence token) {
+	public Response<List<CatalogService>> getCatalogService(String serviceName, QueryParams queryParams,
+			CharSequence token) {
 		return getCatalogService(serviceName, (String) null, queryParams, token);
 	}
 
@@ -170,7 +170,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<List<CatalogService>> getCatalogService(String serviceName, String[] tag, QueryParams queryParams,
 			CharSequence token) {
 		CatalogServiceRequest request = CatalogServiceRequest.newBuilder().setTags(tag).setQueryParams(queryParams)
-				.setToken(token).build();
+				.build();
 		return getCatalogService(serviceName, request);
 	}
 

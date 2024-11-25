@@ -12,7 +12,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 public class SingleQueryParametersTest {
 
 	@Test
-	public void testToUrlParameters() throws Exception {
+	public void testToUrlParameters() {
 		QueryParameters parameters = new SingleQueryParameters("key");
 		assertEquals(Collections.singletonList("key"), parameters.getQueryParameters());
 

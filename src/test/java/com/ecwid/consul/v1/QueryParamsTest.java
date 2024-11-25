@@ -13,7 +13,7 @@ import com.ecwid.consul.v1.QueryParams.Builder;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class QueryParamsTest {
+class QueryParamsTest {
 	@Test
 	public void queryParamsBuilder_ShouldReturnAllDefaults_WhenNoValuesAdded() {
 		// Given
