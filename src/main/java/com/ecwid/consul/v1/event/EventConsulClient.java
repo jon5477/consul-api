@@ -1,6 +1,9 @@
 package com.ecwid.consul.v1.event;
 
 import java.util.List;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
@@ -21,28 +24,8 @@ public final class EventConsulClient implements EventClient {
 	};
 	private final ConsulRawClient rawClient;
 
-	public EventConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public EventConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public EventConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public EventConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public EventConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public EventConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public EventConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override

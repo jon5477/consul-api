@@ -1,10 +1,12 @@
 package com.ecwid.consul.v1.health;
 
 import java.util.List;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -23,32 +25,8 @@ public final class HealthConsulClient implements HealthClient {
 	};
 	private final ConsulRawClient rawClient;
 
-	public HealthConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public HealthConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public HealthConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public HealthConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public HealthConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public HealthConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
-	}
-
-	public HealthConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public HealthConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override

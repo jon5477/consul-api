@@ -110,7 +110,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 * Consul client will connect to local consul agent on 'http://localhost:8500'
 	 */
 	public ConsulClient() {
-		this(new ConsulRawClient());
+		this(new ConsulRawClient.Builder().build());
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 * @param tlsConfig TLS configuration
 	 */
 	public ConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
+		this(new ConsulRawClient.Builder().setTlsConfig(tlsConfig).build());
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 *                  address - client will use HTTP.
 	 */
 	public ConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
+		this(new ConsulRawClient.Builder().setHost(agentHost).build());
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 * @param tlsConfig TLS configuration
 	 */
 	public ConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
+		this(new ConsulRawClient.Builder().setHost(agentHost).setTlsConfig(tlsConfig).build());
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 * @param agentPort Consul agent port
 	 */
 	public ConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
+		this(new ConsulRawClient.Builder(agentHost, agentPort).build());
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 * @param tlsConfig TLS configuration
 	 */
 	public ConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+		this(new ConsulRawClient.Builder(agentHost, agentPort).setTlsConfig(tlsConfig).build());
 	}
 
 	// -------------------------------------------------------------------------------------------

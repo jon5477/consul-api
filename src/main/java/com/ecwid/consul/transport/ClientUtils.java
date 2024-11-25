@@ -62,6 +62,13 @@ public final class ClientUtils {
 
 	public static DefaultHttpTransport createDefaultHttpTransport(
 			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient) {
+		return createDefaultHttpTransport(connectionManager, httpClient, null);
+	}
+
+	public static DefaultHttpTransport createDefaultHttpTransport(
+			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient,
+			@Nullable TLSConfig tlsConfig) {
+		// TODO Pass the TLSConfig options to the connection manager
 		HttpClientConnectionManager conMgr = connectionManager;
 		if (conMgr == null) {
 			conMgr = ClientUtils.createPoolingConnectionManager();

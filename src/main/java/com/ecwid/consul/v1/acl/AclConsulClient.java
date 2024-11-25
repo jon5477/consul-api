@@ -1,13 +1,13 @@
 package com.ecwid.consul.v1.acl;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Request;
@@ -28,32 +28,8 @@ public final class AclConsulClient implements AclClient {
 	private static final String API_TOKEN_PREFIX = "/v1/acl/token/";
 	private final ConsulRawClient rawClient;
 
-	public AclConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public AclConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public AclConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public AclConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public AclConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public AclConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
-	}
-
-	public AclConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public AclConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override

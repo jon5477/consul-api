@@ -2,13 +2,15 @@ package com.ecwid.consul.v1.agent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.SingleQueryParameters;
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Request;
@@ -33,32 +35,8 @@ public final class AgentConsulClient implements AgentClient {
 	};
 	private final ConsulRawClient rawClient;
 
-	public AgentConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public AgentConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public AgentConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public AgentConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public AgentConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public AgentConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
-	}
-
-	public AgentConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public AgentConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override

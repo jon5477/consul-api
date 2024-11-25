@@ -20,6 +20,9 @@
 package com.ecwid.consul.v1.kv;
 
 import java.util.List;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.QueryParameters;
@@ -59,32 +62,8 @@ public final class KeyValueConsulClient implements KeyValueClient {
 	private static final SingleQueryParameters RECURSE_QUERY_PARAM = new SingleQueryParameters("recurse");
 	private final ConsulRawClient rawClient;
 
-	public KeyValueConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public KeyValueConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public KeyValueConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public KeyValueConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
-	}
-
-	public KeyValueConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public KeyValueConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public KeyValueConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public KeyValueConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override

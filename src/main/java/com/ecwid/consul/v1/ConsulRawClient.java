@@ -19,8 +19,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.ClientUtils;
-import com.ecwid.consul.transport.DefaultHttpTransport;
-import com.ecwid.consul.transport.DefaultHttpsTransport;
 import com.ecwid.consul.transport.HttpRequest;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.transport.HttpTransport;
@@ -41,18 +39,24 @@ public final class ConsulRawClient {
 		private String agentHost;
 		private int agentPort;
 		private String agentPath;
+		// Still allow legacy TLSConfig for now
+		private TLSConfig tlsConfig;
 		// Allow clients to specify their own Apache HTTP Client configuration
 		private HttpClientConnectionManager connectionManager;
 		private HttpClient httpClient;
 
-		public static ConsulRawClient.Builder builder() {
-			return new ConsulRawClient.Builder();
+		public Builder() {
+			this(DEFAULT_HOST, DEFAULT_PORT);
 		}
 
-		private Builder() {
-			this.agentHost = DEFAULT_HOST;
-			this.agentPort = DEFAULT_PORT;
-			this.agentPath = DEFAULT_PATH;
+		public Builder(String agentHost, int agentPort) {
+			this(agentHost, agentPort, DEFAULT_PATH);
+		}
+
+		public Builder(String agentHost, int agentPort, String agentPath) {
+			this.agentHost = agentHost;
+			this.agentPort = agentPort;
+			this.agentPath = agentPath;
 		}
 
 		public Builder setHost(String host) {
@@ -70,6 +74,11 @@ public final class ConsulRawClient {
 			return this;
 		}
 
+		public Builder setTlsConfig(TLSConfig tlsConfig) {
+			this.tlsConfig = tlsConfig;
+			return this;
+		}
+
 		public Builder setConnectionManager(HttpClientConnectionManager connectionManager) {
 			this.connectionManager = connectionManager;
 			return this;
@@ -81,71 +90,25 @@ public final class ConsulRawClient {
 		}
 
 		public ConsulRawClient build() {
-			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(connectionManager, httpClient);
-			return new ConsulRawClient(httpTransport, agentHost, agentPort, agentPath);
+			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(connectionManager, httpClient,
+					tlsConfig);
+			return new ConsulRawClient(this, httpTransport);
 		}
 	}
 
-	public ConsulRawClient() {
-		this(DEFAULT_HOST);
-	}
-
-	@Deprecated(forRemoval = true)
-	public ConsulRawClient(TLSConfig tlsConfig) {
-		this(DEFAULT_HOST, tlsConfig);
-	}
-
-	public ConsulRawClient(String agentHost) {
-		this(agentHost, DEFAULT_PORT);
-	}
-
-	@Deprecated(forRemoval = true)
-	public ConsulRawClient(String agentHost, TLSConfig tlsConfig) {
-		this(agentHost, DEFAULT_PORT, tlsConfig);
-	}
-
-	public ConsulRawClient(String agentHost, int agentPort) {
-		this(DEFAULT_HTTP_TRANSPORT, agentHost, agentPort, DEFAULT_PATH);
-	}
-
-	public ConsulRawClient(HttpClient httpClient) {
-		this(DEFAULT_HOST, httpClient);
-	}
-
-	@Deprecated(forRemoval = true)
-	public ConsulRawClient(String agentHost, HttpClient httpClient) {
-		this(new DefaultHttpTransport(httpClient), agentHost, DEFAULT_PORT, DEFAULT_PATH);
-	}
-
-	@Deprecated(forRemoval = true)
-	public ConsulRawClient(String agentHost, int agentPort, HttpClient httpClient) {
-		this(new DefaultHttpTransport(httpClient), agentHost, agentPort, DEFAULT_PATH);
-	}
-
-	@Deprecated(forRemoval = true)
-	public ConsulRawClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new DefaultHttpsTransport(tlsConfig), agentHost, agentPort, DEFAULT_PATH);
-	}
-
-	@Deprecated(forRemoval = true)
-	public ConsulRawClient(HttpClient httpClient, String host, int port, String path) {
-		this(new DefaultHttpTransport(httpClient), host, port, path);
-	}
-
-	// hidden constructor, for unit tests
-	ConsulRawClient(HttpTransport httpTransport, String agentHost, int agentPort, String path) {
+	private ConsulRawClient(Builder b, HttpTransport httpTransport) {
 		this.httpTransport = httpTransport;
 		// check if the agentHost has a scheme or not
-		String agentHostLc = agentHost.toLowerCase();
+		String agentHostLc = b.agentHost.toLowerCase();
 		String agentHostUrl;
 		if (!agentHostLc.startsWith("https://") && !agentHostLc.startsWith("http://")) {
 			// no scheme in host, use default 'http'
-			agentHostUrl = "http://" + agentHost;
+			agentHostUrl = "http://" + b.agentHost;
 		} else {
-			agentHostUrl = agentHost;
+			agentHostUrl = b.agentHost;
 		}
 		try {
-			this.agentAddress = new URL(Utils.assembleAgentAddress(agentHostUrl, agentPort, path));
+			this.agentAddress = new URL(Utils.assembleAgentAddress(agentHostUrl, b.agentPort, b.agentPath));
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}

@@ -2,6 +2,9 @@ package com.ecwid.consul.v1.session;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.json.JsonFactory;
@@ -24,20 +27,8 @@ public final class SessionConsulClient implements SessionClient {
 	};
 	private final ConsulRawClient rawClient;
 
-	public SessionConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public SessionConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public SessionConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public SessionConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
+	public SessionConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override
