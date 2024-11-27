@@ -2,6 +2,9 @@
 
 name: Maven Build and Test
 
+on:
+  workflow_dispatch:
+
 jobs:
   build:
 

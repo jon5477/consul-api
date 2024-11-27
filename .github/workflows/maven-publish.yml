@@ -3,8 +3,6 @@
 name: Maven Package and Deploy to GitHub Packages
 
 on:
-  push:
-    branches: ['master', 'gh-actions']
   release:
     types: [created]
 
