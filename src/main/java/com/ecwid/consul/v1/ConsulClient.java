@@ -2,6 +2,7 @@ package com.ecwid.consul.v1;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -73,7 +74,7 @@ import com.ecwid.consul.v1.status.StatusConsulClient;
  */
 public class ConsulClient implements AclClient, AgentClient, CatalogClient, CoordinateClient, EventClient, HealthClient,
 		KeyValueClient, QueryClient, SessionClient, StatusClient {
-
+	private final ConsulRawClient rawClient;
 	private final AclClient aclClient;
 	private final AgentClient agentClient;
 	private final CatalogClient catalogClient;
@@ -94,6 +95,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	public ConsulClient(ConsulRawClient rawClient, char[] token) {
+		this.rawClient = Objects.requireNonNull(rawClient, "raw client cannot be null");
+		this.rawClient.setToken(token);
 		this.aclClient = new AclConsulClient(rawClient);
 		this.agentClient = new AgentConsulClient(rawClient);
 		this.catalogClient = new CatalogConsulClient(rawClient);
@@ -168,6 +171,14 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 */
 	public ConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
 		this(new ConsulRawClient.Builder(agentHost, agentPort).setTlsConfig(tlsConfig).build());
+	}
+
+	public void setToken(CharSequence token) {
+		this.setToken(Utils.charSequenceToArray(token));
+	}
+
+	public void setToken(char[] token) {
+		this.rawClient.setToken(token);
 	}
 
 	// -------------------------------------------------------------------------------------------
