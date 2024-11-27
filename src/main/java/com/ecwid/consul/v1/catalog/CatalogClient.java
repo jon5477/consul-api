@@ -17,13 +17,9 @@ import com.ecwid.consul.v1.catalog.model.Node;
 public interface CatalogClient {
 	Response<Void> catalogRegister(CatalogRegistration catalogRegistration);
 
-	Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token);
-
 	// -------------------------------------------------------------------------------
 
 	Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration);
-
-	Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token);
 
 	// -------------------------------------------------------------------------------
 

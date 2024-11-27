@@ -33,11 +33,6 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams) {
-		return sessionCreate(newSession, queryParams, null);
-	}
-
-	@Override
-	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/create", JsonFactory.toBytes(newSession),
 				queryParams);
 		if (httpResponse.getStatusCode() == 200) {
@@ -50,11 +45,6 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Void> sessionDestroy(String session, QueryParams queryParams) {
-		return sessionDestroy(session, queryParams, null);
-	}
-
-	@Override
-	public Response<Void> sessionDestroy(String session, QueryParams queryParams, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/destroy/" + session, null, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -65,11 +55,6 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Session> getSessionInfo(String session, QueryParams queryParams) {
-		return getSessionInfo(session, queryParams, null);
-	}
-
-	@Override
-	public Response<Session> getSessionInfo(String session, QueryParams queryParams, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/info/" + session, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
@@ -87,11 +72,6 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams) {
-		return getSessionNode(node, queryParams, null);
-	}
-
-	@Override
-	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/node/" + node, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
@@ -103,11 +83,6 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<List<Session>> getSessionList(QueryParams queryParams) {
-		return getSessionList(queryParams, null);
-	}
-
-	@Override
-	public Response<List<Session>> getSessionList(QueryParams queryParams, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/list", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
@@ -117,12 +92,8 @@ public final class SessionConsulClient implements SessionClient {
 		}
 	}
 
-	public Response<Session> renewSession(String session, QueryParams queryParams) {
-		return renewSession(session, queryParams, null);
-	}
-
 	@Override
-	public Response<Session> renewSession(String session, QueryParams queryParams, CharSequence token) {
+	public Response<Session> renewSession(String session, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/renew/" + session, null, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonFactory.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);

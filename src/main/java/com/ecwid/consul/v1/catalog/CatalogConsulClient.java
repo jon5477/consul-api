@@ -40,11 +40,6 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration) {
-		return catalogRegister(catalogRegistration, null);
-	}
-
-	@Override
-	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register",
 				JsonFactory.toBytes(catalogRegistration));
 		if (httpResponse.getStatusCode() == 200) {
@@ -56,11 +51,6 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration) {
-		return catalogDeregister(catalogDeregistration, null);
-	}
-
-	@Override
-	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister",
 				JsonFactory.toBytes(catalogDeregistration));
 		if (httpResponse.getStatusCode() == 200) {

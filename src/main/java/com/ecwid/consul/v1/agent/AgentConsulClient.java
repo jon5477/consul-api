@@ -5,11 +5,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.SingleQueryParameters;
-import com.ecwid.consul.Utils;
 import com.ecwid.consul.json.JsonFactory;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
@@ -75,11 +73,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Self> getAgentSelf() {
-		return getAgentSelf(null);
-	}
-
-	@Override
-	public Response<Self> getAgentSelf(CharSequence token) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/self");
 		if (httpResponse.getStatusCode() == 200) {
 			Self self = JsonFactory.toPOJO(httpResponse.getContent(), Self.class);
@@ -131,11 +124,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckRegister(NewCheck newCheck) {
-		return agentCheckRegister(newCheck, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckRegister(NewCheck newCheck, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register", JsonFactory.toBytes(newCheck));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -146,11 +134,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckDeregister(String checkId) {
-		return agentCheckDeregister(checkId, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckDeregister(String checkId, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/deregister/" + checkId, null);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -166,11 +149,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckPass(String checkId, String note) {
-		return agentCheckPass(checkId, note, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckPass(String checkId, String note, CharSequence token) {
 		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/pass/" + checkId, null, noteParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -187,11 +165,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckWarn(String checkId, String note) {
-		return agentCheckWarn(checkId, note, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckWarn(String checkId, String note, CharSequence token) {
 		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/warn/" + checkId, null, noteParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -208,11 +181,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckFail(String checkId, String note) {
-		return agentCheckFail(checkId, note, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckFail(String checkId, String note, CharSequence token) {
 		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/fail/" + checkId, null, noteParameter);
 		if (httpResponse.getStatusCode() == 200) {
@@ -224,16 +192,8 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceRegister(NewService newService) {
-		return agentServiceRegister(newService, null);
-	}
-
-	@Override
-	public Response<Void> agentServiceRegister(NewService newService, @Nullable CharSequence token) {
 		Request.Builder request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
 				.setContent(JsonFactory.toBytes(newService));
-		if (token != null) {
-			request.setToken(Utils.charSequenceToArray(token));
-		}
 		HttpResponse httpResponse = rawClient.makePutRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -244,11 +204,6 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceDeregister(String serviceId) {
-		return agentServiceDeregister(serviceId, null);
-	}
-
-	@Override
-	public Response<Void> agentServiceDeregister(String serviceId, CharSequence token) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/deregister/" + serviceId, null);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);

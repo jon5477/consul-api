@@ -1,9 +1,12 @@
 package com.ecwid.consul;
 
+import java.time.Duration;
+import java.util.Objects;
+
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public class Utils {
+public final class Utils {
 	private Utils() {
 	}
 
@@ -14,6 +17,14 @@ public class Utils {
 			arr[i] = seq.charAt(i);
 		}
 		return arr;
+	}
+
+	public static String toConsulDuration(Duration dur) {
+		Objects.requireNonNull(dur, "duration cannot be null");
+		if (dur.isNegative()) {
+			throw new IllegalArgumentException("duration cannot be negative");
+		}
+		return dur.getSeconds() + "s";
 	}
 
 	public static String toSecondsString(long waitTime) {

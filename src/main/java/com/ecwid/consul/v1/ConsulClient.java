@@ -237,11 +237,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Self> getAgentSelf(CharSequence token) {
-		return agentClient.getAgentSelf(token);
-	}
-
-	@Override
 	public Response<Void> agentSetMaintenance(boolean maintenanceEnabled) {
 		return agentClient.agentSetMaintenance(maintenanceEnabled);
 	}
@@ -267,18 +262,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckRegister(NewCheck newCheck, CharSequence token) {
-		return agentClient.agentCheckRegister(newCheck, token);
-	}
-
-	@Override
 	public Response<Void> agentCheckDeregister(String checkId) {
 		return agentClient.agentCheckDeregister(checkId);
-	}
-
-	@Override
-	public Response<Void> agentCheckDeregister(String checkId, CharSequence token) {
-		return agentClient.agentCheckDeregister(checkId, token);
 	}
 
 	@Override
@@ -292,11 +277,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckPass(String checkId, String note, CharSequence token) {
-		return agentClient.agentCheckPass(checkId, note, token);
-	}
-
-	@Override
 	public Response<Void> agentCheckWarn(String checkId) {
 		return agentClient.agentCheckWarn(checkId);
 	}
@@ -304,11 +284,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	@Override
 	public Response<Void> agentCheckWarn(String checkId, String note) {
 		return agentClient.agentCheckWarn(checkId, note);
-	}
-
-	@Override
-	public Response<Void> agentCheckWarn(String checkId, String note, CharSequence token) {
-		return agentClient.agentCheckWarn(checkId, note, token);
 	}
 
 	@Override
@@ -322,28 +297,13 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> agentCheckFail(String checkId, String note, CharSequence token) {
-		return agentClient.agentCheckFail(checkId, note, token);
-	}
-
-	@Override
 	public Response<Void> agentServiceRegister(NewService newService) {
 		return agentClient.agentServiceRegister(newService);
 	}
 
 	@Override
-	public Response<Void> agentServiceRegister(NewService newService, CharSequence token) {
-		return agentClient.agentServiceRegister(newService, token);
-	}
-
-	@Override
 	public Response<Void> agentServiceDeregister(String serviceId) {
 		return agentClient.agentServiceDeregister(serviceId);
-	}
-
-	@Override
-	public Response<Void> agentServiceDeregister(String serviceId, CharSequence token) {
-		return agentClient.agentServiceDeregister(serviceId, token);
 	}
 
 	@Override
@@ -370,18 +330,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration, CharSequence token) {
-		return catalogClient.catalogRegister(catalogRegistration, token);
-	}
-
-	@Override
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration) {
 		return catalogClient.catalogDeregister(catalogDeregistration);
-	}
-
-	@Override
-	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration, CharSequence token) {
-		return catalogClient.catalogDeregister(catalogDeregistration, token);
 	}
 
 	@Override
@@ -477,18 +427,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<GetValue> getKVValue(String key, char[] token) {
-		return keyValueClient.getKVValue(key, token);
-	}
-
-	@Override
 	public Response<GetValue> getKVValue(String key, QueryParams queryParams) {
 		return keyValueClient.getKVValue(key, queryParams);
-	}
-
-	@Override
-	public Response<GetValue> getKVValue(String key, char[] token, QueryParams queryParams) {
-		return keyValueClient.getKVValue(key, token, queryParams);
 	}
 
 	@Override
@@ -497,18 +437,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<GetBinaryValue> getKVBinaryValue(String key, char[] token) {
-		return keyValueClient.getKVBinaryValue(key, token);
-	}
-
-	@Override
 	public Response<GetBinaryValue> getKVBinaryValue(String key, QueryParams queryParams) {
 		return keyValueClient.getKVBinaryValue(key, queryParams);
-	}
-
-	@Override
-	public Response<GetBinaryValue> getKVBinaryValue(String key, char[] token, QueryParams queryParams) {
-		return keyValueClient.getKVBinaryValue(key, token, queryParams);
 	}
 
 	@Override
@@ -517,18 +447,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<GetValue>> getKVValues(String keyPrefix, char[] token) {
-		return keyValueClient.getKVValues(keyPrefix, token);
-	}
-
-	@Override
 	public Response<List<GetValue>> getKVValues(String keyPrefix, QueryParams queryParams) {
 		return keyValueClient.getKVValues(keyPrefix, queryParams);
-	}
-
-	@Override
-	public Response<List<GetValue>> getKVValues(String keyPrefix, char[] token, QueryParams queryParams) {
-		return keyValueClient.getKVValues(keyPrefix, token, queryParams);
 	}
 
 	@Override
@@ -537,18 +457,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, char[] token) {
-		return keyValueClient.getKVBinaryValues(keyPrefix, token);
-	}
-
-	@Override
 	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, QueryParams queryParams) {
 		return keyValueClient.getKVBinaryValues(keyPrefix, queryParams);
-	}
-
-	@Override
-	public Response<List<GetBinaryValue>> getKVBinaryValues(String keyPrefix, char[] token, QueryParams queryParams) {
-		return keyValueClient.getKVBinaryValues(keyPrefix, token, queryParams);
 	}
 
 	@Override
@@ -557,8 +467,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, char[] token) {
-		return keyValueClient.getKVKeysOnly(keyPrefix, separator, token);
+	public Response<List<String>> getKVKeysOnly(String keyPrefix, String separator) {
+		return keyValueClient.getKVKeysOnly(keyPrefix, separator);
 	}
 
 	@Override
@@ -567,9 +477,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, char[] token,
-			QueryParams queryParams) {
-		return keyValueClient.getKVKeysOnly(keyPrefix, separator, token, queryParams);
+	public Response<List<String>> getKVKeysOnly(String keyPrefix, String separator, QueryParams queryParams) {
+		return keyValueClient.getKVKeysOnly(keyPrefix, separator, queryParams);
 	}
 
 	@Override
@@ -583,11 +492,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Boolean> setKVValue(String key, String value, char[] token, PutParams putParams) {
-		return keyValueClient.setKVValue(key, value, token, putParams);
-	}
-
-	@Override
 	public Response<Boolean> setKVValue(String key, String value, QueryParams queryParams) {
 		return keyValueClient.setKVValue(key, value, queryParams);
 	}
@@ -595,12 +499,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	@Override
 	public Response<Boolean> setKVValue(String key, String value, PutParams putParams, QueryParams queryParams) {
 		return keyValueClient.setKVValue(key, value, putParams, queryParams);
-	}
-
-	@Override
-	public Response<Boolean> setKVValue(String key, String value, char[] token, PutParams putParams,
-			QueryParams queryParams) {
-		return keyValueClient.setKVValue(key, value, token, putParams, queryParams);
 	}
 
 	@Override
@@ -614,11 +512,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, char[] token, PutParams putParams) {
-		return keyValueClient.setKVBinaryValue(key, value, token, putParams);
-	}
-
-	@Override
 	public Response<Boolean> setKVBinaryValue(String key, byte[] value, QueryParams queryParams) {
 		return keyValueClient.setKVBinaryValue(key, value, queryParams);
 	}
@@ -629,19 +522,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Boolean> setKVBinaryValue(String key, byte[] value, char[] token, PutParams putParams,
-			QueryParams queryParams) {
-		return keyValueClient.setKVBinaryValue(key, value, token, putParams, queryParams);
-	}
-
-	@Override
 	public Response<Boolean> deleteKVValue(String key) {
 		return keyValueClient.deleteKVValue(key);
-	}
-
-	@Override
-	public Response<Boolean> deleteKVValue(String key, char[] token) {
-		return keyValueClient.deleteKVValue(key, token);
 	}
 
 	@Override
@@ -650,28 +532,13 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Boolean> deleteKVValue(String key, char[] token, QueryParams queryParams) {
-		return keyValueClient.deleteKVValue(key, token, queryParams);
-	}
-
-	@Override
 	public Response<Boolean> deleteKVValues(String key) {
 		return keyValueClient.deleteKVValues(key);
 	}
 
 	@Override
-	public Response<Boolean> deleteKVValues(String key, char[] token) {
-		return keyValueClient.deleteKVValues(key, token);
-	}
-
-	@Override
 	public Response<Boolean> deleteKVValues(String key, QueryParams queryParams) {
 		return keyValueClient.deleteKVValues(key, queryParams);
-	}
-
-	@Override
-	public Response<Boolean> deleteKVValues(String key, char[] token, QueryParams queryParams) {
-		return keyValueClient.deleteKVValues(key, token, queryParams);
 	}
 
 	// -------------------------------------------------------------------------------------------
@@ -691,18 +558,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, CharSequence token) {
-		return sessionClient.sessionCreate(newSession, queryParams, token);
-	}
-
-	@Override
 	public Response<Void> sessionDestroy(String session, QueryParams queryParams) {
 		return sessionClient.sessionDestroy(session, queryParams);
-	}
-
-	@Override
-	public Response<Void> sessionDestroy(String session, QueryParams queryParams, CharSequence token) {
-		return sessionClient.sessionDestroy(session, queryParams, token);
 	}
 
 	@Override
@@ -711,18 +568,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Session> getSessionInfo(String session, QueryParams queryParams, CharSequence token) {
-		return sessionClient.getSessionInfo(session, queryParams, token);
-	}
-
-	@Override
 	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams) {
 		return sessionClient.getSessionNode(node, queryParams);
-	}
-
-	@Override
-	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams, CharSequence token) {
-		return sessionClient.getSessionNode(node, queryParams, token);
 	}
 
 	@Override
@@ -731,18 +578,8 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<List<Session>> getSessionList(QueryParams queryParams, CharSequence token) {
-		return sessionClient.getSessionList(queryParams, token);
-	}
-
-	@Override
 	public Response<Session> renewSession(String session, QueryParams queryParams) {
 		return sessionClient.renewSession(session, queryParams);
-	}
-
-	@Override
-	public Response<Session> renewSession(String session, QueryParams queryParams, CharSequence token) {
-		return sessionClient.renewSession(session, queryParams, token);
 	}
 
 	// -------------------------------------------------------------------------------------------
