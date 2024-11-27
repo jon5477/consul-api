@@ -33,8 +33,8 @@ class KeyValueConsulClientTest {
 
 	@Test
 	void testSetKVBinaryValue() {
-		final String testKey = "test_key";
-		final byte[] testValue = new byte[100];
+		String testKey = "test_key";
+		byte[] testValue = new byte[100];
 		rnd.nextBytes(testValue);
 
 		// Make sure there is no such key before test running
@@ -47,8 +47,8 @@ class KeyValueConsulClientTest {
 
 	@Test
 	void testDeleteKvValue() {
-		final String testKey = "test_key";
-		final String testValue = "test_value";
+		String testKey = "test_key";
+		String testValue = "test_value";
 
 		// Make sure there is no such key before test running
 		Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
@@ -59,19 +59,19 @@ class KeyValueConsulClientTest {
 		Assertions.assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
 
 		// Delete key
-		consulClient.deleteKVValue(testKey);
+		Assertions.assertTrue(consulClient.deleteKVValue(testKey).getValue());
 		// Make sure there is no such key before test running
 		Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
 	}
 
 	@Test
 	void testDeleteKvValues() {
-		final String testKeyPrefix = "test_key";
-		final String testValue = "test_value";
+		String testKeyPrefix = "test_key";
+		String testValue = "test_value";
 
 		// Prepare test keys under testKeyPrefix prefix
 		for (int i = 0; i < 10; i++) {
-			final String testKey = testKeyPrefix + "/" + i;
+			String testKey = testKeyPrefix + "/" + i;
 			// Make sure there is no such key before test running
 			Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
 
@@ -83,7 +83,7 @@ class KeyValueConsulClientTest {
 		}
 
 		// Delete all keys in single shot
-		consulClient.deleteKVValues(testKeyPrefix);
+		Assertions.assertTrue(consulClient.deleteKVValues(testKeyPrefix).getValue());
 
 		// Make sure all keys have been deleted
 		Assertions.assertNull(consulClient.getKVKeysOnly(testKeyPrefix).getValue());
