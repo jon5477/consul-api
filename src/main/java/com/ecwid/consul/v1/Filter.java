@@ -47,6 +47,23 @@ public class Filter implements QueryParameters {
 		public static Selector of(@NonNull String s) {
 			return new Selector(s);
 		}
+
+		@Override
+		public final int hashCode() {
+			return Objects.hash(s);
+		}
+
+		@Override
+		public final boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof Selector)) {
+				return false;
+			}
+			Selector other = (Selector) obj;
+			return Objects.equals(s, other.s);
+		}
 	}
 
 	private static String operatorValueRequired(@NonNull MatchingOperator op) {

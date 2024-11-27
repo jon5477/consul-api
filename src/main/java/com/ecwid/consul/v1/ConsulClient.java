@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.net.ssl.SSLContext;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -86,14 +88,34 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	private final SessionClient sessionClient;
 	private final StatusClient statusClient;
 
+	/**
+	 * Consul client will connect using the {@link ConsulRawClient}.
+	 * 
+	 * @param rawClient The {@link ConsulRawClient} instance to use for all API
+	 *                  calls.
+	 */
 	public ConsulClient(ConsulRawClient rawClient) {
 		this(rawClient, (char[]) null);
 	}
 
+	/**
+	 * Consul client will connect using the {@link ConsulRawClient}.
+	 * 
+	 * @param rawClient The {@link ConsulRawClient} instance to use for all API
+	 *                  calls.
+	 * @param token     The Consul API ACL token for authentication
+	 */
 	public ConsulClient(ConsulRawClient rawClient, CharSequence token) {
 		this(rawClient, Utils.charSequenceToArray(token));
 	}
 
+	/**
+	 * Consul client will connect using the {@link ConsulRawClient}.
+	 * 
+	 * @param rawClient The {@link ConsulRawClient} instance to use for all API
+	 *                  calls.
+	 * @param token     The Consul API ACL token for authentication
+	 */
 	public ConsulClient(ConsulRawClient rawClient, char[] token) {
 		this.rawClient = Objects.requireNonNull(rawClient, "raw client cannot be null");
 		this.rawClient.setToken(token);
@@ -120,9 +142,23 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 * Consul client will connect to local consul agent on 'http://localhost:8500'
 	 *
 	 * @param tlsConfig TLS configuration
+	 * @deprecated Use
+	 *             {@link ConsulRawClient.Builder#setSSLContext(javax.net.ssl.SSLContext)}
+	 *             and {@link #ConsulClient(ConsulRawClient)} or
+	 *             {@link #ConsulClient(SSLContext)} for TLS configuration
 	 */
+	@Deprecated(since = "2.0.0", forRemoval = true)
 	public ConsulClient(TLSConfig tlsConfig) {
 		this(new ConsulRawClient.Builder().setTlsConfig(tlsConfig).build());
+	}
+
+	/**
+	 * Consul client will connect to local consul agent on 'http://localhost:8500'
+	 *
+	 * @param sslCtx The {@link SSLContext} to use for TLS configuration.
+	 */
+	public ConsulClient(SSLContext sslCtx) {
+		this(new ConsulRawClient.Builder().setSSLContext(sslCtx).build());
 	}
 
 	/**
@@ -143,9 +179,26 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 *                  scheme (HTTP/HTTPS) in address. If there is no scheme in
 	 *                  address - client will use HTTP.
 	 * @param tlsConfig TLS configuration
+	 * @deprecated Use
+	 *             {@link ConsulRawClient.Builder#setSSLContext(javax.net.ssl.SSLContext)}
+	 *             and {@link #ConsulClient(ConsulRawClient)} or
+	 *             {@link #ConsulClient(String, SSLContext)} for TLS configuration
 	 */
+	@Deprecated(since = "2.0.0", forRemoval = true)
 	public ConsulClient(String agentHost, TLSConfig tlsConfig) {
 		this(new ConsulRawClient.Builder().setHost(agentHost).setTlsConfig(tlsConfig).build());
+	}
+
+	/**
+	 * Connect to consul agent on specific address and default port (8500)
+	 *
+	 * @param agentHost Hostname or IP address of consul agent. You can specify
+	 *                  scheme (HTTP/HTTPS) in address. If there is no scheme in
+	 *                  address - client will use HTTP.
+	 * @param sslCtx    The {@link SSLContext} to use for TLS configuration.
+	 */
+	public ConsulClient(String agentHost, SSLContext sslCtx) {
+		this(new ConsulRawClient.Builder().setHost(agentHost).setSSLContext(sslCtx).build());
 	}
 
 	/**
@@ -168,15 +221,50 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 *                  address - client will use HTTP.
 	 * @param agentPort Consul agent port
 	 * @param tlsConfig TLS configuration
+	 * @deprecated Use
+	 *             {@link ConsulRawClient.Builder#setSSLContext(javax.net.ssl.SSLContext)}
+	 *             and {@link #ConsulClient(ConsulRawClient)} or
+	 *             {@link #ConsulClient(String, int, SSLContext)} for TLS
+	 *             configuration
 	 */
+	@Deprecated(since = "2.0.0", forRemoval = true)
 	public ConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
 		this(new ConsulRawClient.Builder(agentHost, agentPort).setTlsConfig(tlsConfig).build());
 	}
 
-	public void setToken(CharSequence token) {
-		this.setToken(Utils.charSequenceToArray(token));
+	/**
+	 * Connect to consul agent on specific address and port
+	 *
+	 * @param agentHost Hostname or IP address of consul agent. You can specify
+	 *                  scheme (HTTP/HTTPS) in address. If there is no scheme in
+	 *                  address - client will use HTTP.
+	 * @param agentPort Consul agent port
+	 * @param sslCtx    The {@link SSLContext} to use for TLS configuration.
+	 */
+	public ConsulClient(String agentHost, int agentPort, SSLContext sslCtx) {
+		this(new ConsulRawClient.Builder(agentHost, agentPort).setSSLContext(sslCtx).build());
 	}
 
+	/**
+	 * Sets the Consul API ACL token to use on all API calls. This will be passed in
+	 * X-Consul-Token HTTP header.
+	 * 
+	 * @param token The Consul API ACL token for authentication
+	 */
+	public void setToken(CharSequence token) {
+		if (token != null) {
+			this.setToken(Utils.charSequenceToArray(token));
+		} else {
+			this.setToken((char[]) null);
+		}
+	}
+
+	/**
+	 * Sets the Consul API ACL token to use on all API calls. This will be passed in
+	 * X-Consul-Token HTTP header.
+	 * 
+	 * @param token The Consul API ACL token for authentication
+	 */
 	public void setToken(char[] token) {
 		this.rawClient.setToken(token);
 	}

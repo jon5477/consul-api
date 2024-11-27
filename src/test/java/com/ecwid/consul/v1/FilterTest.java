@@ -29,58 +29,53 @@ class FilterTest {
 
 	@Test
 	void of() {
-		Filter actual = Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo"), "bar");
+		Selector fooSelector = Selector.of("foo");
+		Filter actual = Filter.of(Filter.MatchingOperator.EQUAL, fooSelector, "bar");
 		assertFilter("foo = \"bar\"", actual);
-		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.EQUAL, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.NOT_EQUAL, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.NOT_EQUAL, fooSelector, "bar");
 		assertFilter("foo != \"bar\"", actual);
-		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.NOT_EQUAL, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.NOT_EQUAL, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.IS_EMPTY, Selector.of("foo"), null);
+		actual = Filter.of(Filter.MatchingOperator.IS_EMPTY, fooSelector, null);
 		assertFilter("foo is empty", actual);
-		actual = Filter.of(Filter.MatchingOperator.IS_EMPTY, Selector.of("foo"));
+		actual = Filter.of(Filter.MatchingOperator.IS_EMPTY, fooSelector);
 		assertFilter("foo is empty", actual);
 		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.IS_EMPTY, Selector.of("foo"), "bar"));
+				() -> Filter.of(Filter.MatchingOperator.IS_EMPTY, fooSelector, "bar"));
 
-		actual = Filter.of(Filter.MatchingOperator.IS_NOT_EMPTY, Selector.of("foo"), null);
+		actual = Filter.of(Filter.MatchingOperator.IS_NOT_EMPTY, fooSelector, null);
 		assertFilter("foo is not empty", actual);
-		actual = Filter.of(Filter.MatchingOperator.IS_NOT_EMPTY, Selector.of("foo"));
+		actual = Filter.of(Filter.MatchingOperator.IS_NOT_EMPTY, fooSelector);
 		assertFilter("foo is not empty", actual);
 		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.IS_NOT_EMPTY, Selector.of("foo"), "bar"));
+				() -> Filter.of(Filter.MatchingOperator.IS_NOT_EMPTY, fooSelector, "bar"));
 
-		actual = Filter.of(Filter.MatchingOperator.IN, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.IN, fooSelector, "bar");
 		assertFilter("\"bar\" in foo", actual);
-		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.IN, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.IN, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.NOT_IN, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.NOT_IN, fooSelector, "bar");
 		assertFilter("\"bar\" not in foo", actual);
-		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.NOT_IN, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.NOT_IN, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.CONTAINS, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.CONTAINS, fooSelector, "bar");
 		assertFilter("foo contains \"bar\"", actual);
-		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.CONTAINS, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.CONTAINS, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.NOT_CONTAINS, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.NOT_CONTAINS, fooSelector, "bar");
 		assertFilter("foo not contains \"bar\"", actual);
 		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.NOT_CONTAINS, Selector.of("foo")));
+				() -> Filter.of(Filter.MatchingOperator.NOT_CONTAINS, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.MATCHES, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.MATCHES, fooSelector, "bar");
 		assertFilter("foo matches \"bar\"", actual);
-		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.MATCHES, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.MATCHES, fooSelector));
 
-		actual = Filter.of(Filter.MatchingOperator.NOT_MATCHES, Selector.of("foo"), "bar");
+		actual = Filter.of(Filter.MatchingOperator.NOT_MATCHES, fooSelector, "bar");
 		assertFilter("foo not matches \"bar\"", actual);
-		assertThrows(IllegalArgumentException.class,
-				() -> Filter.of(Filter.MatchingOperator.NOT_MATCHES, Selector.of("foo")));
+		assertThrows(IllegalArgumentException.class, () -> Filter.of(Filter.MatchingOperator.NOT_MATCHES, fooSelector));
 	}
 
 	@Test

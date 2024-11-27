@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  * @author Jon Huang (jon5477)
  */
 public final class JsonFactory {
+	private static final String NODE_NOT_NULL_MSG = "node cannot be null";
 	private static final String DESERIALIZE_ERROR = "Unable to deserialize JSON into object";
 	private static final ObjectMapper OBJ_MAPPER = new ObjectMapper();
 
@@ -54,7 +55,7 @@ public final class JsonFactory {
 	 * @return The serialized {@link JsonNode} as a JSON {@code byte[]}.
 	 */
 	public static byte[] toBytes(@NonNull JsonNode node) {
-		Objects.requireNonNull(node, "node cannot be null");
+		Objects.requireNonNull(node, NODE_NOT_NULL_MSG);
 		try {
 			ObjectWriter writer = OBJ_MAPPER.writer();
 			return writer.writeValueAsBytes(node);
@@ -95,7 +96,7 @@ public final class JsonFactory {
 	 * @param type The {@link TypeReference} to use.
 	 */
 	public static <T> T toPOJO(@NonNull JsonNode node, @NonNull TypeReference<T> type) {
-		Objects.requireNonNull(node, "node cannot be null");
+		Objects.requireNonNull(node, NODE_NOT_NULL_MSG);
 		try {
 			return OBJ_MAPPER.treeToValue(node, type);
 		} catch (JsonProcessingException e) {
@@ -112,7 +113,7 @@ public final class JsonFactory {
 	 * @param type The {@link TypeReference} to use.
 	 */
 	public static <T> T toPOJO(@NonNull JsonNode node, @NonNull Class<T> type) {
-		Objects.requireNonNull(node, "node cannot be null");
+		Objects.requireNonNull(node, NODE_NOT_NULL_MSG);
 		try {
 			return OBJ_MAPPER.treeToValue(node, type);
 		} catch (JsonProcessingException e) {

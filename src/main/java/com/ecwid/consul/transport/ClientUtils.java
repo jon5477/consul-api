@@ -1,7 +1,6 @@
 package com.ecwid.consul.transport;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -43,6 +42,7 @@ import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
 /**
  * Provides utility functions for interfacing with Apache HTTP Client 5.x.
  * <ul>
+ * <li>Creating {@link SSLContext} for passing to HTTP Client</li>
  * <li>Creating HTTP clients</li>
  * <li>Creating HTTP requests</li>
  * <li>Creating HTTP headers</li>
@@ -85,10 +85,8 @@ public final class ClientUtils {
 	 * @return The created {@link SSLContext} from the given {@link TLSConfig}
 	 * @throws KeyStoreException         If the keystore could not read for any
 	 *                                   reason
-	 * @throws FileNotFoundException     If the keystore or truststore file does not
-	 *                                   exist
 	 * @throws IOException               If an IO exception occurs when reading the
-	 *                                   keystore or truststore
+	 *                                   keystore or truststore file
 	 * @throws NoSuchAlgorithmException  If the algorithm does not exist in this JVM
 	 *                                   implementation
 	 * @throws CertificateException      If certificates could not be loaded from
@@ -98,9 +96,9 @@ public final class ClientUtils {
 	 * @throws KeyManagementException    If an exception occurs while constructing
 	 *                                   the {@link SSLContext}.
 	 */
-	public static SSLContext createSSLContext(@NonNull TLSConfig tlsConfig)
-			throws KeyStoreException, FileNotFoundException, IOException, NoSuchAlgorithmException,
-			CertificateException, UnrecoverableKeyException, KeyManagementException {
+	@SuppressWarnings("removal")
+	public static SSLContext createSSLContext(@NonNull TLSConfig tlsConfig) throws KeyStoreException, IOException,
+			NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException, KeyManagementException {
 		Objects.requireNonNull(tlsConfig, "TLS configuration cannot be null");
 		KeyStore clientStore = KeyStore.getInstance(tlsConfig.getKeyStoreInstanceType().name());
 		try (FileInputStream fis = new FileInputStream(tlsConfig.getCertificatePath())) {
@@ -116,7 +114,8 @@ public final class ClientUtils {
 		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		tmf.init(trustStore);
 		TrustManager[] tms = tmf.getTrustManagers();
-		SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(new TrustSelfSignedStrategy()).build();
+		@SuppressWarnings("deprecation")
+		SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE).build();
 		sslContext.init(kms, tms, new SecureRandom());
 		return sslContext;
 	}

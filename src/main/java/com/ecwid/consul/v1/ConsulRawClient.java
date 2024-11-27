@@ -86,9 +86,13 @@ public final class ConsulRawClient {
 		 * Sets the {@link TLSConfig} option for the Consul client. This will be used to
 		 * automatically create the {@link SSLContext}.
 		 * 
+		 * @deprecated Use {@link #setSSLContext(SSLContext)} to pass SSL/TLS
+		 *             configuration instead.
+		 * 
 		 * @param tlsConfig The {@link TLSConfig} option for the Consul client
 		 * @return This {@link Builder} instance for method chaining.
 		 */
+		@Deprecated(since = "2.0.0", forRemoval = true)
 		public Builder setTlsConfig(TLSConfig tlsConfig) {
 			try {
 				this.sslCtx = ClientUtils.createSSLContext(tlsConfig);

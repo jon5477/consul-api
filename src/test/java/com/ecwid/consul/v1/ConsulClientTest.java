@@ -48,6 +48,7 @@ class ConsulClientTest {
 		serviceRegisterTest(consulClient);
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	void agentHttpsTest() {
 		String host = "https://localhost";
