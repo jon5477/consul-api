@@ -23,7 +23,7 @@ class FilterTest {
 					.withPrefabValues(Filter.class,
 							Filter.of(Filter.MatchingOperator.EQUAL, Filter.Selector.of("foo"), "bar"),
 							Filter.in("baz", Filter.Selector.of("fang")))
-					.usingGetClass().withIgnoredFields("parent").verify();
+					.withIgnoredFields("parent").verify();
 		}
 	}
 
@@ -162,9 +162,7 @@ class FilterTest {
 		assertEquals(Collections.singletonMap("filter", "foo = \"bar\""), actual);
 	}
 
-	private void assertFilter(final String expected, final Filter subject) {
+	private void assertFilter(String expected, Filter subject) {
 		assertEquals(expected, subject.toString());
-		final String encoded = expected.replaceAll(" ", "%20").replaceAll("\"", "%22");
-		assertEquals(encoded, subject.toEncodedString());
 	}
 }

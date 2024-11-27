@@ -36,7 +36,7 @@ public final class JsonFactory {
 	 * Serializes the given POJO into JSON as a {@code byte[]}.
 	 * 
 	 * @param src The POJO to serialize.
-	 * @return
+	 * @return The serialized POJO as a JSON {@code byte[]}.
 	 */
 	public static byte[] toBytes(@NonNull Object src) {
 		Objects.requireNonNull(src, "object cannot be null");
@@ -50,8 +50,8 @@ public final class JsonFactory {
 	/**
 	 * Serializes the given {@link JsonNode} into JSON as a {@code byte[]}.
 	 * 
-	 * @param src The POJO to serialize.
-	 * @return
+	 * @param node The {@link JsonNode} to serialize.
+	 * @return The serialized {@link JsonNode} as a JSON {@code byte[]}.
 	 */
 	public static byte[] toBytes(@NonNull JsonNode node) {
 		Objects.requireNonNull(node, "node cannot be null");
@@ -66,11 +66,11 @@ public final class JsonFactory {
 	/**
 	 * Reads a {@link JsonNode} from the given {@code byte[]}.
 	 * 
-	 * @param bytes The {@code byte[]} to read.
+	 * @param content The {@code byte[]} to read.
 	 * @return The parsed {@link JsonNode}.
 	 * @throws IOException If an exception occurs while reading.
 	 */
-	public static JsonNode toJsonNode(@NonNull byte[] content) throws IOException {
+	public static JsonNode toJsonNode(byte[] content) throws IOException {
 		return OBJ_MAPPER.readTree(content);
 	}
 

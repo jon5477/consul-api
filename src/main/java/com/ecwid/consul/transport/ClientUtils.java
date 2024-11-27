@@ -80,15 +80,23 @@ public final class ClientUtils {
 	 * Creates an {@link SSLContext} from the given {@link TLSConfig}. This is
 	 * provided to interoperate with legacy code.
 	 * 
-	 * @param tlsConfig
+	 * @param tlsConfig The {@link TLSConfig} instance that contains the various
+	 *                  configuration options for SSL/TLS.
 	 * @return The created {@link SSLContext} from the given {@link TLSConfig}
-	 * @throws KeyStoreException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws UnrecoverableKeyException
-	 * @throws KeyManagementException
+	 * @throws KeyStoreException         If the keystore could not read for any
+	 *                                   reason
+	 * @throws FileNotFoundException     If the keystore or truststore file does not
+	 *                                   exist
+	 * @throws IOException               If an IO exception occurs when reading the
+	 *                                   keystore or truststore
+	 * @throws NoSuchAlgorithmException  If the algorithm does not exist in this JVM
+	 *                                   implementation
+	 * @throws CertificateException      If certificates could not be loaded from
+	 *                                   the keystore or truststore
+	 * @throws UnrecoverableKeyException If an exception occurs while initializing
+	 *                                   the keystore.
+	 * @throws KeyManagementException    If an exception occurs while constructing
+	 *                                   the {@link SSLContext}.
 	 */
 	public static SSLContext createSSLContext(@NonNull TLSConfig tlsConfig)
 			throws KeyStoreException, FileNotFoundException, IOException, NoSuchAlgorithmException,
