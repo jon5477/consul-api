@@ -635,42 +635,42 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key) {
+	public Response<Boolean> deleteKVValue(String key) {
 		return keyValueClient.deleteKVValue(key);
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key, char[] token) {
+	public Response<Boolean> deleteKVValue(String key, char[] token) {
 		return keyValueClient.deleteKVValue(key, token);
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValue(String key, QueryParams queryParams) {
 		return keyValueClient.deleteKVValue(key, queryParams);
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key, char[] token, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValue(String key, char[] token, QueryParams queryParams) {
 		return keyValueClient.deleteKVValue(key, token, queryParams);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key) {
+	public Response<Boolean> deleteKVValues(String key) {
 		return keyValueClient.deleteKVValues(key);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key, char[] token) {
+	public Response<Boolean> deleteKVValues(String key, char[] token) {
 		return keyValueClient.deleteKVValues(key, token);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValues(String key, QueryParams queryParams) {
 		return keyValueClient.deleteKVValues(key, queryParams);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key, char[] token, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValues(String key, char[] token, QueryParams queryParams) {
 		return keyValueClient.deleteKVValues(key, token, queryParams);
 	}
 

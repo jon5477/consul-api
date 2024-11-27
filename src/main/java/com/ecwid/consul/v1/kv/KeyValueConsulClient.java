@@ -310,54 +310,56 @@ public final class KeyValueConsulClient implements KeyValueClient {
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key) {
+	public Response<Boolean> deleteKVValue(String key) {
 		return deleteKVValue(key, QueryParams.DEFAULT);
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key, char[] token) {
+	public Response<Boolean> deleteKVValue(String key, char[] token) {
 		return deleteKVValue(key, token, QueryParams.DEFAULT);
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValue(String key, QueryParams queryParams) {
 		return deleteKVValue(key, (char[]) null, queryParams);
 	}
 
 	@Override
-	public Response<Void> deleteKVValue(String key, char[] token, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValue(String key, char[] token, QueryParams queryParams) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
 				.addQueryParameters(queryParams).build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			return new Response<>(null, httpResponse);
+			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
+			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key) {
+	public Response<Boolean> deleteKVValues(String key) {
 		return deleteKVValues(key, QueryParams.DEFAULT);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key, char[] token) {
+	public Response<Boolean> deleteKVValues(String key, char[] token) {
 		return deleteKVValues(key, token, QueryParams.DEFAULT);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValues(String key, QueryParams queryParams) {
 		return deleteKVValues(key, (char[]) null, queryParams);
 	}
 
 	@Override
-	public Response<Void> deleteKVValues(String key, char[] token, QueryParams queryParams) {
+	public Response<Boolean> deleteKVValues(String key, char[] token, QueryParams queryParams) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_KV_PREFIX + key).setToken(token)
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			return new Response<>(null, httpResponse);
+			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
+			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}

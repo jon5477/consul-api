@@ -165,35 +165,35 @@ public interface KeyValueClient {
 	Response<Boolean> setKVBinaryValue(String key, byte[] value, char[] token, PutParams putParams,
 			QueryParams queryParams);
 
-	Response<Void> deleteKVValue(String key);
+	Response<Boolean> deleteKVValue(String key);
 
-	default Response<Void> deleteKVValue(String key, CharSequence token) {
+	default Response<Boolean> deleteKVValue(String key, CharSequence token) {
 		return deleteKVValue(key, Utils.charSequenceToArray(token));
 	}
 
-	Response<Void> deleteKVValue(String key, char[] token);
+	Response<Boolean> deleteKVValue(String key, char[] token);
 
-	Response<Void> deleteKVValue(String key, QueryParams queryParams);
+	Response<Boolean> deleteKVValue(String key, QueryParams queryParams);
 
-	default Response<Void> deleteKVValue(String key, CharSequence token, QueryParams queryParams) {
+	default Response<Boolean> deleteKVValue(String key, CharSequence token, QueryParams queryParams) {
 		return deleteKVValue(key, Utils.charSequenceToArray(token), queryParams);
 	}
 
-	Response<Void> deleteKVValue(String key, char[] token, QueryParams queryParams);
+	Response<Boolean> deleteKVValue(String key, char[] token, QueryParams queryParams);
 
-	Response<Void> deleteKVValues(String key);
+	Response<Boolean> deleteKVValues(String key);
 
-	default Response<Void> deleteKVValues(String key, CharSequence token) {
+	default Response<Boolean> deleteKVValues(String key, CharSequence token) {
 		return deleteKVValues(key, Utils.charSequenceToArray(token));
 	}
 
-	Response<Void> deleteKVValues(String key, char[] token);
+	Response<Boolean> deleteKVValues(String key, char[] token);
 
-	Response<Void> deleteKVValues(String key, QueryParams queryParams);
+	Response<Boolean> deleteKVValues(String key, QueryParams queryParams);
 
-	default Response<Void> deleteKVValues(String key, CharSequence token, QueryParams queryParams) {
+	default Response<Boolean> deleteKVValues(String key, CharSequence token, QueryParams queryParams) {
 		return deleteKVValues(key, Utils.charSequenceToArray(token), queryParams);
 	}
 
-	Response<Void> deleteKVValues(String key, char[] token, QueryParams queryParams);
+	Response<Boolean> deleteKVValues(String key, char[] token, QueryParams queryParams);
 }
