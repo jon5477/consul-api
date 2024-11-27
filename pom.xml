@@ -15,18 +15,30 @@
 		<connection>scm:git:git@github.com:jon5477/consul-api.git</connection>
 		<tag>HEAD</tag>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>github</id>
+			<name>GitHub Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/jon5477/consul-api</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.release>11</maven.compiler.release>
+		<!-- Testing -->
 		<junit.version>5.11.3</junit.version>
 		<hamcrest.version>3.0</hamcrest.version>
 		<mockito.version>5.14.2</mockito.version>
 		<equalsverifier.version>3.17.3</equalsverifier.version>
 		<embedded.consul.version>2.2.1</embedded.consul.version>
+		<!-- Annotations -->
 		<checker-qual.version>3.48.2</checker-qual.version>
 		<error-prone.version>2.36.0</error-prone.version>
+		<!-- Dependencies -->
 		<slf4j.version>2.0.16</slf4j.version>
 		<jackson.version>2.18.1</jackson.version>
 		<http.core.version>5.3.1</http.core.version>
