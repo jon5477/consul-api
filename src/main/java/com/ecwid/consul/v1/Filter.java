@@ -169,11 +169,11 @@ public class Filter implements QueryParameters {
 			if (leaf.value != null) {
 				if ((leaf.matchingOperator == MatchingOperator.IN)
 						|| (leaf.matchingOperator == MatchingOperator.NOT_IN)) {
-					return String.format(prefix + "\"%s\" %s %s", leaf.value, leaf.matchingOperator, leaf.selector);
+					return prefix + "\"" + leaf.value + "\" " + leaf.matchingOperator + " " + leaf.selector;
 				}
-				return String.format(prefix + "%s %s \"%s\"", leaf.selector, leaf.matchingOperator, leaf.value);
+				return prefix + leaf.selector + " " + leaf.matchingOperator + " \"" + leaf.value + "\"";
 			}
-			return String.format(prefix + "%s %s", leaf.selector, leaf.matchingOperator);
+			return prefix + leaf.selector + " " + leaf.matchingOperator;
 		}
 
 		final String result = children.stream().map(Filter::toString).collect(Collectors.joining(" " + boolOp + " "));

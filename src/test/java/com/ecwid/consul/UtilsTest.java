@@ -21,7 +21,7 @@ class UtilsTest {
 		String actualAddress = Utils.assembleAgentAddress(expectedHost, expectedPort, expectedPath);
 
 		// Then
-		assertEquals(String.format("%s:%d/%s", expectedHost, expectedPort, expectedPath), actualAddress);
+		assertEquals(expectedHost + ":" + expectedPort + "/" + expectedPath, actualAddress);
 	}
 
 	@Test
@@ -35,7 +35,7 @@ class UtilsTest {
 		String actualAddress = Utils.assembleAgentAddress(expectedHost, expectedPort, expectedPath);
 
 		// Then
-		assertEquals(String.format("%s:%d", expectedHost, expectedPort), actualAddress);
+		assertEquals(expectedHost + ":" + expectedPort, actualAddress);
 	}
 
 	@Test
@@ -48,6 +48,6 @@ class UtilsTest {
 		String actualAddress = Utils.assembleAgentAddress(expectedHost, expectedPort, null);
 
 		// Then
-		assertEquals(String.format("%s:%d", expectedHost, expectedPort), actualAddress);
+		assertEquals(expectedHost + ":" + expectedPort, actualAddress);
 	}
 }
