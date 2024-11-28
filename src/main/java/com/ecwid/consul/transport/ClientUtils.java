@@ -120,12 +120,14 @@ public final class ClientUtils {
 		return sslContext;
 	}
 
+	@SuppressWarnings("resource")
 	public static DefaultHttpTransport createDefaultHttpTransport() {
 		PoolingHttpClientConnectionManager connectionManager = ClientUtils.createPoolingConnectionManager();
 		HttpClient httpClient = ClientUtils.createHttpClient(connectionManager);
 		return new DefaultHttpTransport(connectionManager, httpClient);
 	}
 
+	@SuppressWarnings("resource")
 	public static DefaultHttpTransport createDefaultHttpTransport(
 			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient,
 			@Nullable SSLContext sslCtx) {
@@ -159,6 +161,7 @@ public final class ClientUtils {
 		return conMgrBuilder.build();
 	}
 
+	@SuppressWarnings("resource")
 	public static HttpClient createHttpClient(@NonNull HttpClientConnectionManager conMgr) {
 		Objects.requireNonNull(conMgr, "connection manager cannot be null");
 		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();
@@ -175,6 +178,7 @@ public final class ClientUtils {
 		return conMgrBuilder.build();
 	}
 
+	@SuppressWarnings("resource")
 	public static HttpAsyncClient createAsyncHttpClient(@NonNull AsyncClientConnectionManager conMgr) {
 		Objects.requireNonNull(conMgr, "connection manager cannot be null");
 		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();

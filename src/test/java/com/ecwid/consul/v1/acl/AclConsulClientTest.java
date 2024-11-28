@@ -3,6 +3,7 @@ package com.ecwid.consul.v1.acl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -73,7 +74,10 @@ class AclConsulClientTest {
 		Response<AclToken> response = aclClient.aclRead(token.getAccessorId(), false);
 		assertEquals(token, response.getValue());
 		response = aclClient.aclRead(token.getAccessorId(), true);
-		assertEquals(token, response.getValue());
+		AclToken aclToken = response.getValue();
+		assertNotNull(aclToken.getResolvedByAgent());
+		assertNotNull(aclToken.getAgentACLDefaultPolicy());
+		assertNotNull(aclToken.getAgentACLDownPolicy());
 	}
 
 	@Test

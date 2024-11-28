@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -32,7 +32,7 @@ public final class EventConsulClient implements EventClient {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/event/fire/" + event, payload, eventParams,
 				queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			Event value = JsonFactory.toPOJO(httpResponse.getContent(), Event.class);
+			Event value = JsonUtil.toPOJO(httpResponse.getContent(), Event.class);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -43,7 +43,7 @@ public final class EventConsulClient implements EventClient {
 	public Response<List<Event>> eventList(EventListRequest eventListRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/event/list", eventListRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Event> value = JsonFactory.toPOJO(httpResponse.getContent(), EVENT_LIST_TYPE_REF);
+			List<Event> value = JsonUtil.toPOJO(httpResponse.getContent(), EVENT_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

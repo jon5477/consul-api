@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-class AclTokenTest {
+class UpdateAclTest {
 	@Nested
 	class EqualsAndHashCode {
 		@Test
 		void shouldVerify() {
-			EqualsVerifier.simple().forClass(AclToken.class).withPrefabValues(CharSequence.class, "red", "blue")
+			EqualsVerifier.simple().forClass(UpdateAcl.class).withPrefabValues(CharSequence.class, "red", "blue")
 					.verify();
 		}
 	}

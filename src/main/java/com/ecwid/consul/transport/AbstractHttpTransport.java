@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ecwid.consul.ConsulException;
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -108,7 +108,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 					if (entity != null && ContentType.APPLICATION_JSON.getMimeType().equals(entity.getContentType())) {
 						try (InputStream is = entity.getContent()) {
 							if (is != null) {
-								content = JsonFactory.toJsonNode(is);
+								content = JsonUtil.toJsonNode(is);
 							}
 						}
 					}

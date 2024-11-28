@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -35,10 +35,10 @@ public final class AclConsulClient implements AclClient {
 	@Override
 	public Response<AclToken> aclCreate(NewAcl newAcl) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token")
-				.setContent(JsonFactory.toBytes(newAcl)).build();
+				.setContent(JsonUtil.toBytes(newAcl)).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -58,7 +58,7 @@ public final class AclConsulClient implements AclClient {
 		}
 		HttpResponse httpResponse = rawClient.makeGetRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -70,7 +70,7 @@ public final class AclConsulClient implements AclClient {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + "self").build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -80,10 +80,10 @@ public final class AclConsulClient implements AclClient {
 	@Override
 	public Response<AclToken> aclUpdate(UpdateAcl updateAcl, String accessorId) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId)
-				.setContent(JsonFactory.toBytes(updateAcl)).build();
+				.setContent(JsonUtil.toBytes(updateAcl)).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -102,10 +102,10 @@ public final class AclConsulClient implements AclClient {
 			objNode.put("Description", description);
 		}
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId + "/clone")
-				.setContent(JsonFactory.toBytes(objNode)).build();
+				.setContent(JsonUtil.toBytes(objNode)).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
+			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -129,7 +129,7 @@ public final class AclConsulClient implements AclClient {
 				.addQueryParameters(req.getQueryParameters()).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<AclToken> aclTokens = JsonFactory.toPOJO(httpResponse.getContent(), TOKEN_LIST_TYPE_REF);
+			List<AclToken> aclTokens = JsonUtil.toPOJO(httpResponse.getContent(), TOKEN_LIST_TYPE_REF);
 			return new Response<>(aclTokens, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  * 
  * @author Jon Huang (jon5477)
  */
-public final class JsonFactory {
+public final class JsonUtil {
 	private static final String NODE_NOT_NULL_MSG = "node cannot be null";
 	private static final String DESERIALIZE_ERROR = "Unable to deserialize JSON into object";
 	private static final ObjectMapper OBJ_MAPPER = new ObjectMapper();
@@ -29,7 +29,7 @@ public final class JsonFactory {
 		OBJ_MAPPER.setSerializationInclusion(Include.NON_NULL);
 	}
 
-	private JsonFactory() {
+	private JsonUtil() {
 		// static utility class
 	}
 
@@ -82,6 +82,7 @@ public final class JsonFactory {
 	 * @return The parsed {@link JsonNode}.
 	 * @throws IOException If an exception occurs while reading.
 	 */
+	@SuppressWarnings("resource")
 	public static JsonNode toJsonNode(@NonNull InputStream in) throws IOException {
 		Objects.requireNonNull(in, "input stream cannot be null");
 		return OBJ_MAPPER.readTree(in);

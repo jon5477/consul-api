@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.SingleQueryParameters;
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -77,7 +77,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), VALUE_LIST_TYPE_REF);
+			List<GetValue> value = JsonUtil.toPOJO(httpResponse.getContent(), VALUE_LIST_TYPE_REF);
 			if (value.isEmpty()) {
 				return new Response<>(null, httpResponse);
 			} else if (value.size() == 1) {
@@ -103,7 +103,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetBinaryValue> value = JsonFactory.toPOJO(httpResponse.getContent(), BINARY_VALUE_LIST_TYPE_REF);
+			List<GetBinaryValue> value = JsonUtil.toPOJO(httpResponse.getContent(), BINARY_VALUE_LIST_TYPE_REF);
 			if (value.isEmpty()) {
 				return new Response<>(null, httpResponse);
 			} else if (value.size() == 1) {
@@ -129,7 +129,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetValue> value = JsonFactory.toPOJO(httpResponse.getContent(), VALUE_LIST_TYPE_REF);
+			List<GetValue> value = JsonUtil.toPOJO(httpResponse.getContent(), VALUE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
 			return new Response<>(null, httpResponse);
@@ -149,7 +149,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<GetBinaryValue> value = JsonFactory.toPOJO(httpResponse.getContent(), BINARY_VALUE_LIST_TYPE_REF);
+			List<GetBinaryValue> value = JsonUtil.toPOJO(httpResponse.getContent(), BINARY_VALUE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
 			return new Response<>(null, httpResponse);
@@ -181,7 +181,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(keysParam, separatorParam, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
+			List<String> value = JsonUtil.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else if (httpResponse.getStatusCode() == 404) {
 			return new Response<>(null, httpResponse);
@@ -211,7 +211,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams, putParams).setContent(value.getBytes(StandardCharsets.UTF_8)).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
+			boolean result = JsonUtil.toPOJO(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -239,7 +239,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(queryParams, putParams).setContent(value).build();
 		HttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
+			boolean result = JsonUtil.toPOJO(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -257,7 +257,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
+			boolean result = JsonUtil.toPOJO(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -275,7 +275,7 @@ public final class KeyValueConsulClient implements KeyValueClient {
 				.addQueryParameters(RECURSE_QUERY_PARAM, queryParams).build();
 		HttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			boolean result = JsonFactory.toPOJO(httpResponse.getContent(), boolean.class);
+			boolean result = JsonUtil.toPOJO(httpResponse.getContent(), boolean.class);
 			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

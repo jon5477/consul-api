@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse;
 import org.apache.hc.core5.concurrent.FutureCallback;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -33,7 +33,7 @@ final class SimpleHttpResponseCompletableFutureCallback implements FutureCallbac
 		Boolean consulKnownLeader = AbstractHttpTransport.parseBoolean(result.getFirstHeader("X-Consul-Knownleader"));
 		Long consulLastContact = AbstractHttpTransport.parseUnsignedLong(result.getFirstHeader("X-Consul-Lastcontact"));
 		try {
-			JsonNode content = JsonFactory.toJsonNode(result.getBodyBytes());
+			JsonNode content = JsonUtil.toJsonNode(result.getBodyBytes());
 			cf.complete(new HttpResponse(statusCode, statusMessage, content, consulIndex, consulKnownLeader,
 					consulLastContact));
 		} catch (IOException e) {

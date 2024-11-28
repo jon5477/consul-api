@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -34,7 +34,7 @@ public final class HealthConsulClient implements HealthClient {
 	public Response<List<Check>> getHealthChecksForNode(String nodeName, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
+			List<Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -47,7 +47,7 @@ public final class HealthConsulClient implements HealthClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
 				healthChecksForServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
+			List<Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -60,7 +60,7 @@ public final class HealthConsulClient implements HealthClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/service/" + serviceName,
 				healthServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<HealthService> value = JsonFactory.toPOJO(httpResponse.getContent(), HEALTH_SERVICE_LIST_TYPE_REF);
+			List<HealthService> value = JsonUtil.toPOJO(httpResponse.getContent(), HEALTH_SERVICE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -77,7 +77,7 @@ public final class HealthConsulClient implements HealthClient {
 		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase(Locale.ROOT);
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/state/" + status, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
+			List<Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

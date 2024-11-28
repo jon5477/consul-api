@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -41,7 +41,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register",
-				JsonFactory.toBytes(catalogRegistration));
+				JsonUtil.toBytes(catalogRegistration));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -52,7 +52,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration) {
 		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister",
-				JsonFactory.toBytes(catalogDeregistration));
+				JsonUtil.toBytes(catalogDeregistration));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -64,7 +64,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<List<String>> getCatalogDatacenters() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/datacenters");
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
+			List<String> value = JsonUtil.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -77,7 +77,7 @@ public final class CatalogConsulClient implements CatalogClient {
 				.addQueryParameters(catalogNodesRequest.getQueryParameters()).build();
 		HttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Node> value = JsonFactory.toPOJO(httpResponse.getContent(), NODE_LIST_TYPE_REF);
+			List<Node> value = JsonUtil.toPOJO(httpResponse.getContent(), NODE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -88,7 +88,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, List<String>> value = JsonFactory.toPOJO(httpResponse.getContent(), MAP_LIST_STRING_TYPE_REF);
+			Map<String, List<String>> value = JsonUtil.toPOJO(httpResponse.getContent(), MAP_LIST_STRING_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -101,7 +101,7 @@ public final class CatalogConsulClient implements CatalogClient {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName,
 				catalogServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<CatalogService> value = JsonFactory.toPOJO(httpResponse.getContent(), CATALOG_LIST_TYPE_REF);
+			List<CatalogService> value = JsonUtil.toPOJO(httpResponse.getContent(), CATALOG_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -112,7 +112,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<CatalogNode> getCatalogNode(String nodeName, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			CatalogNode catalogNode = JsonFactory.toPOJO(httpResponse.getContent(), CatalogNode.class);
+			CatalogNode catalogNode = JsonUtil.toPOJO(httpResponse.getContent(), CatalogNode.class);
 			return new Response<>(catalogNode, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

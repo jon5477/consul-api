@@ -8,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.SingleQueryParameters;
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -42,7 +42,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<Map<String, Check>> getAgentChecks() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/checks");
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, Check> value = JsonFactory.toPOJO(httpResponse.getContent(), CHECK_MAP_TYPE_REF);
+			Map<String, Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_MAP_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -53,7 +53,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<Map<String, Service>> getAgentServices() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/services");
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, Service> agentServices = JsonFactory.toPOJO(httpResponse.getContent(), SERVICE_MAP_TYPE_REF);
+			Map<String, Service> agentServices = JsonUtil.toPOJO(httpResponse.getContent(), SERVICE_MAP_TYPE_REF);
 			return new Response<>(agentServices, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -64,7 +64,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<List<Member>> getAgentMembers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/members");
 		if (httpResponse.getStatusCode() == 200) {
-			List<Member> members = JsonFactory.toPOJO(httpResponse.getContent(), MEMBER_LIST_TYPE_REF);
+			List<Member> members = JsonUtil.toPOJO(httpResponse.getContent(), MEMBER_LIST_TYPE_REF);
 			return new Response<>(members, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -75,7 +75,7 @@ public final class AgentConsulClient implements AgentClient {
 	public Response<Self> getAgentSelf() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/self");
 		if (httpResponse.getStatusCode() == 200) {
-			Self self = JsonFactory.toPOJO(httpResponse.getContent(), Self.class);
+			Self self = JsonUtil.toPOJO(httpResponse.getContent(), Self.class);
 			return new Response<>(self, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -124,7 +124,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckRegister(NewCheck newCheck) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register", JsonFactory.toBytes(newCheck));
+		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register", JsonUtil.toBytes(newCheck));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -193,7 +193,7 @@ public final class AgentConsulClient implements AgentClient {
 	@Override
 	public Response<Void> agentServiceRegister(NewService newService) {
 		Request.Builder request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
-				.setContent(JsonFactory.toBytes(newService));
+				.setContent(JsonUtil.toBytes(newService));
 		HttpResponse httpResponse = rawClient.makePutRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);

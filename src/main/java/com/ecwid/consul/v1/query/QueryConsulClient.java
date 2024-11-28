@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -23,7 +23,7 @@ public final class QueryConsulClient implements QueryClient {
 	public Response<QueryExecution> executePreparedQuery(String uuid, QueryParams queryParams) {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/query/" + uuid + "/execute", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			QueryExecution queryExecution = JsonFactory.toPOJO(httpResponse.getContent(), QueryExecution.class);
+			QueryExecution queryExecution = JsonUtil.toPOJO(httpResponse.getContent(), QueryExecution.class);
 			return new Response<>(queryExecution, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);

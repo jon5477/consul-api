@@ -194,11 +194,11 @@ public final class AclToken {
 
 	@Override
 	public String toString() {
-		return "AclToken [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
-				+ ", policies=" + policies + ", templatedPolicies=" + templatedPolicies + ", local=" + local
-				+ ", createTime=" + createTime + ", hash=" + hash + ", expandedPolicies=" + expandedPolicies
-				+ ", expandedRoles=" + expandedRoles + ", agentACLDefaultPolicy=" + agentACLDefaultPolicy
-				+ ", agentACLDownPolicy=" + agentACLDownPolicy + ", resolvedByAgent=" + resolvedByAgent
-				+ ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + "]";
+		return "AclToken [accessorId=" + accessorId + ", description=" + description + ", policies=" + policies
+				+ ", templatedPolicies=" + templatedPolicies + ", local=" + local + ", createTime=" + createTime
+				+ ", hash=" + hash + ", expandedPolicies=" + expandedPolicies + ", expandedRoles=" + expandedRoles
+				+ ", agentACLDefaultPolicy=" + agentACLDefaultPolicy + ", agentACLDownPolicy=" + agentACLDownPolicy
+				+ ", resolvedByAgent=" + resolvedByAgent + ", createIndex=" + createIndex + ", modifyIndex="
+				+ modifyIndex + "]";
 	}
 }

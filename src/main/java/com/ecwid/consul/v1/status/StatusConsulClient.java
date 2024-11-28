@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.ecwid.consul.json.JsonFactory;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.transport.HttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
@@ -28,7 +28,7 @@ public final class StatusConsulClient implements StatusClient {
 	public Response<String> getStatusLeader() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/leader");
 		if (httpResponse.getStatusCode() == 200) {
-			String value = JsonFactory.toPOJO(httpResponse.getContent(), String.class);
+			String value = JsonUtil.toPOJO(httpResponse.getContent(), String.class);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -39,7 +39,7 @@ public final class StatusConsulClient implements StatusClient {
 	public Response<List<String>> getStatusPeers() {
 		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/status/peers");
 		if (httpResponse.getStatusCode() == 200) {
-			List<String> value = JsonFactory.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
+			List<String> value = JsonUtil.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
