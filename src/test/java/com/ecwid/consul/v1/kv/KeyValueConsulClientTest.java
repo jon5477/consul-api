@@ -1,9 +1,13 @@
 package com.ecwid.consul.v1.kv;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Random;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,11 +42,11 @@ class KeyValueConsulClientTest {
 		rnd.nextBytes(testValue);
 
 		// Make sure there is no such key before test running
-		Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
+		assertNull(consulClient.getKVValue(testKey).getValue());
 		// Set the key
 		consulClient.setKVBinaryValue(testKey, testValue);
 		// Make sure test key exists
-		Assertions.assertArrayEquals(consulClient.getKVBinaryValue(testKey).getValue().getValue(), testValue);
+		assertArrayEquals(consulClient.getKVBinaryValue(testKey).getValue().getValue(), testValue);
 	}
 
 	@Test
@@ -51,17 +55,17 @@ class KeyValueConsulClientTest {
 		String testValue = "test_value";
 
 		// Make sure there is no such key before test running
-		Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
+		assertNull(consulClient.getKVValue(testKey).getValue());
 
 		// Set the key
 		consulClient.setKVValue(testKey, testValue);
 		// Make sure test key exists
-		Assertions.assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
+		assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
 
 		// Delete key
-		Assertions.assertTrue(consulClient.deleteKVValue(testKey).getValue());
+		assertTrue(consulClient.deleteKVValue(testKey).getValue());
 		// Make sure there is no such key before test running
-		Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
+		assertNull(consulClient.getKVValue(testKey).getValue());
 	}
 
 	@Test
@@ -73,19 +77,19 @@ class KeyValueConsulClientTest {
 		for (int i = 0; i < 10; i++) {
 			String testKey = testKeyPrefix + "/" + i;
 			// Make sure there is no such key before test running
-			Assertions.assertNull(consulClient.getKVValue(testKey).getValue());
+			assertNull(consulClient.getKVValue(testKey).getValue());
 
 			// Set the key
 			consulClient.setKVValue(testKey, testValue);
 
 			// Make sure test key exists
-			Assertions.assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
+			assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
 		}
 
 		// Delete all keys in single shot
-		Assertions.assertTrue(consulClient.deleteKVValues(testKeyPrefix).getValue());
+		assertTrue(consulClient.deleteKVValues(testKeyPrefix).getValue());
 
 		// Make sure all keys have been deleted
-		Assertions.assertNull(consulClient.getKVKeysOnly(testKeyPrefix).getValue());
+		assertNull(consulClient.getKVKeysOnly(testKeyPrefix).getValue());
 	}
 }
