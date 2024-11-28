@@ -65,14 +65,32 @@ public final class JsonUtil {
 	}
 
 	/**
+	 * Reads a {@link JsonNode} from the given {@link String}.
+	 * 
+	 * @param content The {@link String} to read.
+	 * @return The parsed {@link JsonNode}.
+	 */
+	public static JsonNode toJsonNode(@NonNull String content) {
+		Objects.requireNonNull(content, "content cannot be null");
+		try {
+			return OBJ_MAPPER.readTree(content);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(DESERIALIZE_ERROR, e);
+		}
+	}
+
+	/**
 	 * Reads a {@link JsonNode} from the given {@code byte[]}.
 	 * 
 	 * @param content The {@code byte[]} to read.
 	 * @return The parsed {@link JsonNode}.
-	 * @throws IOException If an exception occurs while reading.
 	 */
-	public static JsonNode toJsonNode(byte[] content) throws IOException {
-		return OBJ_MAPPER.readTree(content);
+	public static JsonNode toJsonNode(byte[] content) {
+		try {
+			return OBJ_MAPPER.readTree(content);
+		} catch (IOException e) {
+			throw new RuntimeException(DESERIALIZE_ERROR, e);
+		}
 	}
 
 	/**
@@ -80,12 +98,15 @@ public final class JsonUtil {
 	 * 
 	 * @param in The {@link InputStream} to read from.
 	 * @return The parsed {@link JsonNode}.
-	 * @throws IOException If an exception occurs while reading.
 	 */
 	@SuppressWarnings("resource")
-	public static JsonNode toJsonNode(@NonNull InputStream in) throws IOException {
+	public static JsonNode toJsonNode(@NonNull InputStream in) {
 		Objects.requireNonNull(in, "input stream cannot be null");
-		return OBJ_MAPPER.readTree(in);
+		try {
+			return OBJ_MAPPER.readTree(in);
+		} catch (IOException e) {
+			throw new RuntimeException(DESERIALIZE_ERROR, e);
+		}
 	}
 
 	/**

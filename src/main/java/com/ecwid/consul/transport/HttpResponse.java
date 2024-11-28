@@ -16,50 +16,61 @@ public final class HttpResponse {
 	private final int statusCode;
 	private final String statusMessage;
 	private final JsonNode content;
-	private final Long consulIndex;
+	private final String consulEffectiveConsistency;
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;
+	private final Long consulIndex;
 
 	public HttpResponse(int statusCode, @NonNull String statusMessage, @Nullable JsonNode content,
-			@Nullable Long consulIndex, @Nullable Boolean consulKnownLeader, @Nullable Long consulLastContact) {
+			@Nullable String consulEffectiveConsistency, @Nullable Boolean consulKnownLeader,
+			@Nullable Long consulLastContact, @Nullable Long consulIndex) {
 		this.statusCode = statusCode;
 		this.statusMessage = statusMessage;
 		this.content = content;
-		this.consulIndex = consulIndex;
+		this.consulEffectiveConsistency = consulEffectiveConsistency;
 		this.consulKnownLeader = consulKnownLeader;
 		this.consulLastContact = consulLastContact;
+		this.consulIndex = consulIndex;
 	}
 
-	public int getStatusCode() {
+	public final int getStatusCode() {
 		return statusCode;
 	}
 
-	public boolean isSuccess() {
-		return statusCode == 200;
-	}
-
 	@NonNull
-	public String getStatusMessage() {
+	public final String getStatusMessage() {
 		return statusMessage;
 	}
 
 	@Nullable
-	public JsonNode getContent() {
+	public final JsonNode getContent() {
 		return content;
 	}
 
 	@Nullable
-	public Long getConsulIndex() {
+	public final String getConsulEffectiveConsistency() {
+		return consulEffectiveConsistency;
+	}
+
+	@Nullable
+	public final Long getConsulIndex() {
 		return consulIndex;
 	}
 
 	@Nullable
-	public Boolean isConsulKnownLeader() {
+	public final Boolean isConsulKnownLeader() {
 		return consulKnownLeader;
 	}
 
 	@Nullable
-	public Long getConsulLastContact() {
+	public final Long getConsulLastContact() {
 		return consulLastContact;
+	}
+
+	@Override
+	public final String toString() {
+		return "HttpResponse [statusCode=" + statusCode + ", statusMessage=" + statusMessage + ", content=" + content
+				+ ", consulEffectiveConsistency=" + consulEffectiveConsistency + ", consulKnownLeader="
+				+ consulKnownLeader + ", consulLastContact=" + consulLastContact + ", consulIndex=" + consulIndex + "]";
 	}
 }

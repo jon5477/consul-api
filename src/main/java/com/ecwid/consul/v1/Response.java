@@ -1,5 +1,7 @@
 package com.ecwid.consul.v1;
 
+import java.util.Objects;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -14,21 +16,27 @@ import com.ecwid.consul.transport.HttpResponse;
  */
 public final class Response<T> {
 	private final T value;
-	private final Long consulIndex;
+	private final String consulEffectiveConsistency;
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;
+	private final Long consulIndex;
 
-	public Response(@Nullable T value, @Nullable Long consulIndex, @Nullable Boolean consulKnownLeader,
-			@Nullable Long consulLastContact) {
+	public Response(@Nullable T value, @Nullable String consulEffectiveConsistency, @Nullable Boolean consulKnownLeader,
+			@Nullable Long consulLastContact, @Nullable Long consulIndex) {
 		this.value = value;
-		this.consulIndex = consulIndex;
+		this.consulEffectiveConsistency = consulEffectiveConsistency;
 		this.consulKnownLeader = consulKnownLeader;
 		this.consulLastContact = consulLastContact;
+		this.consulIndex = consulIndex;
 	}
 
-	public Response(@Nullable T value, @NonNull HttpResponse httpResponse) {
-		this(value, httpResponse.getConsulIndex(), httpResponse.isConsulKnownLeader(),
-				httpResponse.getConsulLastContact());
+	public Response(@Nullable T value, @NonNull HttpResponse resp) {
+		Objects.requireNonNull(resp, "http response cannot be null");
+		this.value = value;
+		this.consulEffectiveConsistency = resp.getConsulEffectiveConsistency();
+		this.consulKnownLeader = resp.isConsulKnownLeader();
+		this.consulLastContact = resp.getConsulLastContact();
+		this.consulIndex = resp.getConsulIndex();
 	}
 
 	@Nullable
@@ -37,8 +45,8 @@ public final class Response<T> {
 	}
 
 	@Nullable
-	public final Long getConsulIndex() {
-		return consulIndex;
+	public final String getConsulEffectiveConsistency() {
+		return consulEffectiveConsistency;
 	}
 
 	@Nullable
@@ -49,6 +57,11 @@ public final class Response<T> {
 	@Nullable
 	public final Long getConsulLastContact() {
 		return consulLastContact;
+	}
+
+	@Nullable
+	public final Long getConsulIndex() {
+		return consulIndex;
 	}
 
 	@Override

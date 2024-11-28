@@ -1,29 +1,26 @@
 package com.ecwid.consul.transport;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
+import org.apache.hc.client5.http.async.HttpAsyncClient;
+import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
+import org.apache.hc.client5.http.async.methods.SimpleRequestProducer;
+import org.apache.hc.client5.http.async.methods.SimpleResponseConsumer;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
-import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.message.HeaderGroup;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ecwid.consul.ConsulException;
-import com.ecwid.consul.json.JsonUtil;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Abstract HTTP transport code that interfaces with Apache HTTP Client 5.x.
@@ -45,7 +42,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	@Override
 	public final HttpResponse makeGetRequest(HttpRequest request) {
 		HttpGet httpGet = new HttpGet(request.getURI());
-		addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
+		HttpUtils.addHeadersToRequest(httpGet, request.getToken(), request.getHeaders());
 		return executeRequest(httpGet);
 	}
 
@@ -53,7 +50,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	@Override
 	public final HttpResponse makePutRequest(HttpRequest request) {
 		HttpPut httpPut = new HttpPut(request.getURI());
-		addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
+		HttpUtils.addHeadersToRequest(httpPut, request.getToken(), request.getHeaders());
 		if (request.getContent() != null) {
 			String cType = request.getContentType();
 			// Assume content type is JSON unless it is explicitly set
@@ -66,7 +63,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	@Override
 	public final HttpResponse makeDeleteRequest(HttpRequest request) {
 		HttpDelete httpDelete = new HttpDelete(request.getURI());
-		addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
+		HttpUtils.addHeadersToRequest(httpDelete, request.getToken(), request.getHeaders());
 		return executeRequest(httpDelete);
 	}
 
@@ -100,27 +97,12 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	private HttpResponse executeRequest(@NonNull HttpUriRequest httpRequest) {
 		logRequest(httpRequest);
 		try {
-			return getHttpClient().execute(httpRequest, response -> {
-				int statusCode = response.getCode();
-				String statusMessage = response.getReasonPhrase();
-				JsonNode content = null;
-				try (HttpEntity entity = response.getEntity()) {
-					if (entity != null && ContentType.APPLICATION_JSON.getMimeType().equals(entity.getContentType())) {
-						try (InputStream is = entity.getContent()) {
-							if (is != null) {
-								content = JsonUtil.toJsonNode(is);
-							}
-						}
-					}
-				}
-				Long consulIndex = parseUnsignedLong(response.getFirstHeader("X-Consul-Index"));
-				Boolean consulKnownLeader = parseBoolean(response.getFirstHeader("X-Consul-Knownleader"));
-				Long consulLastContact = parseUnsignedLong(response.getFirstHeader("X-Consul-Lastcontact"));
-				return new HttpResponse(statusCode, statusMessage, content, consulIndex, consulKnownLeader,
-						consulLastContact);
-			});
+			return getHttpClient().execute(httpRequest, HttpConsulResponseHandler.INSTANCE);
 		} catch (IOException e) {
 			throw new TransportException(e);
+		} catch (RuntimeException e) {
+			httpRequest.abort();
+			throw e;
 		}
 	}
 
@@ -131,48 +113,6 @@ abstract class AbstractHttpTransport implements HttpTransport {
 //				null, callback);
 //		return callback.getCompletableFuture();
 //	}
-
-	@Nullable
-	static Long parseUnsignedLong(@Nullable Header header) {
-		if (header != null) {
-			String value = header.getValue();
-			if (value != null) {
-				try {
-					return Long.parseUnsignedLong(value);
-				} catch (NumberFormatException e) {
-					LOGGER.error("Failed to parse header {} as unsigned long", header.getName());
-				}
-			}
-		}
-		return null;
-	}
-
-	@Nullable
-	static Boolean parseBoolean(@Nullable Header header) {
-		if (header != null) {
-			if ("true".equals(header.getValue())) {
-				return true;
-			}
-			if ("false".equals(header.getValue())) {
-				return false;
-			}
-			LOGGER.error("Failed to parse header {} as boolean", header.getName());
-		}
-		return null;
-	}
-
-	private void addHeadersToRequest(HeaderGroup request, char[] token, Map<String, String> headers) {
-		if (token != null) {
-			request.addHeader(new BasicHeader("X-Consul-Token", new String(token), true));
-		}
-		if (headers != null && !headers.isEmpty()) {
-			for (Map.Entry<String, String> headerValue : headers.entrySet()) {
-				String name = headerValue.getKey();
-				String value = headerValue.getValue();
-				request.addHeader(new BasicHeader(name, value));
-			}
-		}
-	}
 
 	private void logRequest(org.apache.hc.core5.http.HttpRequest httpRequest) {
 		if (LOGGER.isTraceEnabled()) {
