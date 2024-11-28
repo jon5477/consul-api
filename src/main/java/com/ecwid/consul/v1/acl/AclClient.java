@@ -21,6 +21,8 @@ public interface AclClient {
 
 	Response<AclToken> aclRead(String accessorId);
 
+	Response<AclToken> aclRead(String accessorId, boolean expanded);
+
 	Response<AclToken> aclReadSelf();
 
 	Response<AclToken> aclUpdate(UpdateAcl updateAcl, String accessorId);

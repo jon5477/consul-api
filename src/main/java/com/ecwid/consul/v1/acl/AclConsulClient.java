@@ -47,8 +47,16 @@ public final class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclRead(String accessorId) {
-		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).build();
-		HttpResponse httpResponse = rawClient.makeGetRequest(request);
+		return aclRead(accessorId, false);
+	}
+
+	@Override
+	public Response<AclToken> aclRead(String accessorId, boolean expanded) {
+		Request.Builder request = new Request.Builder().setEndpoint(API_TOKEN_PREFIX + accessorId);
+		if (expanded) {
+			request.addQueryParameter("expanded", String.valueOf(expanded));
+		}
+		HttpResponse httpResponse = rawClient.makeGetRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonFactory.toPOJO(httpResponse.getContent(), AclToken.class);
 			return new Response<>(aclToken, httpResponse);

@@ -1,5 +1,6 @@
 package com.ecwid.consul.v1;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,5 +89,17 @@ public final class Request implements QueryParameters {
 		public Request build() {
 			return new Request(this);
 		}
+
+		@Override
+		public String toString() {
+			return "Builder [endpoint=" + endpoint + ", queryParameters=" + queryParameters + ", content="
+					+ Arrays.toString(content) + "]";
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Request [endpoint=" + endpoint + ", queryParameters=" + queryParameters + ", content="
+				+ Arrays.toString(content) + "]";
 	}
 }

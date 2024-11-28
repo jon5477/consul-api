@@ -176,36 +176,38 @@ public class CatalogService {
 	}
 
 	@Override
-	public String toString() {
-		return "CatalogService{" + "id='" + id + '\'' + ", node='" + node + '\'' + ", address='" + address + '\''
-				+ ", datacenter='" + datacenter + '\'' + ", taggedAddresses=" + taggedAddresses + ", nodeMeta="
-				+ nodeMeta + ", serviceId='" + serviceId + '\'' + ", serviceName='" + serviceName + '\''
-				+ ", serviceTags=" + serviceTags + ", serviceAddress='" + serviceAddress + '\'' + ", serviceMeta="
-				+ serviceMeta + ", servicePort=" + servicePort + ", serviceEnableTagOverride="
-				+ serviceEnableTagOverride + ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		CatalogService that = (CatalogService) o;
-		return Objects.equals(id, that.id) && Objects.equals(node, that.node) && Objects.equals(address, that.address)
-				&& Objects.equals(datacenter, that.datacenter) && Objects.equals(taggedAddresses, that.taggedAddresses)
-				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(serviceId, that.serviceId)
-				&& Objects.equals(serviceName, that.serviceName) && Objects.equals(serviceTags, that.serviceTags)
-				&& Objects.equals(serviceAddress, that.serviceAddress) && Objects.equals(serviceMeta, that.serviceMeta)
-				&& Objects.equals(servicePort, that.servicePort)
-				&& Objects.equals(serviceEnableTagOverride, that.serviceEnableTagOverride)
-				&& Objects.equals(createIndex, that.createIndex) && Objects.equals(modifyIndex, that.modifyIndex);
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hash(id, node, address, datacenter, taggedAddresses, nodeMeta, serviceId, serviceName,
-				serviceTags, serviceAddress, serviceMeta, servicePort, serviceEnableTagOverride, createIndex,
-				modifyIndex);
+		return Objects.hash(address, createIndex, datacenter, id, modifyIndex, node, nodeMeta, serviceAddress,
+				serviceEnableTagOverride, serviceId, serviceMeta, serviceName, servicePort, serviceTags,
+				taggedAddresses);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CatalogService)) {
+			return false;
+		}
+		CatalogService other = (CatalogService) obj;
+		return Objects.equals(address, other.address) && Objects.equals(createIndex, other.createIndex)
+				&& Objects.equals(datacenter, other.datacenter) && Objects.equals(id, other.id)
+				&& Objects.equals(modifyIndex, other.modifyIndex) && Objects.equals(node, other.node)
+				&& Objects.equals(nodeMeta, other.nodeMeta) && Objects.equals(serviceAddress, other.serviceAddress)
+				&& Objects.equals(serviceEnableTagOverride, other.serviceEnableTagOverride)
+				&& Objects.equals(serviceId, other.serviceId) && Objects.equals(serviceMeta, other.serviceMeta)
+				&& Objects.equals(serviceName, other.serviceName) && Objects.equals(servicePort, other.servicePort)
+				&& Objects.equals(serviceTags, other.serviceTags)
+				&& Objects.equals(taggedAddresses, other.taggedAddresses);
+	}
+
+	@Override
+	public String toString() {
+		return "CatalogService [id=" + id + ", node=" + node + ", address=" + address + ", datacenter=" + datacenter
+				+ ", taggedAddresses=" + taggedAddresses + ", nodeMeta=" + nodeMeta + ", serviceId=" + serviceId
+				+ ", serviceName=" + serviceName + ", serviceTags=" + serviceTags + ", serviceAddress=" + serviceAddress
+				+ ", serviceMeta=" + serviceMeta + ", servicePort=" + servicePort + ", serviceEnableTagOverride="
+				+ serviceEnableTagOverride + ", createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + "]";
 	}
 }

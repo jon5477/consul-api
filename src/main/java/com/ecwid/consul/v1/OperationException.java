@@ -39,7 +39,7 @@ public final class OperationException extends ConsulException {
 
 	@Override
 	public String toString() {
-		return "OperationException{" + "statusCode=" + statusCode + ", statusMessage='" + statusMessage + '\''
-				+ ", statusContent='" + statusContent + '\'' + '}';
+		return "OperationException [statusCode=" + statusCode + ", statusMessage=" + statusMessage + ", statusContent="
+				+ statusContent + "]";
 	}
 }

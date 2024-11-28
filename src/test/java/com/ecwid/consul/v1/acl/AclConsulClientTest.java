@@ -70,7 +70,9 @@ class AclConsulClientTest {
 	@Test
 	void should_read_acl_token() {
 		AclToken token = createTestToken();
-		Response<AclToken> response = aclClient.aclRead(token.getAccessorId());
+		Response<AclToken> response = aclClient.aclRead(token.getAccessorId(), false);
+		assertEquals(token, response.getValue());
+		response = aclClient.aclRead(token.getAccessorId(), true);
 		assertEquals(token, response.getValue());
 	}
 
@@ -116,7 +118,7 @@ class AclConsulClientTest {
 		AclToken token = createTestToken();
 		String accessorId = token.getAccessorId();
 		aclClient.aclDelete(accessorId);
-		assertThrows(OperationException.class, () -> aclClient.aclRead(accessorId));
+		assertThrows(OperationException.class, () -> aclClient.aclRead(accessorId, false));
 	}
 
 	@Test

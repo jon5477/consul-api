@@ -3,6 +3,7 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -142,7 +143,7 @@ public final class NewAcl {
 				&& Objects.equals(expirationTime, other.expirationTime)
 				&& Objects.equals(expirationTtl, other.expirationTtl) && local == other.local
 				&& Objects.equals(nodeIdentities, other.nodeIdentities) && Objects.equals(policies, other.policies)
-				&& Objects.equals(roles, other.roles) && Objects.equals(secretId, other.secretId)
+				&& Objects.equals(roles, other.roles) && Utils.charSequenceEquals(secretId, other.secretId)
 				&& Objects.equals(serviceIdentities, other.serviceIdentities)
 				&& Objects.equals(templatedPolicies, other.templatedPolicies);
 	}

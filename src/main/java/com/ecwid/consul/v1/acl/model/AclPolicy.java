@@ -15,6 +15,18 @@ public final class AclPolicy {
 	private String id;
 	@JsonProperty("Name")
 	private String name;
+	@JsonProperty("Description")
+	private String description;
+	@JsonProperty("Rules")
+	private String rules;
+	@JsonProperty("Datacenters")
+	private String datacenter;
+	@JsonProperty("Hash")
+	private String hash;
+	@JsonProperty("CreateIndex")
+	private Integer createIndex;
+	@JsonProperty("ModifyIndex")
+	private Integer modifyIndex;
 
 	public AclPolicy() {
 	}
@@ -40,9 +52,57 @@ public final class AclPolicy {
 		this.name = name;
 	}
 
+	public final String getDescription() {
+		return description;
+	}
+
+	public final void setDescription(String description) {
+		this.description = description;
+	}
+
+	public final String getRules() {
+		return rules;
+	}
+
+	public final void setRules(String rules) {
+		this.rules = rules;
+	}
+
+	public final String getDatacenter() {
+		return datacenter;
+	}
+
+	public final void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
+	}
+
+	public final String getHash() {
+		return hash;
+	}
+
+	public final void setHash(String hash) {
+		this.hash = hash;
+	}
+
+	public final Integer getCreateIndex() {
+		return createIndex;
+	}
+
+	public final void setCreateIndex(Integer createIndex) {
+		this.createIndex = createIndex;
+	}
+
+	public final Integer getModifyIndex() {
+		return modifyIndex;
+	}
+
+	public final void setModifyIndex(Integer modifyIndex) {
+		this.modifyIndex = modifyIndex;
+	}
+
 	@Override
 	public final int hashCode() {
-		return Objects.hash(id, name);
+		return Objects.hash(createIndex, datacenter, description, hash, id, modifyIndex, name, rules);
 	}
 
 	@Override
@@ -54,11 +114,16 @@ public final class AclPolicy {
 			return false;
 		}
 		AclPolicy other = (AclPolicy) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
+		return Objects.equals(createIndex, other.createIndex) && Objects.equals(datacenter, other.datacenter)
+				&& Objects.equals(description, other.description) && Objects.equals(hash, other.hash)
+				&& Objects.equals(id, other.id) && Objects.equals(modifyIndex, other.modifyIndex)
+				&& Objects.equals(name, other.name) && Objects.equals(rules, other.rules);
 	}
 
 	@Override
 	public final String toString() {
-		return "AclPolicy [id=" + id + ", name=" + name + "]";
+		return "AclPolicy [id=" + id + ", name=" + name + ", description=" + description + ", rules=" + rules
+				+ ", datacenter=" + datacenter + ", hash=" + hash + ", createIndex=" + createIndex + ", modifyIndex="
+				+ modifyIndex + "]";
 	}
 }

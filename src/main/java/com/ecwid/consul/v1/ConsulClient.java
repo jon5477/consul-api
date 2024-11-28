@@ -283,6 +283,11 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
+	public Response<AclToken> aclRead(String accessorId, boolean expanded) {
+		return aclClient.aclRead(accessorId, expanded);
+	}
+
+	@Override
 	public Response<AclToken> aclReadSelf() {
 		return aclClient.aclReadSelf();
 	}
