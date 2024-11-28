@@ -75,6 +75,14 @@ public final class AclToken {
 		this.policies = policies;
 	}
 
+	public final List<AclTemplatePolicy> getTemplatedPolicies() {
+		return templatedPolicies;
+	}
+
+	public final void setTemplatedPolicies(List<AclTemplatePolicy> templatedPolicies) {
+		this.templatedPolicies = templatedPolicies;
+	}
+
 	public final boolean isLocal() {
 		return local;
 	}

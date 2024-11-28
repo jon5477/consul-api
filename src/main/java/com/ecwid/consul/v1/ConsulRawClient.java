@@ -52,6 +52,7 @@ public final class ConsulRawClient {
 		// Allow clients to specify their own Apache HTTP Client configuration
 		private HttpClientConnectionManager connectionManager;
 		private HttpClient httpClient;
+		private char[] token;
 
 		public Builder() {
 			this(DEFAULT_HOST, DEFAULT_PORT);
@@ -118,6 +119,18 @@ public final class ConsulRawClient {
 			return this;
 		}
 
+		public Builder setToken(CharSequence token) {
+			if (token != null) {
+				this.setToken(Utils.charSequenceToArray(token));
+			}
+			return this;
+		}
+
+		public Builder setToken(char[] token) {
+			this.token = Arrays.copyOf(token, token.length);
+			return this;
+		}
+
 		public ConsulRawClient build() {
 			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(connectionManager, httpClient, sslCtx);
 			return new ConsulRawClient(this, httpTransport);
@@ -140,6 +153,7 @@ public final class ConsulRawClient {
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
+		this.token.set(b.token);
 	}
 
 	public char[] getToken() {
@@ -150,6 +164,14 @@ public final class ConsulRawClient {
 	public void setToken(char[] token) {
 		if (token != null) {
 			this.token.set(Arrays.copyOf(token, token.length)); // defensive copy
+		} else {
+			this.token.set(null);
+		}
+	}
+
+	public void setToken(CharSequence token) {
+		if (token != null) {
+			this.token.set(Utils.charSequenceToArray(token));
 		} else {
 			this.token.set(null);
 		}

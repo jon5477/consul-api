@@ -3,6 +3,7 @@ package com.ecwid.consul.v1.acl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -13,10 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
-import com.ecwid.consul.Utils;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Response;
+import com.ecwid.consul.v1.acl.model.AclPolicy;
 import com.ecwid.consul.v1.acl.model.AclToken;
 import com.ecwid.consul.v1.acl.model.NewAcl;
 import com.ecwid.consul.v1.acl.model.UpdateAcl;
@@ -25,16 +26,18 @@ import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
 
 class AclConsulClientTest {
-	private static final char[] ACL_MASTER_TOKEN = "mastertoken".toCharArray();
+	private static final String ACL_MASTER_TOKEN = "mastertoken";
 	private ConsulProcess consul;
 	private int port = Ports.nextAvailable();
-	private AclClient aclClient = new AclConsulClient(new ConsulRawClient.Builder("localhost", port).build());
+	private ConsulRawClient rawClient = new ConsulRawClient.Builder("localhost", port).setToken(ACL_MASTER_TOKEN)
+			.build();
+	private AclClient aclClient = new AclConsulClient(rawClient);
 
 	@BeforeEach
 	public void setup() {
 		String customConfiguration = "{\n" + "  \"acl\": {\n" + "    \"enabled\": true,\n"
 				+ "    \"enable_token_persistence\": true,\n" + "    \"tokens\": {\n"
-				+ "      \"initial_management\": \"" + new String(ACL_MASTER_TOKEN) + "\"\n" + "    }\n" + "  },\n"
+				+ "      \"initial_management\": \"" + ACL_MASTER_TOKEN + "\"\n" + "    }\n" + "  },\n"
 				+ "  \"primary_datacenter\": \"dc-test\",\n" + "  \"datacenter\": \"dc-test\"\n" + "}";
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
 				.withHttpPort(port).withCustomConfig(customConfiguration).withWaitTimeout(90).build().start();
@@ -51,7 +54,7 @@ class AclConsulClientTest {
 		newAcl.setAccessorId(uuid.toString());
 		newAcl.setSecretId("c604a178-e102-af3a-cbd8-8febf4b26468");
 		newAcl.setDescription("Test ACL Token");
-		Response<AclToken> response = aclClient.aclCreate(ACL_MASTER_TOKEN, newAcl);
+		Response<AclToken> response = aclClient.aclCreate(newAcl);
 		return response.getValue();
 	}
 
@@ -59,7 +62,7 @@ class AclConsulClientTest {
 	void should_create_acl_token() {
 		NewAcl newAcl = new NewAcl();
 		newAcl.setDescription("test-acl");
-		Response<AclToken> response = aclClient.aclCreate(ACL_MASTER_TOKEN, newAcl);
+		Response<AclToken> response = aclClient.aclCreate(newAcl);
 		AclToken createdAcl = response.getValue();
 		assertEquals(newAcl.getDescription(), createdAcl.getDescription());
 	}
@@ -67,17 +70,26 @@ class AclConsulClientTest {
 	@Test
 	void should_read_acl_token() {
 		AclToken token = createTestToken();
-		Response<AclToken> response = aclClient.aclRead(ACL_MASTER_TOKEN, token.getAccessorId());
+		Response<AclToken> response = aclClient.aclRead(token.getAccessorId());
 		assertEquals(token, response.getValue());
 	}
 
 	@Test
 	void should_read_self_acl_token() {
-		AclToken token = createTestToken();
-		char[] secretId = Utils.charSequenceToArray(token.getSecretId());
-		Response<AclToken> response = aclClient.aclReadSelf(secretId);
+		Response<AclToken> response = aclClient.aclReadSelf();
+		AclToken token = response.getValue();
+		assertEquals("Initial Management Token", token.getDescription());
+		assertEquals(1, token.getPolicies().size());
+		assertEquals(new AclPolicy("00000000-0000-0000-0000-000000000001", "global-management"),
+				token.getPolicies().get(0));
+		assertNull(token.getTemplatedPolicies());
+		assertFalse(token.isLocal());
+		assertEquals(6, token.getCreateIndex());
+		assertEquals(6, token.getModifyIndex());
+		token = createTestToken();
+		rawClient.setToken(token.getSecretId());
+		response = aclClient.aclReadSelf();
 		assertEquals(token, response.getValue());
-
 	}
 
 	@Test
@@ -85,14 +97,14 @@ class AclConsulClientTest {
 		AclToken token = createTestToken();
 		UpdateAcl update = new UpdateAcl();
 		update.setDescription("Test Updating ACL Token Description");
-		Response<AclToken> response = aclClient.aclUpdate(ACL_MASTER_TOKEN, update, token.getAccessorId());
+		Response<AclToken> response = aclClient.aclUpdate(update, token.getAccessorId());
 		assertEquals(update.getDescription(), response.getValue().getDescription());
 	}
 
 	@Test
 	void should_clone_acl_token() {
 		AclToken token = createTestToken();
-		Response<AclToken> response = aclClient.aclClone(ACL_MASTER_TOKEN, token.getAccessorId());
+		Response<AclToken> response = aclClient.aclClone(token.getAccessorId());
 		AclToken cloned = response.getValue();
 		assertNotEquals(token, cloned);
 		assertNotEquals(token.getAccessorId(), cloned.getAccessorId());
@@ -103,13 +115,13 @@ class AclConsulClientTest {
 	void should_delete_acl_token() {
 		AclToken token = createTestToken();
 		String accessorId = token.getAccessorId();
-		aclClient.aclDelete(ACL_MASTER_TOKEN, accessorId);
-		assertThrows(OperationException.class, () -> aclClient.aclRead(ACL_MASTER_TOKEN, accessorId));
+		aclClient.aclDelete(accessorId);
+		assertThrows(OperationException.class, () -> aclClient.aclRead(accessorId));
 	}
 
 	@Test
 	void should_list_acl_tokens() {
-		Response<List<AclToken>> response = aclClient.aclList(ACL_MASTER_TOKEN, AclTokensRequest.newBuilder().build());
+		Response<List<AclToken>> response = aclClient.aclList(AclTokensRequest.newBuilder().build());
 		List<AclToken> tokens = response.getValue();
 		assertFalse(tokens.isEmpty());
 	}
