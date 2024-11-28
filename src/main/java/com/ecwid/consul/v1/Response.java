@@ -1,9 +1,16 @@
 package com.ecwid.consul.v1;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import com.ecwid.consul.transport.HttpResponse;
 
 /**
+ * Represents a Consul response from the Consul API.
+ * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ *
  */
 public final class Response<T> {
 	private final T value;
@@ -11,40 +18,42 @@ public final class Response<T> {
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;
 
-	public Response(T value, Long consulIndex, Boolean consulKnownLeader, Long consulLastContact) {
+	public Response(@Nullable T value, @Nullable Long consulIndex, @Nullable Boolean consulKnownLeader,
+			@Nullable Long consulLastContact) {
 		this.value = value;
 		this.consulIndex = consulIndex;
 		this.consulKnownLeader = consulKnownLeader;
 		this.consulLastContact = consulLastContact;
 	}
 
-	public Response(T value, HttpResponse httpResponse) {
-		this(value, httpResponse.getConsulIndex(), httpResponse.isConsulKnownLeader(), httpResponse.getConsulLastContact());
+	public Response(@Nullable T value, @NonNull HttpResponse httpResponse) {
+		this(value, httpResponse.getConsulIndex(), httpResponse.isConsulKnownLeader(),
+				httpResponse.getConsulLastContact());
 	}
 
-	public T getValue() {
+	@Nullable
+	public final T getValue() {
 		return value;
 	}
 
-	public Long getConsulIndex() {
+	@Nullable
+	public final Long getConsulIndex() {
 		return consulIndex;
 	}
 
-	public Boolean isConsulKnownLeader() {
+	@Nullable
+	public final Boolean isConsulKnownLeader() {
 		return consulKnownLeader;
 	}
 
-	public Long getConsulLastContact() {
+	@Nullable
+	public final Long getConsulLastContact() {
 		return consulLastContact;
 	}
 
 	@Override
-	public String toString() {
-		return "Response{" +
-				"value=" + value +
-				", consulIndex=" + consulIndex +
-				", consulKnownLeader=" + consulKnownLeader +
-				", consulLastContact=" + consulLastContact +
-				'}';
+	public final String toString() {
+		return "Response [value=" + value + ", consulIndex=" + consulIndex + ", consulKnownLeader=" + consulKnownLeader
+				+ ", consulLastContact=" + consulLastContact + "]";
 	}
 }

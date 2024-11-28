@@ -6,7 +6,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
+ * Represents a HTTP response from the Consul API.
+ * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ *
  */
 public final class HttpResponse {
 	private final int statusCode;
