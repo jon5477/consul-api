@@ -19,6 +19,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.NoopUserTokenHandler;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
@@ -172,9 +173,10 @@ public final class ClientUtils {
 	}
 
 	public static PoolingAsyncClientConnectionManager createPoolingAsyncConnectionManager() {
-//		SocketConfig sockCfg = SocketConfig.custom().setSoTimeout(DEFAULT_READ_TIMEOUT).build();
+		ConnectionConfig connCfg = ConnectionConfig.custom().setSocketTimeout(DEFAULT_READ_TIMEOUT).build();
 		PoolingAsyncClientConnectionManagerBuilder conMgrBuilder = PoolingAsyncClientConnectionManagerBuilder.create()
-				.setMaxConnTotal(DEFAULT_MAX_CONNECTIONS).setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS);
+				.setDefaultConnectionConfig(connCfg).setMaxConnTotal(DEFAULT_MAX_CONNECTIONS)
+				.setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS);
 		return conMgrBuilder.build();
 	}
 
