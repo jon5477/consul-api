@@ -17,19 +17,19 @@ import com.ecwid.consul.v1.acl.model.UpdateAcl;
  *
  */
 public interface AclClient {
-	Response<AclToken> aclCreate(char[] token, NewAcl newAcl);
+	Response<AclToken> aclCreate(NewAcl newAcl);
 
-	Response<AclToken> aclRead(char[] token, String accessorId);
+	Response<AclToken> aclRead(String accessorId);
 
-	Response<AclToken> aclReadSelf(char[] token);
+	Response<AclToken> aclReadSelf();
 
-	Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId);
+	Response<AclToken> aclUpdate(UpdateAcl updateAcl, String accessorId);
 
-	Response<AclToken> aclClone(char[] token, @NonNull String accessorId);
+	Response<AclToken> aclClone(@NonNull String accessorId);
 
-	Response<AclToken> aclClone(char[] token, @NonNull String accessorId, @Nullable String description);
+	Response<AclToken> aclClone(@NonNull String accessorId, @Nullable String description);
 
-	Response<Void> aclDelete(char[] token, String accessorId);
+	Response<Void> aclDelete(String accessorId);
 
-	Response<List<AclToken>> aclList(char[] token, AclTokensRequest request);
+	Response<List<AclToken>> aclList(AclTokensRequest request);
 }

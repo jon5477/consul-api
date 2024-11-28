@@ -273,43 +273,43 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	// ACL
 
 	@Override
-	public Response<AclToken> aclCreate(char[] token, NewAcl newAcl) {
-		return aclClient.aclCreate(token, newAcl);
+	public Response<AclToken> aclCreate(NewAcl newAcl) {
+		return aclClient.aclCreate(newAcl);
 	}
 
 	@Override
-	public Response<AclToken> aclRead(char[] token, String accessorId) {
-		return aclClient.aclRead(token, accessorId);
+	public Response<AclToken> aclRead(String accessorId) {
+		return aclClient.aclRead(accessorId);
 	}
 
 	@Override
-	public Response<AclToken> aclReadSelf(char[] token) {
-		return aclClient.aclReadSelf(token);
+	public Response<AclToken> aclReadSelf() {
+		return aclClient.aclReadSelf();
 	}
 
 	@Override
-	public Response<AclToken> aclUpdate(char[] token, UpdateAcl updateAcl, String accessorId) {
-		return aclClient.aclUpdate(token, updateAcl, accessorId);
+	public Response<AclToken> aclUpdate(UpdateAcl updateAcl, String accessorId) {
+		return aclClient.aclUpdate(updateAcl, accessorId);
 	}
 
 	@Override
-	public Response<AclToken> aclClone(char[] token, @NonNull String accessorId) {
-		return aclClient.aclClone(token, accessorId);
+	public Response<AclToken> aclClone(@NonNull String accessorId) {
+		return aclClient.aclClone(accessorId);
 	}
 
 	@Override
-	public Response<AclToken> aclClone(char[] token, @NonNull String accessorId, @Nullable String description) {
-		return aclClient.aclClone(token, accessorId, description);
+	public Response<AclToken> aclClone(@NonNull String accessorId, @Nullable String description) {
+		return aclClient.aclClone(accessorId, description);
 	}
 
 	@Override
-	public Response<Void> aclDelete(char[] token, String accessorId) {
-		return aclClient.aclDelete(token, accessorId);
+	public Response<Void> aclDelete(String accessorId) {
+		return aclClient.aclDelete(accessorId);
 	}
 
 	@Override
-	public Response<List<AclToken>> aclList(char[] token, AclTokensRequest request) {
-		return aclClient.aclList(token, request);
+	public Response<List<AclToken>> aclList(AclTokensRequest request) {
+		return aclClient.aclList(request);
 	}
 
 	// -------------------------------------------------------------------------------------------
