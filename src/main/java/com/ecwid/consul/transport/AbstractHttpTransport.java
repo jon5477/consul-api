@@ -3,6 +3,9 @@ package com.ecwid.consul.transport;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -91,13 +94,30 @@ abstract class AbstractHttpTransport implements HttpTransport {
 
 	private HttpResponse executeRequest(@NonNull HttpUriRequest httpRequest) {
 		logRequest(httpRequest);
-		try {
-			return getHttpClient().execute(httpRequest, HttpConsulResponseHandler.INSTANCE);
-		} catch (IOException e) {
-			throw new TransportException(e);
-		} catch (RuntimeException e) {
-			httpRequest.abort();
-			throw e;
+		
+		HttpClient
+		
+		// Determine if this HTTP request will block
+		boolean blockingQuery = httpRequest.containsHeader("index");
+		if (blockingQuery) {
+			// If this query will block, we need to respect thread interruptions
+			ForkJoinTask<?> task = ForkJoinPool.commonPool().submit(() -> {
+			});
+			try {
+				task.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				return getHttpClient().execute(httpRequest, HttpConsulResponseHandler.INSTANCE);
+			} catch (IOException e) {
+				throw new TransportException(e);
+			} catch (RuntimeException e) {
+				httpRequest.abort();
+				throw e;
+			}
 		}
 	}
 
