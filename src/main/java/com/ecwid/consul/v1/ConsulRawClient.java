@@ -2,6 +2,7 @@ package com.ecwid.consul.v1;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -16,18 +17,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.ClientUtils;
 import com.ecwid.consul.transport.ConsulHttpRequest;
 import com.ecwid.consul.transport.ConsulHttpResponse;
+import com.ecwid.consul.transport.DefaultHttpTransport;
 import com.ecwid.consul.transport.HttpTransport;
 import com.ecwid.consul.transport.TLSConfig;
 
@@ -49,7 +54,10 @@ public final class ConsulRawClient {
 		private String agentHost;
 		private int agentPort;
 		private String agentPath;
+		private ProxySelector proxy;
 		private SSLContext sslCtx;
+		private SSLParameters sslParams;
+		private Executor executor;
 		// Allow clients to specify their own HTTP Client
 		private HttpClient httpClient;
 		private char[] token;
@@ -83,6 +91,11 @@ public final class ConsulRawClient {
 			return this;
 		}
 
+		public Builder setProxy(ProxySelector proxy) {
+			this.proxy = proxy;
+			return this;
+		}
+
 		/**
 		 * Sets the {@link TLSConfig} option for the Consul client. This will be used to
 		 * automatically create the {@link SSLContext}.
@@ -99,13 +112,23 @@ public final class ConsulRawClient {
 				this.sslCtx = ClientUtils.createSSLContext(tlsConfig);
 			} catch (UnrecoverableKeyException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException
 					| CertificateException | IOException e) {
-				throw new RuntimeException(e);
+				throw new ConsulException(e);
 			}
 			return this;
 		}
 
 		public Builder setSSLContext(SSLContext sslCtx) {
 			this.sslCtx = sslCtx;
+			return this;
+		}
+
+		public Builder setSSLParameters(SSLParameters sslParams) {
+			this.sslParams = sslParams;
+			return this;
+		}
+
+		public Builder setExecutor(Executor executor) {
+			this.executor = executor;
 			return this;
 		}
 
@@ -127,7 +150,12 @@ public final class ConsulRawClient {
 		}
 
 		public ConsulRawClient build() {
-			HttpTransport httpTransport = ClientUtils.createDefaultHttpTransport(httpClient);
+			HttpTransport httpTransport;
+			if (httpClient != null) {
+				httpTransport = new DefaultHttpTransport(httpClient);
+			} else {
+				httpTransport = ClientUtils.createDefaultHttpTransport(proxy, sslCtx, sslParams, executor);
+			}
 			return new ConsulRawClient(this, httpTransport);
 		}
 	}

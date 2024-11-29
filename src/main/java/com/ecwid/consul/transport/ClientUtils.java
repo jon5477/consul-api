@@ -2,7 +2,7 @@ package com.ecwid.consul.transport;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.Authenticator;
+import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpClient.Version;
@@ -15,14 +15,17 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
 
@@ -39,6 +42,10 @@ import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
  *
  */
 public final class ClientUtils {
+	/**
+	 * The default HTTP connect timeout (30 seconds).
+	 */
+	public static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(30);
 	/**
 	 * The default HTTP request timeout (30 seconds).
 	 */
@@ -92,18 +99,22 @@ public final class ClientUtils {
 		return sslContext;
 	}
 
-	public static HttpClient createHttpClient() {
-		HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1) // consul only supports HTTP 1.1
-				.followRedirects(Redirect.NORMAL) // follow redirects
-				.authenticator(Authenticator.getDefault()).build();
-		return client;
-	}
-
-	public static DefaultHttpTransport createDefaultHttpTransport(HttpClient client) {
-		HttpClient httpClient = client;
-		if (client == null) {
-			httpClient = ClientUtils.createHttpClient();
+	public static DefaultHttpTransport createDefaultHttpTransport(@Nullable ProxySelector proxy,
+			@Nullable SSLContext sslCtx, @Nullable SSLParameters sslParams, @Nullable Executor executor) {
+		HttpClient.Builder builder = HttpClient.newBuilder().version(Version.HTTP_1_1) // consul supports HTTP 1.1
+				.followRedirects(Redirect.NORMAL).connectTimeout(DEFAULT_CONNECT_TIMEOUT);
+		if (proxy != null) {
+			builder.proxy(proxy);
 		}
-		return new DefaultHttpTransport(httpClient);
+		if (sslCtx != null) {
+			builder.sslContext(sslCtx);
+		}
+		if (sslParams != null) {
+			builder.sslParameters(sslParams);
+		}
+		if (executor != null) {
+			builder.executor(executor);
+		}
+		return new DefaultHttpTransport(builder.build());
 	}
 }
