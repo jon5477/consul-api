@@ -5,9 +5,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandler;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -24,8 +25,8 @@ class ConsulRawClientTest {
 	private static final String EXPECTED_AGENT_ADDRESS = "http://" + HOST + ":" + PORT + "/" + PATH + ENDPOINT;
 
 	@SuppressWarnings("unchecked")
-	private static <T> HttpClientResponseHandler<T> anyResponseHandler() {
-		return (HttpClientResponseHandler<T>) any(HttpClientResponseHandler.class);
+	private static <T> BodyHandler<T> anyBodyHandler() {
+		return (BodyHandler<T>) any(BodyHandler.class);
 	}
 
 	@Test
@@ -38,9 +39,9 @@ class ConsulRawClientTest {
 		client.makeGetRequest(ENDPOINT, EMPTY_QUERY_PARAMS);
 
 		// Then
-		ArgumentCaptor<HttpUriRequest> calledUri = ArgumentCaptor.forClass(HttpUriRequest.class);
-		verify(httpClient).execute(calledUri.capture(), anyResponseHandler());
-		assertEquals(EXPECTED_AGENT_ADDRESS_NO_PATH, calledUri.getValue().getUri().toString());
+		ArgumentCaptor<HttpRequest> calledUri = ArgumentCaptor.forClass(HttpRequest.class);
+		verify(httpClient).send(calledUri.capture(), anyBodyHandler());
+		assertEquals(EXPECTED_AGENT_ADDRESS_NO_PATH, calledUri.getValue().uri().toString());
 	}
 
 	@Test
@@ -54,8 +55,8 @@ class ConsulRawClientTest {
 		client.makeGetRequest(ENDPOINT, EMPTY_QUERY_PARAMS);
 
 		// Then
-		ArgumentCaptor<HttpUriRequest> calledUri = ArgumentCaptor.forClass(HttpUriRequest.class);
-		verify(httpClient).execute(calledUri.capture(), anyResponseHandler());
-		assertEquals(EXPECTED_AGENT_ADDRESS, calledUri.getValue().getUri().toString());
+		ArgumentCaptor<HttpRequest> calledUri = ArgumentCaptor.forClass(HttpRequest.class);
+		verify(httpClient).send(calledUri.capture(), anyBodyHandler());
+		assertEquals(EXPECTED_AGENT_ADDRESS, calledUri.getValue().uri().toString());
 	}
 }

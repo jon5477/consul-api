@@ -1,7 +1,7 @@
 package com.ecwid.consul.transport;
 
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import java.net.http.HttpClient;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -12,20 +12,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  */
 public final class DefaultHttpTransport extends AbstractHttpTransport {
-	private final HttpClientConnectionManager connectionManager;
 	private final HttpClient httpClient;
-//	private final AsyncClientConnectionManager asyncConnectionManager;
-//	private final HttpAsyncClient asyncHttpClient;
 
-	public DefaultHttpTransport(@NonNull HttpClientConnectionManager connectionManager,
-			@NonNull HttpClient httpClient) {
-		this.connectionManager = connectionManager;
+	public DefaultHttpTransport(@NonNull HttpClient httpClient) {
 		this.httpClient = httpClient;
-	}
-
-	@Override
-	public final HttpClientConnectionManager getConnectionManager() {
-		return connectionManager;
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.json.JsonUtil;
-import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -40,7 +40,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Void> catalogRegister(CatalogRegistration catalogRegistration) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register",
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/register",
 				JsonUtil.toBytes(catalogRegistration));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -51,7 +51,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Void> catalogDeregister(CatalogDeregistration catalogDeregistration) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister",
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/catalog/deregister",
 				JsonUtil.toBytes(catalogDeregistration));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -62,7 +62,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<List<String>> getCatalogDatacenters() {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/datacenters");
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/datacenters");
 		if (httpResponse.getStatusCode() == 200) {
 			List<String> value = JsonUtil.toPOJO(httpResponse.getContent(), STRING_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
@@ -75,7 +75,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	public Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest) {
 		Request request = Request.Builder.newBuilder().setEndpoint("/v1/catalog/nodes")
 				.addQueryParameters(catalogNodesRequest.getQueryParameters()).build();
-		HttpResponse httpResponse = rawClient.makeGetRequest(request);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Node> value = JsonUtil.toPOJO(httpResponse.getContent(), NODE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
@@ -86,7 +86,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<Map<String, List<String>>> getCatalogServices(CatalogServicesRequest catalogServicesRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/services", catalogServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			Map<String, List<String>> value = JsonUtil.toPOJO(httpResponse.getContent(), MAP_LIST_STRING_TYPE_REF);
 			return new Response<>(value, httpResponse);
@@ -98,7 +98,7 @@ public final class CatalogConsulClient implements CatalogClient {
 	@Override
 	public Response<List<CatalogService>> getCatalogService(String serviceName,
 			CatalogServiceRequest catalogServiceRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName,
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/service/" + serviceName,
 				catalogServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
 			List<CatalogService> value = JsonUtil.toPOJO(httpResponse.getContent(), CATALOG_LIST_TYPE_REF);
@@ -110,7 +110,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<CatalogNode> getCatalogNode(String nodeName, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/node/" + nodeName, queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/catalog/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			CatalogNode catalogNode = JsonUtil.toPOJO(httpResponse.getContent(), CatalogNode.class);
 			return new Response<>(catalogNode, httpResponse);

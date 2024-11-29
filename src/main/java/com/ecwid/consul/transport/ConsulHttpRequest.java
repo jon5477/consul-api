@@ -4,9 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.hc.core5.http.ContentType;
-
-public final class HttpRequest {
+public final class ConsulHttpRequest {
 	private final URI uri;
 	private final Map<String, String> headers;
 	private final char[] token;
@@ -17,7 +15,7 @@ public final class HttpRequest {
 	 */
 	private final String contentType;
 
-	private HttpRequest(Builder b) {
+	private ConsulHttpRequest(Builder b) {
 		this.uri = b.uri;
 		this.headers = b.headers;
 		this.token = b.token;
@@ -54,10 +52,6 @@ public final class HttpRequest {
 		private byte[] content;
 		private String contentType;
 
-		public static Builder newBuilder() {
-			return new Builder();
-		}
-
 		public Builder setURI(URI uri) {
 			this.uri = uri;
 			return this;
@@ -88,8 +82,8 @@ public final class HttpRequest {
 			return this;
 		}
 
-		public HttpRequest build() {
-			return new HttpRequest(this);
+		public ConsulHttpRequest build() {
+			return new ConsulHttpRequest(this);
 		}
 	}
 }

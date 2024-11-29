@@ -47,7 +47,7 @@ module com.ecwid.consul.api {
 	opens com.ecwid.consul.v1.session.model;
 	opens com.ecwid.consul.v1.status;
 
-	requires java.net.http;
+	requires transitive java.net.http;
 
 	requires com.fasterxml.jackson.annotation;
 	requires com.fasterxml.jackson.core;

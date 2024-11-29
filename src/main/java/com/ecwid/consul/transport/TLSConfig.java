@@ -1,7 +1,5 @@
 package com.ecwid.consul.transport;
 
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-
 /**
  * Allows specification of the keystore and truststores for handling the SSL
  * context.

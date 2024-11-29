@@ -1,6 +1,5 @@
 package com.ecwid.consul.transport;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,20 +11,17 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author Jon Huang (jon5477)
  *
  */
-public final class HttpResponse {
+public final class ConsulHttpResponse {
 	private final int statusCode;
-	private final String statusMessage;
 	private final JsonNode content;
 	private final String consulEffectiveConsistency;
 	private final Boolean consulKnownLeader;
 	private final Long consulLastContact;
 	private final Long consulIndex;
 
-	public HttpResponse(int statusCode, @NonNull String statusMessage, @Nullable JsonNode content,
-			@Nullable String consulEffectiveConsistency, @Nullable Boolean consulKnownLeader,
-			@Nullable Long consulLastContact, @Nullable Long consulIndex) {
+	public ConsulHttpResponse(int statusCode, @Nullable JsonNode content, @Nullable String consulEffectiveConsistency,
+			@Nullable Boolean consulKnownLeader, @Nullable Long consulLastContact, @Nullable Long consulIndex) {
 		this.statusCode = statusCode;
-		this.statusMessage = statusMessage;
 		this.content = content;
 		this.consulEffectiveConsistency = consulEffectiveConsistency;
 		this.consulKnownLeader = consulKnownLeader;
@@ -35,11 +31,6 @@ public final class HttpResponse {
 
 	public final int getStatusCode() {
 		return statusCode;
-	}
-
-	@NonNull
-	public final String getStatusMessage() {
-		return statusMessage;
 	}
 
 	@Nullable
@@ -69,8 +60,8 @@ public final class HttpResponse {
 
 	@Override
 	public final String toString() {
-		return "HttpResponse [statusCode=" + statusCode + ", statusMessage=" + statusMessage + ", content=" + content
-				+ ", consulEffectiveConsistency=" + consulEffectiveConsistency + ", consulKnownLeader="
-				+ consulKnownLeader + ", consulLastContact=" + consulLastContact + ", consulIndex=" + consulIndex + "]";
+		return "HttpResponse [statusCode=" + statusCode + ", content=" + content + ", consulEffectiveConsistency="
+				+ consulEffectiveConsistency + ", consulKnownLeader=" + consulKnownLeader + ", consulLastContact="
+				+ consulLastContact + ", consulIndex=" + consulIndex + "]";
 	}
 }

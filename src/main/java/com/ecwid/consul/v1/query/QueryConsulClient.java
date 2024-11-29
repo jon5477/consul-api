@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.json.JsonUtil;
-import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -21,7 +21,7 @@ public final class QueryConsulClient implements QueryClient {
 
 	@Override
 	public Response<QueryExecution> executePreparedQuery(String uuid, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/query/" + uuid + "/execute", queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/query/" + uuid + "/execute", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			QueryExecution queryExecution = JsonUtil.toPOJO(httpResponse.getContent(), QueryExecution.class);
 			return new Response<>(queryExecution, httpResponse);

@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 
 /**
  * Represents a Consul response from the Consul API.
@@ -30,7 +30,7 @@ public final class Response<T> {
 		this.consulIndex = consulIndex;
 	}
 
-	public Response(@Nullable T value, @NonNull HttpResponse resp) {
+	public Response(@Nullable T value, @NonNull ConsulHttpResponse resp) {
 		Objects.requireNonNull(resp, "http response cannot be null");
 		this.value = value;
 		this.consulEffectiveConsistency = resp.getConsulEffectiveConsistency();

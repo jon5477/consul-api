@@ -8,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.json.JsonUtil;
-import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -33,7 +33,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/create", JsonUtil.toBytes(newSession),
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/session/create", JsonUtil.toBytes(newSession),
 				queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			Map<String, String> value = JsonUtil.toPOJO(httpResponse.getContent(), STRING_MAP_TYPE_REF);
@@ -45,7 +45,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Void> sessionDestroy(String session, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/destroy/" + session, null, queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/session/destroy/" + session, null, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -55,7 +55,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Session> getSessionInfo(String session, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/info/" + session, queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/info/" + session, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			if (value == null || value.isEmpty()) {
@@ -72,7 +72,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/node/" + node, queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/node/" + node, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
@@ -83,7 +83,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<List<Session>> getSessionList(QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/list", queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/list", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
@@ -94,7 +94,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Session> renewSession(String session, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/renew/" + session, null, queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/session/renew/" + session, null, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			if (value.size() == 1) {

@@ -2,6 +2,10 @@ package com.ecwid.consul.transport;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpClient.Version;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -9,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.time.Duration;
 import java.util.Objects;
 
 import javax.net.ssl.KeyManager;
@@ -17,26 +22,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.apache.hc.client5.http.async.HttpAsyncClient;
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.NoopUserTokenHandler;
-import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
-import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.io.HttpClientConnectionManager;
-import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
-import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
-import org.apache.hc.client5.http.ssl.TrustSelfSignedStrategy;
-import org.apache.hc.core5.http.io.SocketConfig;
-import org.apache.hc.core5.ssl.SSLContexts;
-import org.apache.hc.core5.util.Timeout;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
 
@@ -54,24 +40,9 @@ import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
  */
 public final class ClientUtils {
 	/**
-	 * The default number of maximum connections in the pool.
+	 * The default HTTP request timeout (30 seconds).
 	 */
-	private static final int DEFAULT_MAX_CONNECTIONS = 1000;
-	/**
-	 * The default number of maximum connections per route in the pool.
-	 */
-	private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 500;
-	/**
-	 * The default HTTP connection timeout (10 seconds).
-	 */
-	private static final Timeout DEFAULT_CONNECTION_TIMEOUT = Timeout.ofSeconds(10);
-	/**
-	 * The default HTTP read timeout of 10 minutes. This is account for blocking
-	 * queries.
-	 * 
-	 * @see https://developer.hashicorp.com/consul/api-docs/features/blocking
-	 */
-	private static final Timeout DEFAULT_READ_TIMEOUT = Timeout.ofMinutes(10);
+	public static final Duration DEFAULT_REQUEST_TIMEOUT = Duration.ofSeconds(30);
 
 	private ClientUtils() {
 		// static utility class
@@ -121,72 +92,18 @@ public final class ClientUtils {
 		return sslContext;
 	}
 
-	@SuppressWarnings("resource")
-	public static DefaultHttpTransport createDefaultHttpTransport() {
-		PoolingHttpClientConnectionManager connectionManager = ClientUtils.createPoolingConnectionManager();
-		HttpClient httpClient = ClientUtils.createHttpClient(connectionManager);
-		return new DefaultHttpTransport(connectionManager, httpClient);
+	public static HttpClient createHttpClient() {
+		HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1) // consul only supports HTTP 1.1
+				.followRedirects(Redirect.NORMAL) // follow redirects
+				.authenticator(Authenticator.getDefault()).build();
+		return client;
 	}
 
-	@SuppressWarnings("resource")
-	public static DefaultHttpTransport createDefaultHttpTransport(
-			@Nullable HttpClientConnectionManager connectionManager, @Nullable HttpClient httpClient,
-			@Nullable SSLContext sslCtx) {
-		HttpClientConnectionManager conMgr = connectionManager;
-		if (conMgr == null) {
-			conMgr = ClientUtils.createPoolingConnectionManager(sslCtx);
+	public static DefaultHttpTransport createDefaultHttpTransport(HttpClient client) {
+		HttpClient httpClient = client;
+		if (client == null) {
+			httpClient = ClientUtils.createHttpClient();
 		}
-		HttpClient hc = httpClient;
-		if (hc == null) {
-			hc = ClientUtils.createHttpClient(conMgr);
-		}
-		return new DefaultHttpTransport(conMgr, hc);
-	}
-
-	public static PoolingHttpClientConnectionManager createPoolingConnectionManager() {
-		SocketConfig sockCfg = SocketConfig.custom().setSoTimeout(DEFAULT_READ_TIMEOUT).build();
-		PoolingHttpClientConnectionManagerBuilder conMgrBuilder = PoolingHttpClientConnectionManagerBuilder.create()
-				.setMaxConnTotal(DEFAULT_MAX_CONNECTIONS).setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS)
-				.setDefaultSocketConfig(sockCfg);
-		return conMgrBuilder.build();
-	}
-
-	public static PoolingHttpClientConnectionManager createPoolingConnectionManager(@Nullable SSLContext sslCtx) {
-		SocketConfig sockCfg = SocketConfig.custom().setSoTimeout(DEFAULT_READ_TIMEOUT).build();
-		PoolingHttpClientConnectionManagerBuilder conMgrBuilder = PoolingHttpClientConnectionManagerBuilder.create()
-				.setMaxConnTotal(DEFAULT_MAX_CONNECTIONS).setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS)
-				.setDefaultSocketConfig(sockCfg);
-		if (sslCtx != null) {
-			conMgrBuilder.setTlsSocketStrategy(new DefaultClientTlsStrategy(sslCtx));
-		}
-		return conMgrBuilder.build();
-	}
-
-	@SuppressWarnings("resource")
-	public static HttpClient createHttpClient(@NonNull HttpClientConnectionManager conMgr) {
-		Objects.requireNonNull(conMgr, "connection manager cannot be null");
-		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();
-		HttpClientBuilder hcBuilder = HttpClientBuilder.create().setConnectionManager(conMgr)
-				.setDefaultRequestConfig(reqCfg).useSystemProperties()
-				.setUserTokenHandler(NoopUserTokenHandler.INSTANCE);
-		return hcBuilder.build();
-	}
-
-	public static PoolingAsyncClientConnectionManager createPoolingAsyncConnectionManager() {
-		ConnectionConfig connCfg = ConnectionConfig.custom().setSocketTimeout(DEFAULT_READ_TIMEOUT).build();
-		PoolingAsyncClientConnectionManagerBuilder conMgrBuilder = PoolingAsyncClientConnectionManagerBuilder.create()
-				.setDefaultConnectionConfig(connCfg).setMaxConnTotal(DEFAULT_MAX_CONNECTIONS)
-				.setMaxConnPerRoute(DEFAULT_MAX_PER_ROUTE_CONNECTIONS);
-		return conMgrBuilder.build();
-	}
-
-	@SuppressWarnings("resource")
-	public static HttpAsyncClient createAsyncHttpClient(@NonNull AsyncClientConnectionManager conMgr) {
-		Objects.requireNonNull(conMgr, "connection manager cannot be null");
-		RequestConfig reqCfg = RequestConfig.custom().setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT).build();
-		HttpAsyncClientBuilder asyncHttpClientBuilder = HttpAsyncClientBuilder.create().setConnectionManager(conMgr)
-				.setDefaultRequestConfig(reqCfg).useSystemProperties()
-				.setUserTokenHandler(NoopUserTokenHandler.INSTANCE);
-		return asyncHttpClientBuilder.build();
+		return new DefaultHttpTransport(httpClient);
 	}
 }
