@@ -86,7 +86,7 @@ public final class ClientUtils {
 	 * @throws KeyManagementException    If an exception occurs while constructing
 	 *                                   the {@link SSLContext}.
 	 */
-	@SuppressWarnings("removal")
+	@Deprecated(since = "2.0.0", forRemoval = true)
 	public static SSLContext createSSLContext(@NonNull TLSConfig tlsConfig) throws KeyStoreException, IOException,
 			NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException, KeyManagementException {
 		Objects.requireNonNull(tlsConfig, "TLS configuration cannot be null");
