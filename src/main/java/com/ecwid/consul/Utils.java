@@ -2,9 +2,13 @@ package com.ecwid.consul;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import com.ecwid.consul.v1.QueryParams;
+import com.ecwid.consul.v1.event.model.Event;
 
 /**
  * Provides various utility functions used by the Consul API client library.
@@ -124,5 +128,28 @@ public final class Utils {
 			agentPath = "/" + path;
 		}
 		return host + ":" + port + agentPath;
+	}
+
+	/**
+	 * This is code converted from <a href=
+	 * "https://github.com/hashicorp/consul/blob/beef7a7417a22f1dc7c436de531704fd206b0b4c/api/event.go#L102-L114">Consul's
+	 * code</a>
+	 * 
+	 * This is a hack. It simulates the index generation to convert an
+	 * {@link Event#getId()} into a wait <a href=
+	 * "https://developer.hashicorp.com/consul/api-docs/features/blocking">index</a>.
+	 *
+	 * @param id The {@link UUID} to convert.
+	 * @return A wait index value suitable for passing to
+	 *         {@link QueryParams.Builder#setIndex(long)} for blocking calls.
+	 */
+	public static long getWaitIndex(@NonNull UUID id) {
+		Objects.requireNonNull(id, "UUID cannot be null");
+		String uuid = id.toString();
+		String lower = uuid.substring(0, 8) + uuid.substring(9, 13) + uuid.substring(14, 18);
+		String upper = uuid.substring(19, 23) + uuid.substring(24);
+		long lowVal = Long.parseUnsignedLong(lower, 16);
+		long highVal = Long.parseUnsignedLong(upper, 16);
+		return lowVal ^ highVal;
 	}
 }

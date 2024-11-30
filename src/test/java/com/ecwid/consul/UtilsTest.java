@@ -85,11 +85,6 @@ class UtilsTest {
 	}
 
 	@Test
-	void testToSecondsString() {
-		assertEquals("1000s", Utils.toSecondsString(1000L));
-	}
-
-	@Test
 	void testAssembleAgentAddressWithPath() {
 		// Given
 		String expectedHost = "http://host";

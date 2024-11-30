@@ -196,7 +196,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceRegister(NewService newService) {
-		Request.Builder request = Request.Builder.newBuilder().setEndpoint("/v1/agent/service/register")
+		Request.Builder request = new Request.Builder("/v1/agent/service/register")
 				.setContent(JsonUtil.toBytes(newService));
 		ConsulHttpResponse httpResponse = rawClient.makePutRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {

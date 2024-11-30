@@ -3,6 +3,7 @@ package com.ecwid.consul.v1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.time.Duration;
 import java.util.Locale;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ class QueryParamsTest {
 		// Given
 		ConsistencyMode expectedMode = ConsistencyMode.DEFAULT;
 		long expectedIndex = -1;
-		long expectedWaitTime = -1;
 		String expectedNear = null;
 
 		// When
@@ -28,7 +28,7 @@ class QueryParamsTest {
 		// Then
 		assertNull(actual.getDatacenter());
 		assertEquals(actual.getConsistencyMode(), expectedMode);
-		assertEquals(actual.getWaitTime(), expectedWaitTime);
+		assertNull(actual.getWaitTime());
 		assertEquals(actual.getIndex(), expectedIndex);
 		assertEquals(actual.getNear(), expectedNear);
 	}
@@ -39,7 +39,7 @@ class QueryParamsTest {
 		String expectedDatacenter = "testDC";
 		ConsistencyMode expectedMode = ConsistencyMode.CONSISTENT;
 		long expectedIndex = 100;
-		long expectedWaitTime = 10000;
+		Duration expectedWaitTime = Duration.ofMinutes(10);
 		String expectedNear = "_agent";
 
 		// When
@@ -60,7 +60,7 @@ class QueryParamsTest {
 		// Given
 		String expectedDatacenter = "testDC";
 		ConsistencyMode expectedMode = ConsistencyMode.CONSISTENT;
-		long expectedWaitTime = 1000L;
+		Duration expectedWaitTime = Duration.ofMinutes(1);
 		long expectedIndex = 2000L;
 		String expectedNear = "_agent";
 
@@ -72,7 +72,7 @@ class QueryParamsTest {
 		// Then
 		assertEquals(expectedDatacenter, queryParams.get("dc"));
 		assertNull(queryParams.get(expectedMode.name().toLowerCase(Locale.ROOT)));
-		assertEquals(Utils.toSecondsString(expectedWaitTime), queryParams.get("wait"));
+		assertEquals(Utils.toConsulDuration(expectedWaitTime), queryParams.get("wait"));
 		assertEquals(String.valueOf(expectedIndex), queryParams.get("index"));
 		assertEquals(expectedNear, queryParams.get("near"));
 	}

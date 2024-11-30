@@ -73,7 +73,7 @@ public final class CatalogConsulClient implements CatalogClient {
 
 	@Override
 	public Response<List<Node>> getCatalogNodes(CatalogNodesRequest catalogNodesRequest) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/catalog/nodes")
+		Request request = new Request.Builder("/v1/catalog/nodes")
 				.addQueryParameters(catalogNodesRequest.getQueryParameters()).build();
 		ConsulHttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
