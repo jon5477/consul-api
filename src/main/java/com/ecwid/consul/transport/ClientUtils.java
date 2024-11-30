@@ -41,6 +41,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
+import com.ecwid.consul.v1.ConsulRawClient;
 
 /**
  * Provides utility functions for interfacing with Java {@link HttpClient}.
@@ -69,6 +70,9 @@ public final class ClientUtils {
 	/**
 	 * Creates an {@link SSLContext} from the given {@link TLSConfig}. This is
 	 * provided to interoperate with legacy code.
+	 * 
+	 * @deprecated Directly pass the {@link SSLContext} to
+	 *             {@link ConsulRawClient.Builder#setSSLContext(SSLContext)}.
 	 * 
 	 * @param tlsConfig The {@link TLSConfig} instance that contains the various
 	 *                  configuration options for SSL/TLS.

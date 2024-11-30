@@ -27,6 +27,7 @@ import javax.net.ssl.X509TrustManager;
  * @author Jon Huang (jon5477)
  *
  */
+@Deprecated(since = "2.0.0", forRemoval = true)
 public final class InsecureTrustManager implements X509TrustManager {
 	public static final InsecureTrustManager INSTANCE = new InsecureTrustManager();
 
