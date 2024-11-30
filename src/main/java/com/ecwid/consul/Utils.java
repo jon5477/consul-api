@@ -7,12 +7,15 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * Provides various utility functions used by the Consul API client library.
+ * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
  *
  */
 public final class Utils {
 	private Utils() {
+		// static utility class
 	}
 
 	/**

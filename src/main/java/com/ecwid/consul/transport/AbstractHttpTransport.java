@@ -2,6 +2,7 @@ package com.ecwid.consul.transport;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -16,14 +17,16 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ecwid.consul.TimedOutException;
+
 /**
- * The Abstract HTTP transport code that interfaces with Apache HTTP Client 5.x.
- * Provides both synchronous and asynchronous clients.
+ * The HTTP transport code that interfaces with the underlying Java
+ * {@link HttpClient}.
  * 
  * The following modifications were made from the original APL 2.0 code:
  * <ul>
- * <li>Migration from Apache HTTPClient 4.x to 5.x</li>
- * <li>Added code for {@link AsyncHttpClient}</li>
+ * <li>Migration from Apache HTTPClient 4.x to Java {@link HttpClient}</li>
+ * <li>Added code for building {@link HttpRequest}s.</li>
  * </ul>
  * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -74,8 +77,8 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		} catch (InterruptedException e) {
 			// propagate the interrupt signal
 			Thread.currentThread().interrupt();
-			// TODO How should we properly handle Thread interrupts?
-			throw new TransportException(e);
+			// throw this custom exception so clients can handle it
+			throw new TimedOutException(e);
 		} catch (IOException e) {
 			throw new TransportException(e);
 		}

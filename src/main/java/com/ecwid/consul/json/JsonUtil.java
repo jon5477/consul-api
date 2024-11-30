@@ -1,3 +1,13 @@
+/*********************************************************************
+* Copyright (c) 2024 Jon Huang
+*
+* This program and the accompanying materials are made
+* available under the terms of the Eclipse Public License 2.0
+* which is available at https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+**********************************************************************/
+
 package com.ecwid.consul.json;
 
 import java.io.IOException;
@@ -18,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  * Provides utilities for serializing a POJO (Plain old Java Object) to JSON.
  * 
  * @author Jon Huang (jon5477)
+ *
  */
 public final class JsonUtil {
 	private static final String NODE_NOT_NULL_MSG = "node cannot be null";
@@ -25,7 +36,9 @@ public final class JsonUtil {
 	private static final ObjectMapper OBJ_MAPPER = new ObjectMapper();
 
 	static {
+		// do not fail if the property does not exist
 		OBJ_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		// do not include null fields in the serialized output
 		OBJ_MAPPER.setSerializationInclusion(Include.NON_NULL);
 	}
 
@@ -44,7 +57,7 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.writeValueAsBytes(src);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Unable to serialize object to JSON", e);
+			throw new JsonException("Unable to serialize object to JSON", e);
 		}
 	}
 
@@ -60,7 +73,7 @@ public final class JsonUtil {
 			ObjectWriter writer = OBJ_MAPPER.writer();
 			return writer.writeValueAsBytes(node);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Unable to serialize object to JSON", e);
+			throw new JsonException("Unable to serialize object to JSON", e);
 		}
 	}
 
@@ -75,7 +88,7 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.readTree(content);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
+			throw new JsonException(DESERIALIZE_ERROR, e);
 		}
 	}
 
@@ -89,7 +102,7 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.readTree(content);
 		} catch (IOException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
+			throw new JsonException(DESERIALIZE_ERROR, e);
 		}
 	}
 
@@ -105,7 +118,7 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.readTree(in);
 		} catch (IOException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
+			throw new JsonException(DESERIALIZE_ERROR, e);
 		}
 	}
 
@@ -122,7 +135,7 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.treeToValue(node, type);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
+			throw new JsonException(DESERIALIZE_ERROR, e);
 		}
 	}
 
@@ -139,7 +152,7 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.treeToValue(node, type);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(DESERIALIZE_ERROR, e);
+			throw new JsonException(DESERIALIZE_ERROR, e);
 		}
 	}
 }

@@ -14,8 +14,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.ecwid.consul.QueryParameters;
 
 /**
- * Implements a query filter parameter. See
- * https://www.consul.io/api-docs/features/filtering
+ * Implements the Consul query filter parameter.
+ * 
+ * @see <a href=
+ *      "https://developer.hashicorp.com/consul/api-docs/features/filtering">Consul
+ *      Filtering</a>
+ * 
+ * @author ovesh
+ *
  */
 public class Filter implements QueryParameters {
 	public enum MatchingOperator {

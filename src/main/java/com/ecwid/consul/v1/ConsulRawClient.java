@@ -1,11 +1,9 @@
 package com.ecwid.consul.v1;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
@@ -50,7 +48,7 @@ public final class ConsulRawClient {
 	public static final int DEFAULT_PORT = 8500;
 	public static final String DEFAULT_PATH = "";
 	private final HttpTransport httpTransport;
-	private final URL agentAddress;
+	private final URI agentUri;
 	private final AtomicReference<char[]> token = new AtomicReference<>();
 
 	public static final class Builder {
@@ -175,9 +173,9 @@ public final class ConsulRawClient {
 			agentHostUrl = b.agentHost;
 		}
 		try {
-			this.agentAddress = new URL(Utils.assembleAgentAddress(agentHostUrl, b.agentPort, b.agentPath));
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
+			this.agentUri = new URI(Utils.assembleAgentAddress(agentHostUrl, b.agentPort, b.agentPath));
+		} catch (URISyntaxException e) {
+			throw new ConsulException(e);
 		}
 		this.token.set(b.token);
 	}
@@ -234,7 +232,7 @@ public final class ConsulRawClient {
 	public final ConsulHttpResponse makeGetRequest(@NonNull String endpoint, QueryParameters... queryParams) {
 		Objects.requireNonNull(endpoint, ENDPOINT_NOT_NULL_MSG);
 		URI uri = buildURI(endpoint, queryParams);
-		ConsulHttpRequest request = new ConsulHttpRequest.Builder().setURI(uri).setToken(token.get()).build();
+		ConsulHttpRequest request = new ConsulHttpRequest.Builder(uri).setToken(token.get()).build();
 		return httpTransport.makeGetRequest(request);
 	}
 
@@ -246,8 +244,7 @@ public final class ConsulRawClient {
 	public final ConsulHttpResponse makeGetRequest(@NonNull Request request) {
 		Objects.requireNonNull(request, REQUEST_NOT_NULL_MSG);
 		URI uri = buildURI(request.getEndpoint(), request);
-		ConsulHttpRequest httpRequest = new ConsulHttpRequest.Builder().setURI(uri).setToken(getConsulToken(request))
-				.build();
+		ConsulHttpRequest httpRequest = new ConsulHttpRequest.Builder(uri).setToken(getConsulToken(request)).build();
 		return httpTransport.makeGetRequest(httpRequest);
 	}
 
@@ -265,7 +262,7 @@ public final class ConsulRawClient {
 			QueryParameters... queryParams) {
 		Objects.requireNonNull(endpoint, ENDPOINT_NOT_NULL_MSG);
 		URI uri = buildURI(endpoint, queryParams);
-		ConsulHttpRequest.Builder request = new ConsulHttpRequest.Builder().setURI(uri).setToken(token.get());
+		ConsulHttpRequest.Builder request = new ConsulHttpRequest.Builder(uri).setToken(token.get());
 		if (content != null) {
 			request.setContent(content);
 		}
@@ -297,8 +294,7 @@ public final class ConsulRawClient {
 	public final ConsulHttpResponse makePutRequest(@NonNull Request request) {
 		Objects.requireNonNull(request, REQUEST_NOT_NULL_MSG);
 		URI uri = buildURI(request.getEndpoint(), request);
-		ConsulHttpRequest.Builder reqBuilder = new ConsulHttpRequest.Builder().setURI(uri)
-				.setToken(getConsulToken(request));
+		ConsulHttpRequest.Builder reqBuilder = new ConsulHttpRequest.Builder(uri).setToken(getConsulToken(request));
 		if (request.getContent() != null) {
 			reqBuilder.setContent(request.getContent());
 		}
@@ -309,7 +305,7 @@ public final class ConsulRawClient {
 	public final ConsulHttpResponse makeDeleteRequest(@NonNull Request request) {
 		Objects.requireNonNull(request, REQUEST_NOT_NULL_MSG);
 		URI uri = buildURI(request.getEndpoint(), request);
-		ConsulHttpRequest httpRequest = new ConsulHttpRequest.Builder().setURI(uri).setToken(getConsulToken(request))
+		ConsulHttpRequest httpRequest = new ConsulHttpRequest.Builder(uri).setToken(getConsulToken(request))
 				.setContent(request.getContent()).build();
 		return httpTransport.makeDeleteRequest(httpRequest);
 	}
@@ -329,8 +325,8 @@ public final class ConsulRawClient {
 			String queryStr = Arrays.stream(queryParams).flatMap(e -> e.getQueryParameters().entrySet().stream())
 					.map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
 			String query = !queryStr.isEmpty() ? queryStr : null;
-			return new URI(agentAddress.getProtocol(), agentAddress.getUserInfo(), agentAddress.getHost(),
-					agentAddress.getPort(), agentAddress.getPath() + endpoint, query, null);
+			return new URI(agentUri.getScheme(), agentUri.getUserInfo(), agentUri.getHost(), agentUri.getPort(),
+					agentUri.getPath() + endpoint, query, null);
 		} catch (URISyntaxException e) {
 			throw new ConsulException(e);
 		}

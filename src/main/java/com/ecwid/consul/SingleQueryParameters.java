@@ -6,6 +6,8 @@ import java.util.Objects;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ *
  */
 public final class SingleQueryParameters implements QueryParameters {
 	private final String key;

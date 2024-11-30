@@ -15,10 +15,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 public final class OperationException extends ConsulException {
 	private static final long serialVersionUID = 7189026270432209391L;
 	private final int statusCode;
-	private final JsonNode statusContent;
+	private final transient JsonNode statusContent;
 
 	public OperationException(int statusCode, @Nullable JsonNode statusContent) {
-		super("OperationException(statusCode=" + statusCode + "', statusContent='" + statusContent + "')");
+		super("Consul operation exception; HTTP Status: " + statusCode);
 		this.statusCode = statusCode;
 		this.statusContent = statusContent;
 	}
@@ -27,17 +27,17 @@ public final class OperationException extends ConsulException {
 		this(httpResponse.getStatusCode(), httpResponse.getContent());
 	}
 
-	public int getStatusCode() {
+	public final int getStatusCode() {
 		return statusCode;
 	}
 
 	@Nullable
-	public JsonNode getStatusContent() {
+	public final JsonNode getStatusContent() {
 		return statusContent;
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		return "OperationException [statusCode=" + statusCode + ", statusContent=" + statusContent + "]";
 	}
 }

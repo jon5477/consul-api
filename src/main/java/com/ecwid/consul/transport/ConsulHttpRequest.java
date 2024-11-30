@@ -1,9 +1,30 @@
+/*********************************************************************
+* Copyright (c) 2024 Jon Huang
+*
+* This program and the accompanying materials are made
+* available under the terms of the Eclipse Public License 2.0
+* which is available at https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+**********************************************************************/
+
 package com.ecwid.consul.transport;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+/**
+ * Represents a HTTP request to be made to Consul. Contains all the relevant and
+ * necessary fields for making an HTTP request.
+ * 
+ * @author Jon Huang (jon5477)
+ *
+ */
 public final class ConsulHttpRequest {
 	private final URI uri;
 	private final Map<String, String> headers;
@@ -23,66 +44,68 @@ public final class ConsulHttpRequest {
 		this.contentType = b.contentType;
 	}
 
-	public URI getURI() {
+	@NonNull
+	public final URI getURI() {
 		return uri;
 	}
 
-	public Map<String, String> getHeaders() {
+	@NonNull
+	public final Map<String, String> getHeaders() {
 		return headers;
 	}
 
-	public char[] getToken() {
+	public final char[] getToken() {
 		return token;
 	}
 
-	public byte[] getContent() {
+	public final byte[] getContent() {
 		return content;
 	}
 
-	public String getContentType() {
+	@Nullable
+	public final String getContentType() {
 		return contentType;
 	}
 
-	// ---------------------------------------
-	// Builder
 	public static final class Builder {
-		private URI uri;
-		private Map<String, String> headers = new HashMap<>();
+		private final URI uri;
+		private final Map<String, String> headers = new HashMap<>();
 		private char[] token;
 		private byte[] content;
 		private String contentType;
 
-		public Builder setURI(URI uri) {
-			this.uri = uri;
-			return this;
+		public Builder(@NonNull URI uri) {
+			this.uri = Objects.requireNonNull(uri, "URI cannot be null");
 		}
 
-		public Builder addHeaders(Map<String, String> headers) {
+		public final Builder addHeaders(@NonNull Map<String, String> headers) {
+			Objects.requireNonNull(headers, "headers cannot be null");
 			this.headers.putAll(headers);
 			return this;
 		}
 
-		public Builder addHeader(String name, String value) {
+		public final Builder addHeader(@NonNull String name, @Nullable String value) {
+			Objects.requireNonNull(name, "header name cannot be null");
 			this.headers.put(name, value);
 			return this;
 		}
 
-		public Builder setToken(char[] token) {
+		public final Builder setToken(char[] token) {
 			this.token = token;
 			return this;
 		}
 
-		public Builder setContent(byte[] content) {
+		public final Builder setContent(byte[] content) {
 			this.content = content;
 			return this;
 		}
 
-		public Builder setContentType(String contentType) {
+		public final Builder setContentType(@Nullable String contentType) {
 			this.contentType = contentType;
 			return this;
 		}
 
-		public ConsulHttpRequest build() {
+		public final ConsulHttpRequest build() {
 			return new ConsulHttpRequest(this);
 		}
 	}

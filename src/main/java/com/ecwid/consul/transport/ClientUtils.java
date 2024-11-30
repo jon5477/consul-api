@@ -1,3 +1,13 @@
+/*********************************************************************
+* Copyright (c) 2024 Jon Huang
+*
+* This program and the accompanying materials are made
+* available under the terms of the Eclipse Public License 2.0
+* which is available at https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+**********************************************************************/
+
 package com.ecwid.consul.transport;
 
 import java.io.FileInputStream;
@@ -33,12 +43,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
 
 /**
- * Provides utility functions for interfacing with Apache HTTP Client 5.x.
+ * Provides utility functions for interfacing with Java {@link HttpClient}.
  * <ul>
- * <li>Creating {@link SSLContext} for passing to HTTP Client</li>
- * <li>Creating HTTP clients</li>
- * <li>Creating HTTP requests</li>
- * <li>Creating HTTP headers</li>
+ * <li>Creating {@link SSLContext} for passing to {@link HttpClient}.</li>
+ * <li>Creating {@link HttpTransport}s</li>
  * </ul>
  * 
  * @author Jon Huang

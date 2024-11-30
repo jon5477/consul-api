@@ -1,12 +1,13 @@
 package com.ecwid.consul.transport;
 
+import java.net.http.HttpClient;
+
 /**
  * Allows specification of the keystore and truststores for handling the SSL
  * context.
  * 
  * @deprecated This class has been deprecated in favor of passing SSL
- *             configuration options directly on the
- *             {@link PoolingHttpClientConnectionManager}
+ *             configuration options directly on the {@link HttpClient}.
  * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
