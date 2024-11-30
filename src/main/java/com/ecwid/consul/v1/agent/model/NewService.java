@@ -1,8 +1,10 @@
 package com.ecwid.consul.v1.agent.model;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
+import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -130,6 +132,10 @@ public class NewService {
 
 		public void setInterval(String interval) {
 			this.interval = interval;
+		}
+
+		public void setInterval(Duration interval) {
+			this.interval = Utils.toConsulDuration(interval);
 		}
 
 		public String getNotes() {

@@ -32,26 +32,26 @@ class ConsulClientTest {
 				+ "      \"key_file\": \"" + certRootPath + "/key.key\",\n" + "      \"cert_file\": \"" + certRootPath
 				+ "/key.crt\"\n" + "    }\n" + "  }\n" + "}\n";
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withCustomConfig(customConfiguration).build().start();
+				.withCustomConfig(customConfiguration).withWaitTimeout(60).build().start();
 	}
 
 	@AfterEach
-	public void cleanup() throws Exception {
+	public void cleanup() {
 		consul.close();
 	}
 
 	@Test
-	void agentHttpTest() throws Exception {
+	void agentHttpTest() {
 		String host = "http://localhost";
 		int port = consul.getHttpPort();
 		ConsulClient consulClient = new ConsulClient(host, port);
 		serviceRegisterTest(consulClient);
 	}
 
+	@SuppressWarnings("removal")
 	@Test
-	void agentHttpsTest() throws Exception {
+	void agentHttpsTest() {
 		String host = "https://localhost";
-		// TODO make https random port in consul
 		int httpsPort = randomHttpsPort;
 		String path = "src/test/resources/ssl";
 		String certRootPath = new File(path).getAbsolutePath().replace('\\', '/');

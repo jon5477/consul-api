@@ -3,6 +3,7 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,7 +16,7 @@ public final class UpdateAcl {
 	@JsonProperty("AccessorID")
 	private String accessorId;
 	@JsonProperty("SecretID")
-	private String secretId;
+	private CharSequence secretId;
 	@JsonProperty("Description")
 	private String description;
 	@JsonProperty("Policies")
@@ -39,11 +40,11 @@ public final class UpdateAcl {
 		this.accessorId = accessorId;
 	}
 
-	public final String getSecretId() {
+	public final CharSequence getSecretId() {
 		return secretId;
 	}
 
-	public final void setSecretId(String secretId) {
+	public final void setSecretId(CharSequence secretId) {
 		this.secretId = secretId;
 	}
 
@@ -121,15 +122,14 @@ public final class UpdateAcl {
 		return Objects.equals(accessorId, other.accessorId) && Objects.equals(description, other.description)
 				&& Objects.equals(expirationTime, other.expirationTime) && local == other.local
 				&& Objects.equals(nodeIdentities, other.nodeIdentities) && Objects.equals(policies, other.policies)
-				&& Objects.equals(roles, other.roles) && Objects.equals(secretId, other.secretId)
+				&& Objects.equals(roles, other.roles) && Utils.charSequenceEquals(secretId, other.secretId)
 				&& Objects.equals(serviceIdentities, other.serviceIdentities);
 	}
 
 	@Override
 	public final String toString() {
-		return "UpdateAcl [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
-				+ ", policies=" + policies + ", roles=" + roles + ", serviceIdentities=" + serviceIdentities
-				+ ", nodeIdentities=" + nodeIdentities + ", local=" + local + ", expirationTime=" + expirationTime
-				+ "]";
+		return "UpdateAcl [accessorId=" + accessorId + ", description=" + description + ", policies=" + policies
+				+ ", roles=" + roles + ", serviceIdentities=" + serviceIdentities + ", nodeIdentities=" + nodeIdentities
+				+ ", local=" + local + ", expirationTime=" + expirationTime + "]";
 	}
 }

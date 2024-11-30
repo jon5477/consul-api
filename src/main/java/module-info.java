@@ -5,7 +5,6 @@ module com.ecwid.consul.api {
 	exports com.ecwid.consul.v1;
 	exports com.ecwid.consul.v1.acl;
 	exports com.ecwid.consul.v1.acl.model;
-	exports com.ecwid.consul.v1.acl.model.legacy;
 	exports com.ecwid.consul.v1.agent;
 	exports com.ecwid.consul.v1.agent.model;
 	exports com.ecwid.consul.v1.catalog;
@@ -30,7 +29,6 @@ module com.ecwid.consul.api {
 	opens com.ecwid.consul.v1;
 	opens com.ecwid.consul.v1.acl;
 	opens com.ecwid.consul.v1.acl.model;
-	opens com.ecwid.consul.v1.acl.model.legacy;
 	opens com.ecwid.consul.v1.agent;
 	opens com.ecwid.consul.v1.agent.model;
 	opens com.ecwid.consul.v1.catalog;
@@ -49,10 +47,11 @@ module com.ecwid.consul.api {
 	opens com.ecwid.consul.v1.session.model;
 	opens com.ecwid.consul.v1.status;
 
+	requires transitive java.net.http;
+
 	requires com.fasterxml.jackson.annotation;
 	requires com.fasterxml.jackson.core;
 	requires transitive com.fasterxml.jackson.databind;
-	requires transitive org.apache.httpcomponents.client5.httpclient5;
-	requires org.apache.httpcomponents.core5.httpcore5;
+	requires org.checkerframework.checker.qual;
 	requires org.slf4j;
 }

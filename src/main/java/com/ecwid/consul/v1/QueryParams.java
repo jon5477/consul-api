@@ -1,31 +1,33 @@
 package com.ecwid.consul.v1;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.UrlParameters;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
-public final class QueryParams implements UrlParameters {
-	public static final class Builder {
-		public static Builder builder() {
-			return new Builder();
-		}
+public final class QueryParams implements QueryParameters {
+	public static final Duration MAX_WAIT_TIME = Duration.ofMinutes(10);
 
+	public static final class Builder {
 		private String datacenter;
 		private ConsistencyMode consistencyMode;
-		private long waitTime;
+		private Duration waitTime;
 		private long index;
 		private String near;
 
-		private Builder() {
+		public Builder() {
 			this.datacenter = null;
 			this.consistencyMode = ConsistencyMode.DEFAULT;
-			this.waitTime = -1;
+			this.waitTime = null;
 			this.index = -1;
 			this.near = null;
 		}
@@ -40,7 +42,27 @@ public final class QueryParams implements UrlParameters {
 			return this;
 		}
 
-		public Builder setWaitTime(long waitTime) {
+		/**
+		 * Sets the maximum wait time {@link Duration} for the blocking request.
+		 * 
+		 * From <a href=
+		 * "https://developer.hashicorp.com/consul/api-docs/features/blocking">Consul
+		 * documentation</a>: This is limited to 10 minutes. If not set, the wait time
+		 * defaults to 5 minutes.
+		 * 
+		 * @param waitTime The maximum wait time {@link Duration} for the blocking
+		 *                 request.
+		 * @return The {@link Builder} instance for chaining.
+		 */
+		public Builder setWaitTime(@Nullable Duration waitTime) {
+			if (waitTime != null) {
+				if (waitTime.isNegative() || waitTime.isZero()) {
+					throw new IllegalArgumentException("wait time duration must be greater than zero");
+				}
+				if (waitTime.compareTo(MAX_WAIT_TIME) > 0) {
+					throw new IllegalArgumentException("wait time duration cannot exceed 10 minutes");
+				}
+			}
 			this.waitTime = waitTime;
 			return this;
 		}
@@ -64,11 +86,12 @@ public final class QueryParams implements UrlParameters {
 
 	private final String datacenter;
 	private final ConsistencyMode consistencyMode;
-	private final long waitTime;
+	private final Duration waitTime;
 	private final long index;
 	private final String near;
 
-	private QueryParams(String datacenter, ConsistencyMode consistencyMode, long waitTime, long index, String near) {
+	private QueryParams(String datacenter, ConsistencyMode consistencyMode, @Nullable Duration waitTime, long index,
+			@Nullable String near) {
 		this.datacenter = datacenter;
 		this.consistencyMode = consistencyMode;
 		this.waitTime = waitTime;
@@ -76,29 +99,29 @@ public final class QueryParams implements UrlParameters {
 		this.near = near;
 	}
 
-	private QueryParams(String datacenter, ConsistencyMode consistencyMode, long waitTime, long index) {
+	private QueryParams(String datacenter, ConsistencyMode consistencyMode, @Nullable Duration waitTime, long index) {
 		this(datacenter, consistencyMode, waitTime, index, null);
 	}
 
 	public QueryParams(String datacenter) {
-		this(datacenter, ConsistencyMode.DEFAULT, -1, -1);
+		this(datacenter, ConsistencyMode.DEFAULT, null, -1);
 	}
 
 	public QueryParams(ConsistencyMode consistencyMode) {
-		this(null, consistencyMode, -1, -1);
+		this(null, consistencyMode, null, -1);
 	}
 
 	public QueryParams(String datacenter, ConsistencyMode consistencyMode) {
-		this(datacenter, consistencyMode, -1, -1);
+		this(datacenter, consistencyMode, null, -1);
 	}
 
-	public QueryParams(long waitTime, long index) {
+	public QueryParams(Duration waitTime, long index) {
 		this(null, ConsistencyMode.DEFAULT, waitTime, index);
 	}
 
-    public QueryParams(String datacenter, long waitTime, long index) {
+	public QueryParams(String datacenter, Duration waitTime, long index) {
 		this(datacenter, ConsistencyMode.DEFAULT, waitTime, index, null);
-    }
+	}
 
 	public String getDatacenter() {
 		return datacenter;
@@ -108,7 +131,7 @@ public final class QueryParams implements UrlParameters {
 		return consistencyMode;
 	}
 
-	public long getWaitTime() {
+	public Duration getWaitTime() {
 		return waitTime;
 	}
 
@@ -121,30 +144,24 @@ public final class QueryParams implements UrlParameters {
 	}
 
 	@Override
-	public List<String> toUrlParameters() {
-		List<String> params = new ArrayList<String>();
-
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		// add basic params
 		if (datacenter != null) {
-			params.add("dc=" + Utils.encodeValue(datacenter));
+			params.put("dc", datacenter);
 		}
-
 		if (consistencyMode != ConsistencyMode.DEFAULT) {
-			params.add(consistencyMode.name().toLowerCase());
+			params.put(consistencyMode.name().toLowerCase(Locale.ROOT), null);
 		}
-
-		if (waitTime != -1) {
-			params.add("wait=" + Utils.toSecondsString(waitTime));
+		if (waitTime != null) {
+			params.put("wait", Utils.toConsulDuration(waitTime));
 		}
-
 		if (index != -1) {
-			params.add("index=" + Long.toUnsignedString(index));
+			params.put("index", Long.toUnsignedString(index));
 		}
-
 		if (near != null) {
-			params.add("near=" + Utils.encodeValue(near));
+			params.put("near", near);
 		}
-
 		return params;
 	}
 
@@ -157,11 +174,9 @@ public final class QueryParams implements UrlParameters {
 			return false;
 		}
 		QueryParams that = (QueryParams) o;
-		return waitTime == that.waitTime &&
-			index == that.index &&
-			Objects.equals(datacenter, that.datacenter) &&
-			consistencyMode == that.consistencyMode &&
-			Objects.equals(near, that.near);
+		return Objects.equals(waitTime, that.waitTime) && index == that.index
+				&& Objects.equals(datacenter, that.datacenter) && consistencyMode == that.consistencyMode
+				&& Objects.equals(near, that.near);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.ecwid.consul.v1.health.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Check {
-	public static enum CheckStatus {
+	public enum CheckStatus {
 		@JsonProperty("unknown")
 		UNKNOWN, @JsonProperty("passing")
 		PASSING, @JsonProperty("warning")
@@ -135,6 +136,29 @@ public class Check {
 
 	public void setModifyIndex(Long modifyIndex) {
 		this.modifyIndex = modifyIndex;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(checkId, createIndex, modifyIndex, name, node, notes, output, serviceId, serviceName,
+				serviceTags, status);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Check)) {
+			return false;
+		}
+		Check other = (Check) obj;
+		return Objects.equals(checkId, other.checkId) && Objects.equals(createIndex, other.createIndex)
+				&& Objects.equals(modifyIndex, other.modifyIndex) && Objects.equals(name, other.name)
+				&& Objects.equals(node, other.node) && Objects.equals(notes, other.notes)
+				&& Objects.equals(output, other.output) && Objects.equals(serviceId, other.serviceId)
+				&& Objects.equals(serviceName, other.serviceName) && Objects.equals(serviceTags, other.serviceTags)
+				&& status == other.status;
 	}
 
 	@Override

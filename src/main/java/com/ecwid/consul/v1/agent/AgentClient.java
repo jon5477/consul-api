@@ -23,8 +23,6 @@ public interface AgentClient {
 
 	Response<Self> getAgentSelf();
 
-	Response<Self> getAgentSelf(String token);
-
 	Response<Void> agentSetMaintenance(boolean maintenanceEnabled);
 
 	Response<Void> agentSetMaintenance(boolean maintenanceEnabled, String reason);
@@ -35,37 +33,23 @@ public interface AgentClient {
 
 	Response<Void> agentCheckRegister(NewCheck newCheck);
 
-	Response<Void> agentCheckRegister(NewCheck newCheck, String token);
-
 	Response<Void> agentCheckDeregister(String checkId);
-
-	Response<Void> agentCheckDeregister(String checkId, String token);
 
 	Response<Void> agentCheckPass(String checkId);
 
 	Response<Void> agentCheckPass(String checkId, String note);
 
-	Response<Void> agentCheckPass(String checkId, String note, String token);
-
 	Response<Void> agentCheckWarn(String checkId);
 
 	Response<Void> agentCheckWarn(String checkId, String note);
-
-	Response<Void> agentCheckWarn(String checkId, String note, String token);
 
 	Response<Void> agentCheckFail(String checkId);
 
 	Response<Void> agentCheckFail(String checkId, String note);
 
-	Response<Void> agentCheckFail(String checkId, String note, String token);
-
 	Response<Void> agentServiceRegister(NewService newService);
 
-	Response<Void> agentServiceRegister(NewService newService, String token);
-
 	Response<Void> agentServiceDeregister(String serviceId);
-
-	Response<Void> agentServiceDeregister(String serviceId, String token);
 
 	Response<Void> agentServiceSetMaintenance(String serviceId, boolean maintenanceEnabled);
 

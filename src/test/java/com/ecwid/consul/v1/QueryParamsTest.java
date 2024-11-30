@@ -1,91 +1,80 @@
 package com.ecwid.consul.v1;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.List;
+import java.time.Duration;
+import java.util.Locale;
+import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.Utils;
-import com.ecwid.consul.v1.QueryParams.Builder;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class QueryParamsTest {
+class QueryParamsTest {
 	@Test
-	public void queryParamsBuilder_ShouldReturnAllDefaults_WhenNoValuesAdded() {
+	void queryParamsBuilder_ShouldReturnAllDefaults_WhenNoValuesAdded() {
 		// Given
-		final ConsistencyMode EXPECTED_MODE = ConsistencyMode.DEFAULT;
-		final long EXPECTED_INDEX = -1;
-		final long EXPECTED_WAIT_TIME = -1;
-		final String EXPECTED_NEAR = null;
+		ConsistencyMode expectedMode = ConsistencyMode.DEFAULT;
+		long expectedIndex = -1;
+		String expectedNear = null;
 
 		// When
-		QueryParams actual = Builder.builder().build();
+		QueryParams actual = new QueryParams.Builder().build();
 
 		// Then
 		assertNull(actual.getDatacenter());
-		assertEquals(actual.getConsistencyMode(), EXPECTED_MODE);
-		assertEquals(actual.getWaitTime(), EXPECTED_WAIT_TIME);
-		assertEquals(actual.getIndex(), EXPECTED_INDEX);
-		assertEquals(actual.getNear(), EXPECTED_NEAR);
+		assertEquals(actual.getConsistencyMode(), expectedMode);
+		assertNull(actual.getWaitTime());
+		assertEquals(actual.getIndex(), expectedIndex);
+		assertEquals(actual.getNear(), expectedNear);
 	}
 
 	@Test
-	public void queryParamsBuilder_ShouldReturnQueryParams_WithCorrectValuesApplied() {
+	void queryParamsBuilder_ShouldReturnQueryParams_WithCorrectValuesApplied() {
 		// Given
-		final String EXPECTED_DATACENTER = "testDC";
-		final ConsistencyMode EXPECTED_MODE = ConsistencyMode.CONSISTENT;
-		final long EXPECTED_INDEX = 100;
-		final long EXPECTED_WAIT_TIME = 10000;
-		final String EXPECTED_NEAR = "_agent";
+		String expectedDatacenter = "testDC";
+		ConsistencyMode expectedMode = ConsistencyMode.CONSISTENT;
+		long expectedIndex = 100;
+		Duration expectedWaitTime = Duration.ofMinutes(10);
+		String expectedNear = "_agent";
 
 		// When
-		QueryParams actual = Builder.builder()
-				.setDatacenter(EXPECTED_DATACENTER)
-				.setConsistencyMode(EXPECTED_MODE)
-				.setWaitTime(EXPECTED_WAIT_TIME)
-				.setIndex(EXPECTED_INDEX)
-				.setNear(EXPECTED_NEAR)
-				.build();
+		QueryParams actual = new QueryParams.Builder().setDatacenter(expectedDatacenter)
+				.setConsistencyMode(expectedMode).setWaitTime(expectedWaitTime).setIndex(expectedIndex)
+				.setNear(expectedNear).build();
 
 		// Then
-		assertEquals(actual.getDatacenter(), EXPECTED_DATACENTER);
-		assertEquals(actual.getConsistencyMode(), EXPECTED_MODE);
-		assertEquals(actual.getIndex(), EXPECTED_INDEX);
-		assertEquals(actual.getWaitTime(), EXPECTED_WAIT_TIME);
-		assertEquals(actual.getNear(), EXPECTED_NEAR);
+		assertEquals(actual.getDatacenter(), expectedDatacenter);
+		assertEquals(actual.getConsistencyMode(), expectedMode);
+		assertEquals(actual.getIndex(), expectedIndex);
+		assertEquals(actual.getWaitTime(), expectedWaitTime);
+		assertEquals(actual.getNear(), expectedNear);
 	}
 
 	@Test
-	public void queryParamsToUrlParameters_ShouldContainSetQueryParams_WithCorrectValuesApplied() {
+	void queryParamsToUrlParameters_ShouldContainSetQueryParams_WithCorrectValuesApplied() {
 		// Given
-		final String EXPECTED_DATACENTER = "testDC";
-		final ConsistencyMode EXPECTED_MODE = ConsistencyMode.CONSISTENT;
-		final long EXPECTED_WAIT = 1000L;
-		final long EXPECTED_INDEX = 2000L;
-		final String EXPECTED_NEAR = "_agent";
+		String expectedDatacenter = "testDC";
+		ConsistencyMode expectedMode = ConsistencyMode.CONSISTENT;
+		Duration expectedWaitTime = Duration.ofMinutes(1);
+		long expectedIndex = 2000L;
+		String expectedNear = "_agent";
 
 		// When
-		List<String> urlParameters = Builder.builder()
-				.setDatacenter(EXPECTED_DATACENTER)
-				.setConsistencyMode(EXPECTED_MODE)
-				.setWaitTime(EXPECTED_WAIT)
-				.setIndex(EXPECTED_INDEX)
-				.setNear(EXPECTED_NEAR)
-				.build()
-				.toUrlParameters();
+		Map<String, String> queryParams = new QueryParams.Builder().setDatacenter(expectedDatacenter)
+				.setConsistencyMode(expectedMode).setWaitTime(expectedWaitTime).setIndex(expectedIndex)
+				.setNear(expectedNear).build().getQueryParameters();
 
 		// Then
-		assertThat(urlParameters, hasItem("dc=" + EXPECTED_DATACENTER));
-		assertThat(urlParameters, hasItem(EXPECTED_MODE.name().toLowerCase()));
-		assertThat(urlParameters, hasItem("wait=" + Utils.toSecondsString(EXPECTED_WAIT)));
-		assertThat(urlParameters, hasItem("index=" + EXPECTED_INDEX));
-		assertThat(urlParameters, hasItem("near=" + EXPECTED_NEAR));
+		assertEquals(expectedDatacenter, queryParams.get("dc"));
+		assertNull(queryParams.get(expectedMode.name().toLowerCase(Locale.ROOT)));
+		assertEquals(Utils.toConsulDuration(expectedWaitTime), queryParams.get("wait"));
+		assertEquals(String.valueOf(expectedIndex), queryParams.get("index"));
+		assertEquals(expectedNear, queryParams.get("near"));
 	}
 
 	@Nested

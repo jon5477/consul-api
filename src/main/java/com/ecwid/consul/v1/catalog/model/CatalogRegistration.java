@@ -2,6 +2,7 @@ package com.ecwid.consul.v1.catalog.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -85,12 +86,9 @@ public class CatalogRegistration {
 
 	public static enum CheckStatus {
 		@JsonProperty("unknown")
-		UNKNOWN, 
-		@JsonProperty("passing")
-		PASSING, 
-		@JsonProperty("warning")
-		WARNING, 
-		@JsonProperty("critical")
+		UNKNOWN, @JsonProperty("passing")
+		PASSING, @JsonProperty("warning")
+		WARNING, @JsonProperty("critical")
 		CRITICAL
 	}
 
@@ -168,39 +166,31 @@ public class CatalogRegistration {
 		}
 	}
 
-	@JsonProperty("Datacenter")
-	private String datacenter;
-
+	@JsonProperty("ID")
+	private UUID id;
 	@JsonProperty("Node")
 	private String node;
-
 	@JsonProperty("Address")
 	private String address;
-
-	@JsonProperty("Service")
-	private Service service;
-
-	@JsonProperty("Check")
-	private Check check;
-
-	@JsonProperty("WriteRequest")
-	private WriteRequest writeRequest;
-
+	@JsonProperty("Datacenter")
+	private String datacenter;
+	@JsonProperty("TaggedAddresses")
+	private Map<String, String> taggedAddresses;
 	@JsonProperty("NodeMeta")
 	private Map<String, String> nodeMeta;
-
+	@JsonProperty("Service")
+	private Service service;
+	@JsonProperty("Check")
+	private Check check;
 	@JsonProperty("SkipNodeUpdate")
 	private boolean skipNodeUpdate;
 
-	@JsonProperty("TaggedAddresses")
-	private Map<String, String> taggedAddresses;
-
-	public String getDatacenter() {
-		return datacenter;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setDatacenter(String datacenter) {
-		this.datacenter = datacenter;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public String getNode() {
@@ -219,6 +209,30 @@ public class CatalogRegistration {
 		this.address = address;
 	}
 
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
+	}
+
+	public Map<String, String> getTaggedAddresses() {
+		return taggedAddresses;
+	}
+
+	public void setTaggedAddresses(Map<String, String> taggedAddresses) {
+		this.taggedAddresses = taggedAddresses;
+	}
+
+	public Map<String, String> getNodeMeta() {
+		return nodeMeta;
+	}
+
+	public void setNodeMeta(Map<String, String> nodeMeta) {
+		this.nodeMeta = nodeMeta;
+	}
+
 	public Service getService() {
 		return service;
 	}
@@ -235,22 +249,6 @@ public class CatalogRegistration {
 		this.check = check;
 	}
 
-	public WriteRequest getWriteRequest() {
-		return writeRequest;
-	}
-
-	public void setWriteRequest(WriteRequest writeRequest) {
-		this.writeRequest = writeRequest;
-	}
-
-	public Map<String, String> getNodeMeta() {
-		return nodeMeta;
-	}
-
-	public void setNodeMeta(Map<String, String> nodeMeta) {
-		this.nodeMeta = nodeMeta;
-	}
-
 	public boolean isSkipNodeUpdate() {
 		return skipNodeUpdate;
 	}
@@ -259,19 +257,10 @@ public class CatalogRegistration {
 		this.skipNodeUpdate = skipNodeUpdate;
 	}
 
-	public Map<String, String> getTaggedAddresses() {
-		return taggedAddresses;
-	}
-
-	public void setTaggedAddresses(Map<String, String> taggedAddresses) {
-		this.taggedAddresses = taggedAddresses;
-	}
-
 	@Override
 	public String toString() {
-		return "CatalogRegistration{" + "datacenter='" + datacenter + '\'' + ", node='" + node + '\'' + ", address='"
-				+ address + '\'' + ", service=" + service + ", check=" + check + ", writeRequest=" + writeRequest
-				+ ", nodeMeta=" + nodeMeta + ", skipNodeUpdate=" + skipNodeUpdate + ", taggedAddresses="
-				+ taggedAddresses + '}';
+		return "CatalogRegistration [id=" + id + ", node=" + node + ", address=" + address + ", datacenter="
+				+ datacenter + ", taggedAddresses=" + taggedAddresses + ", nodeMeta=" + nodeMeta + ", service="
+				+ service + ", check=" + check + ", skipNodeUpdate=" + skipNodeUpdate + "]";
 	}
 }

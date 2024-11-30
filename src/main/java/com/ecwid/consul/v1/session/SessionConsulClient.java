@@ -2,12 +2,13 @@ package com.ecwid.consul.v1.session;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.ecwid.consul.ConsulException;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.json.JsonFactory;
-import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.json.JsonUtil;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -20,38 +21,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class SessionConsulClient implements SessionClient {
+	private static final TypeReference<List<Session>> SESSION_LIST_TYPE_REF = new TypeReference<List<Session>>() {
+	};
+	private static final TypeReference<Map<String, String>> STRING_MAP_TYPE_REF = new TypeReference<Map<String, String>>() {
+	};
 	private final ConsulRawClient rawClient;
 
-	public SessionConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public SessionConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public SessionConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public SessionConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
+	public SessionConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override
 	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams) {
-		return sessionCreate(newSession, queryParams, null);
-	}
-
-	@Override
-	public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		String json = JsonFactory.toJson(newSession);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/create", json, queryParams, tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/session/create", JsonUtil.toBytes(newSession),
+				queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, String> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, String>>() {
-					});
+			Map<String, String> value = JsonUtil.toPOJO(httpResponse.getContent(), STRING_MAP_TYPE_REF);
 			return new Response<>(value.get("ID"), httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -60,14 +45,7 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Void> sessionDestroy(String session, QueryParams queryParams) {
-		return sessionDestroy(session, queryParams, null);
-	}
-
-	@Override
-	public Response<Void> sessionDestroy(String session, QueryParams queryParams, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/destroy/" + session, "", queryParams,
-				tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/session/destroy/" + session, null, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -77,17 +55,9 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<Session> getSessionInfo(String session, QueryParams queryParams) {
-		return getSessionInfo(session, queryParams, null);
-	}
-
-	@Override
-	public Response<Session> getSessionInfo(String session, QueryParams queryParams, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/info/" + session, queryParams, tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/info/" + session, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			if (value == null || value.isEmpty()) {
 				return new Response<>(null, httpResponse);
 			} else if (value.size() == 1) {
@@ -102,17 +72,9 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams) {
-		return getSessionNode(node, queryParams, null);
-	}
-
-	@Override
-	public Response<List<Session>> getSessionNode(String node, QueryParams queryParams, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/node/" + node, queryParams, tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/node/" + node, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -121,36 +83,20 @@ public final class SessionConsulClient implements SessionClient {
 
 	@Override
 	public Response<List<Session>> getSessionList(QueryParams queryParams) {
-		return getSessionList(queryParams, null);
-	}
-
-	@Override
-	public Response<List<Session>> getSessionList(QueryParams queryParams, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/list", queryParams, tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/session/list", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
 	}
 
-	public Response<Session> renewSession(String session, QueryParams queryParams) {
-		return renewSession(session, queryParams, null);
-	}
-
 	@Override
-	public Response<Session> renewSession(String session, QueryParams queryParams, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/session/renew/" + session, "", queryParams,
-				tokenParam);
+	public Response<Session> renewSession(String session, QueryParams queryParams) {
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/session/renew/" + session, null, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Session> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Session>>() {
-					});
+			List<Session> value = JsonUtil.toPOJO(httpResponse.getContent(), SESSION_LIST_TYPE_REF);
 			if (value.size() == 1) {
 				return new Response<>(value.get(0), httpResponse);
 			} else {

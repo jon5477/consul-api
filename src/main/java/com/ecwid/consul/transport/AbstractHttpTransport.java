@@ -1,156 +1,189 @@
 package com.ecwid.consul.transport;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.classic.methods.HttpDelete;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.classic.methods.HttpPut;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.util.Timeout;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ecwid.consul.ConsulException;
+import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.TimedOutException;
+import com.ecwid.consul.v1.QueryParams;
+import com.ecwid.consul.v1.Request;
 
-public abstract class AbstractHttpTransport implements HttpTransport {
+/**
+ * The HTTP transport code that interfaces with the underlying Java
+ * {@link HttpClient}.
+ * 
+ * The following modifications were made from the original APL 2.0 code:
+ * <ul>
+ * <li>Migration from Apache HTTPClient 4.x to Java {@link HttpClient}</li>
+ * <li>Added code for building {@link HttpRequest}s.</li>
+ * </ul>
+ * 
+ * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ * 
+ */
+abstract class AbstractHttpTransport implements HttpTransport {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpTransport.class);
-	static final int DEFAULT_MAX_CONNECTIONS = 1000;
-	static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 500;
-	static final Timeout DEFAULT_CONNECTION_TIMEOUT = Timeout.ofSeconds(10);
+
 	/**
-	 * 10 minutes for read timeout due to blocking queries timeout
+	 * Makes a HTTP request to the given Consul Agent {@link URI} with the specified
+	 * {@link HttpMethod} and {@link Request}.
 	 * 
-	 * @see https://www.consul.io/api/index.html#blocking-queries
+	 * @param agentUri The Consul Agent {@link URI}.
+	 * @param method   The HTTP method to use.
+	 * @param request  The {@link Request} to make.
+	 * @return The {@link ConsulHttpResponse} from the given API.
+	 * @throws TimedOutException If the request timed-out, this can happen due to a
+	 *                           {@link Thread#interrupt()} or an
+	 *                           {@link InterruptedException}.
 	 */
-	static final Timeout DEFAULT_READ_TIMEOUT = Timeout.ofMinutes(10);
-
 	@Override
-	public HttpResponse makeGetRequest(HttpRequest request) {
-		HttpGet httpGet = new HttpGet(request.getUrl());
-		addHeadersToRequest(httpGet, request.getHeaders());
-		return executeRequest(httpGet);
-	}
-
-	@Override
-	public HttpResponse makePutRequest(HttpRequest request) {
-		HttpPut httpPut = new HttpPut(request.getUrl());
-		addHeadersToRequest(httpPut, request.getHeaders());
-		if (request.getContent() != null) {
-			httpPut.setEntity(new StringEntity(request.getContent(), StandardCharsets.UTF_8));
-		} else if (request.getBinaryContent() != null) {
-			httpPut.setEntity(new ByteArrayEntity(request.getBinaryContent(), null));
+	public final ConsulHttpResponse makeRequest(@NonNull URI agentUri, @NonNull HttpMethod method,
+			@NonNull Request request) throws TimedOutException {
+		Objects.requireNonNull(agentUri, "agent URI cannot be null");
+		Objects.requireNonNull(method, "HTTP method cannot be null");
+		Objects.requireNonNull(request, "request cannot be null");
+		Map<String, String> allQueryParams = getAllQueryParameters(request);
+		// Grab the full URI that the HTTP client will make a request to
+		URI reqUri = buildURI(agentUri, request.getEndpoint(), allQueryParams);
+		HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(reqUri);
+		// Set the timeout on this request - dependent on the "wait" query parameter
+		if (allQueryParams.containsKey("wait")) {
+			// TODO This should be adjusted to the duration on the wait parameter + 1 second
+			reqBuilder.timeout(QueryParams.MAX_WAIT_TIME);
+		} else {
+			reqBuilder.timeout(ClientUtils.DEFAULT_REQUEST_TIMEOUT);
 		}
-		return executeRequest(httpPut);
-	}
-
-	@Override
-	public HttpResponse makeDeleteRequest(HttpRequest request) {
-		HttpDelete httpDelete = new HttpDelete(request.getUrl());
-		addHeadersToRequest(httpDelete, request.getHeaders());
-		return executeRequest(httpDelete);
+		// Add HTTP headers to the request
+		HttpUtils.addHeadersToRequest(reqBuilder, request.getToken(), request.getHeaders());
+		// Specify the HTTP method and body
+		switch (method) {
+			case GET:
+				reqBuilder.GET();
+				break;
+			case DELETE:
+				reqBuilder.DELETE();
+				break;
+			case PUT:
+			default: // Gracefully handle "default" case :)
+				if (request.getContent() != null) {
+					String contentType = Optional.ofNullable(request.getContentType()).orElse("application/json");
+					reqBuilder.header("Content-Type", contentType).method(method.name(),
+							BodyPublishers.ofByteArray(request.getContent()));
+				} else {
+					reqBuilder.method(method.name(), BodyPublishers.noBody());
+				}
+				break;
+		}
+		return executeRequest(reqBuilder.build());
 	}
 
 	/**
-	 * You should override this method to instantiate ready to use HttpClient
-	 *
-	 * @return HttpClient
+	 * Constructs the given HTTP request from the {@link Request} instance and sends
+	 * it to the Consul API.
+	 * 
+	 * @param request The {@link HttpRequest} instance to use for making the HTTP
+	 *                request.
+	 * @return A {@link ConsulHttpResponse} from the Consul API.
+	 * @throws TimedOutException  If the request timed-out, this can happen due to a
+	 *                            {@link Thread#interrupt()} or an
+	 *                            {@link InterruptedException}.
+	 * @throws TransportException If an {@link IOException} occurs while performing
+	 *                            the request.
 	 */
-	protected abstract HttpClient getHttpClient();
-
-	private HttpResponse executeRequest(HttpUriRequest httpRequest) {
-		if (LOGGER.isTraceEnabled()) {
-			logRequest(httpRequest);
-		}
+	private ConsulHttpResponse executeRequest(@NonNull HttpRequest request) {
+		logRequest(request);
 		try {
-			return getHttpClient().execute(httpRequest, response -> {
-				int statusCode = response.getCode();
-				String statusMessage = response.getReasonPhrase();
-				String content = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-				Long consulIndex = parseUnsignedLong(response.getFirstHeader("X-Consul-Index"));
-				Boolean consulKnownLeader = parseBoolean(response.getFirstHeader("X-Consul-Knownleader"));
-				Long consulLastContact = parseUnsignedLong(response.getFirstHeader("X-Consul-Lastcontact"));
-				return new HttpResponse(statusCode, statusMessage, content, consulIndex, consulKnownLeader,
-						consulLastContact);
-			});
+			HttpResponse<InputStream> response = getHttpClient().send(request, BodyHandlers.ofInputStream());
+			return HttpUtils.parseResponse(response);
+		} catch (InterruptedException e) {
+			// propagate the interrupt signal
+			Thread.currentThread().interrupt();
+			// throw this custom exception so clients can handle it
+			throw new TimedOutException(e);
 		} catch (IOException e) {
 			throw new TransportException(e);
 		}
 	}
 
-	private Long parseUnsignedLong(Header header) {
-		if (header == null) {
-			return null;
+	@NonNull
+	private Map<String, String> getAllQueryParameters(@NonNull Request request) {
+		Map<String, String> queryParams = new HashMap<>();
+		// read the normal query parameters
+		for (QueryParameters params : request.getQueryParameters()) {
+			queryParams.putAll(params.getQueryParameters());
 		}
-		String value = header.getValue();
-		if (value == null) {
-			return null;
-		}
+		// read the extra query parameters (these take precedence)
+		queryParams.putAll(request.getExtraQueryParameters());
+		return queryParams;
+	}
+
+	/**
+	 * Creates a full {@link URI} to the Consul API endpoint.
+	 * 
+	 * @param agentUri    The {@link URI} to the Consul agent.
+	 * @param endpoint    The Consul API endpoint to use.
+	 * @param queryParams The {@link Map} of key-value query parameters to include.
+	 * @return The {@link URI} to the Consul API endpoint including query
+	 *         parameters.
+	 */
+	private URI buildURI(@NonNull URI agentUri, @NonNull String endpoint, @NonNull Map<String, String> queryParams) {
+		Objects.requireNonNull(agentUri, "agent URI cannot be null");
+		Objects.requireNonNull(endpoint, "API endpoint cannot be null");
 		try {
-			return Long.parseUnsignedLong(value);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	private Boolean parseBoolean(Header header) {
-		if (header == null) {
-			return null;
-		}
-		if ("true".equals(header.getValue())) {
-			return true;
-		}
-		if ("false".equals(header.getValue())) {
-			return false;
-		}
-		return null;
-	}
-
-	private void addHeadersToRequest(HttpUriRequestBase request, Map<String, String> headers) {
-		if (headers == null) {
-			return;
-		}
-		for (Map.Entry<String, String> headerValue : headers.entrySet()) {
-			String name = headerValue.getKey();
-			String value = headerValue.getValue();
-			request.addHeader(name, value);
-		}
-	}
-
-	private void logRequest(HttpUriRequest httpRequest) {
-		StringBuilder sb = new StringBuilder();
-		// method
-		sb.append(httpRequest.getMethod());
-		sb.append(" ");
-		// url
-		try {
-			sb.append(httpRequest.getUri());
+			URLEncoder.encode(endpoint, StandardCharsets.UTF_8);
+			String queryStr = queryParams.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
+					.collect(Collectors.joining("&"));
+			String query = !queryStr.isEmpty() ? queryStr : null;
+			return new URI(agentUri.getScheme(), agentUri.getUserInfo(), agentUri.getHost(), agentUri.getPort(),
+					agentUri.getPath() + endpoint, query, null);
 		} catch (URISyntaxException e) {
 			throw new ConsulException(e);
 		}
-		sb.append(" ");
-		// headers, if any
-		Iterator<Header> iterator = httpRequest.headerIterator();
-		if (iterator.hasNext()) {
-			sb.append("Headers:[");
-			Header header = iterator.next();
-			sb.append(header.getName()).append("=").append(header.getValue());
-			while (iterator.hasNext()) {
-				header = iterator.next();
-				sb.append(header.getName()).append("=").append(header.getValue());
-				sb.append(";");
+	}
+
+	private void logRequest(@NonNull HttpRequest request) {
+		if (LOGGER.isTraceEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			// method
+			sb.append(request.method()).append(' ').append(request.uri()).append(' ');
+			// headers, if any
+			HttpHeaders headers = request.headers();
+			if (!headers.map().isEmpty()) {
+				sb.append("Headers:[");
+				for (Iterator<Entry<String, List<String>>> i = headers.map().entrySet().iterator(); i.hasNext();) {
+					Entry<String, List<String>> header = i.next();
+					sb.append(header.getKey()).append('=').append(header.getValue().get(0));
+					if (i.hasNext()) {
+						sb.append("; ");
+					}
+				}
+				sb.append("] ");
 			}
-			sb.append("] ");
+			LOGGER.trace(sb.toString());
 		}
-		LOGGER.trace(sb.toString());
 	}
 }

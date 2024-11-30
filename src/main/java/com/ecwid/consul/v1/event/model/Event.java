@@ -1,5 +1,9 @@
 package com.ecwid.consul.v1.event.model;
 
+import java.util.Objects;
+import java.util.UUID;
+
+import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -7,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Event {
 	@JsonProperty("ID")
-	private String id;
+	private UUID id;
 
 	@JsonProperty("Name")
 	private String name;
@@ -30,11 +34,11 @@ public class Event {
 	@JsonProperty("LTime")
 	private int lTime;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -95,41 +99,41 @@ public class Event {
 	}
 
 	/**
-	 * Converted from https://github.com/hashicorp/consul/blob/master/api/event.go#L90-L104
-	 * This is a hack. It simulates the index generation to convert an event ID into a WaitIndex.
-	 *
-	 * @return a Wait Index value suitable for passing in to {@link com.ecwid.consul.v1.QueryParams}
-	 * for blocking eventList calls.
+	 * Generates a wait index that matches the behavior of Consul's index
+	 * generation.
+	 * 
+	 * @deprecated Use {@link Utils#getWaitIndex(UUID)} with this Event ID.
+	 * @return The Consul wait index to use.
 	 */
+	@Deprecated(since = "2.0.0", forRemoval = true)
 	public long getWaitIndex() {
-		if (id == null || id.length() != 36) {
-			return 0;
+		return Utils.getWaitIndex(id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, lTime, name, nodeFilter, payload, serviceFilter, tagFilter, version);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
 		}
-		long lower = 0, upper = 0;
-		for (int i = 0; i < 18; i++) {
-			if (i != 8 && i != 13) {
-				lower = lower * 16 + Character.digit(id.charAt(i), 16);
-			}
+		if (!(obj instanceof Event)) {
+			return false;
 		}
-		for (int i = 19; i < 36; i++) {
-			if (i != 23) {
-				upper = upper * 16 + Character.digit(id.charAt(i), 16);
-			}
-		}
-		return lower ^ upper;
+		Event other = (Event) obj;
+		return Objects.equals(id, other.id) && lTime == other.lTime && Objects.equals(name, other.name)
+				&& Objects.equals(nodeFilter, other.nodeFilter) && Objects.equals(payload, other.payload)
+				&& Objects.equals(serviceFilter, other.serviceFilter) && Objects.equals(tagFilter, other.tagFilter)
+				&& version == other.version;
 	}
 
 	@Override
 	public String toString() {
-		return "Event{" +
-				"id='" + id + '\'' +
-				", name='" + name + '\'' +
-				", payload='" + payload + '\'' +
-				", nodeFilter='" + nodeFilter + '\'' +
-				", serviceFilter='" + serviceFilter + '\'' +
-				", tagFilter='" + tagFilter + '\'' +
-				", version=" + version +
-				", lTime=" + lTime +
-				'}';
+		return "Event [id=" + id + ", name=" + name + ", payload=" + payload + ", nodeFilter=" + nodeFilter
+				+ ", serviceFilter=" + serviceFilter + ", tagFilter=" + tagFilter + ", version=" + version + ", lTime="
+				+ lTime + "]";
 	}
 }

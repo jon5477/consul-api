@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Session {
-	public static enum Behavior {
+	public enum Behavior {
 		@JsonProperty("release")
 		RELEASE,
 

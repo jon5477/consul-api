@@ -13,25 +13,13 @@ import com.ecwid.consul.v1.session.model.Session;
 public interface SessionClient {
 	Response<String> sessionCreate(NewSession newSession, QueryParams queryParams);
 
-	Response<String> sessionCreate(NewSession newSession, QueryParams queryParams, String token);
-
 	Response<Void> sessionDestroy(String session, QueryParams queryParams);
-
-	Response<Void> sessionDestroy(String session, QueryParams queryParams, String token);
 
 	Response<Session> getSessionInfo(String session, QueryParams queryParams);
 
-	Response<Session> getSessionInfo(String session, QueryParams queryParams, String token);
-
 	Response<List<Session>> getSessionNode(String node, QueryParams queryParams);
-
-	Response<List<Session>> getSessionNode(String node, QueryParams queryParams, String token);
 
 	Response<List<Session>> getSessionList(QueryParams queryParams);
 
-	Response<List<Session>> getSessionList(QueryParams queryParams, String token);
-
 	Response<Session> renewSession(String session, QueryParams queryParams);
-
-	Response<Session> renewSession(String session, QueryParams queryParams, String token);
 }

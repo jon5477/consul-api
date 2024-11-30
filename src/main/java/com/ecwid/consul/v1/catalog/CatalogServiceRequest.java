@@ -1,88 +1,50 @@
 package com.ecwid.consul.v1.catalog;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ecwid.consul.ConsulRequest;
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.v1.NodeMetaParameters;
+import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.v1.Filter;
 import com.ecwid.consul.v1.QueryParams;
-import com.ecwid.consul.v1.TagsParameters;
 
-public final class CatalogServiceRequest implements ConsulRequest {
+public final class CatalogServiceRequest implements QueryParameters {
 	private final String datacenter;
-	private final String[] tags;
 	private final String near;
-	private final Map<String, String> nodeMeta;
+	private final Filter filter;
 	private final QueryParams queryParams;
-	private final String token;
 
-	private CatalogServiceRequest(String datacenter, String[] tags, String near, Map<String, String> nodeMeta,
-			QueryParams queryParams, String token) {
+	private CatalogServiceRequest(String datacenter, String near, Filter filter, QueryParams queryParams) {
 		this.datacenter = datacenter;
-		this.tags = tags;
 		this.near = near;
-		this.nodeMeta = nodeMeta;
+		this.filter = filter;
 		this.queryParams = queryParams;
-		this.token = token;
 	}
 
 	public String getDatacenter() {
 		return datacenter;
 	}
 
-	public String getTag() {
-		return tags != null && tags.length > 0 ? tags[0] : null;
-	}
-
-	public String[] getTags() {
-		return tags;
-	}
-
 	public String getNear() {
 		return near;
 	}
 
-	public Map<String, String> getNodeMeta() {
-		return nodeMeta;
+	public Filter getFilter() {
+		return filter;
 	}
 
 	public QueryParams getQueryParams() {
 		return queryParams;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
 	public static class Builder {
 		private String datacenter;
-		private String[] tags;
 		private String near;
-		private Map<String, String> nodeMeta;
+		private Filter filter;
 		private QueryParams queryParams;
-		private String token;
-
-		private Builder() {
-		}
 
 		public Builder setDatacenter(String datacenter) {
 			this.datacenter = datacenter;
-			return this;
-		}
-
-		public Builder setTag(String tag) {
-			this.tags = new String[] { tag };
-			return this;
-		}
-
-		public Builder setTags(String[] tags) {
-			this.tags = tags;
 			return this;
 		}
 
@@ -91,13 +53,8 @@ public final class CatalogServiceRequest implements ConsulRequest {
 			return this;
 		}
 
-		public Builder setNodeMeta(Map<String, String> nodeMeta) {
-			if (nodeMeta == null) {
-				this.nodeMeta = null;
-			} else {
-				this.nodeMeta = Collections.unmodifiableMap(nodeMeta);
-			}
-
+		public Builder setFilters(Filter filter) {
+			this.filter = filter;
 			return this;
 		}
 
@@ -106,59 +63,44 @@ public final class CatalogServiceRequest implements ConsulRequest {
 			return this;
 		}
 
-		public Builder setToken(String token) {
-			this.token = token;
-			return this;
-		}
-
 		public CatalogServiceRequest build() {
-			return new CatalogServiceRequest(datacenter, tags, near, nodeMeta, queryParams, token);
+			return new CatalogServiceRequest(datacenter, near, filter, queryParams);
 		}
-	}
-
-	public static Builder newBuilder() {
-		return new Builder();
 	}
 
 	@Override
-	public List<UrlParameters> asUrlParameters() {
-		List<UrlParameters> params = new ArrayList<>();
+	public Map<String, String> getQueryParameters() {
+		Map<String, String> params = new HashMap<>();
 		if (datacenter != null) {
-			params.add(new SingleUrlParameters("dc", datacenter));
-		}
-		if (tags != null) {
-			params.add(new TagsParameters(tags));
+			params.put("dc", datacenter);
 		}
 		if (near != null) {
-			params.add(new SingleUrlParameters("near", near));
+			params.put("near", near);
 		}
-		if (nodeMeta != null) {
-			params.add(new NodeMetaParameters(nodeMeta));
+		if (filter != null) {
+			params.put("filter", filter.toString());
 		}
 		if (queryParams != null) {
-			params.add(queryParams);
+			params.putAll(queryParams.getQueryParameters());
 		}
 		return params;
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof CatalogServiceRequest)) {
-			return false;
-		}
-		CatalogServiceRequest that = (CatalogServiceRequest) o;
-		return Objects.equals(datacenter, that.datacenter) && Arrays.equals(tags, that.tags)
-				&& Objects.equals(near, that.near) && Objects.equals(nodeMeta, that.nodeMeta)
-				&& Objects.equals(queryParams, that.queryParams) && Objects.equals(token, that.token);
+	public int hashCode() {
+		return Objects.hash(datacenter, filter, near, queryParams);
 	}
 
 	@Override
-	public int hashCode() {
-		int result = Objects.hash(datacenter, near, nodeMeta, queryParams, token);
-		result = 31 * result + Arrays.hashCode(tags);
-		return result;
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CatalogServiceRequest)) {
+			return false;
+		}
+		CatalogServiceRequest other = (CatalogServiceRequest) obj;
+		return Objects.equals(datacenter, other.datacenter) && Objects.equals(filter, other.filter)
+				&& Objects.equals(near, other.near) && Objects.equals(queryParams, other.queryParams);
 	}
 }

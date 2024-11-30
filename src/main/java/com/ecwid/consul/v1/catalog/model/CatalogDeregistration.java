@@ -6,20 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogDeregistration {
-	@JsonProperty("Datacenter")
-	private String datacenter;
-
 	@JsonProperty("Node")
 	private String node;
-
+	@JsonProperty("Datacenter")
+	private String datacenter;
 	@JsonProperty("CheckID")
 	private String checkId;
-
 	@JsonProperty("ServiceID")
 	private String serviceId;
-
-	@JsonProperty("WriteRequest")
-	private WriteRequest writeRequest;
 
 	public String getDatacenter() {
 		return datacenter;
@@ -53,17 +47,9 @@ public class CatalogDeregistration {
 		this.serviceId = serviceId;
 	}
 
-	public WriteRequest getWriteRequest() {
-		return writeRequest;
-	}
-
-	public void setWriteRequest(WriteRequest writeRequest) {
-		this.writeRequest = writeRequest;
-	}
-
 	@Override
 	public String toString() {
 		return "CatalogDeregistration{" + "datacenter='" + datacenter + '\'' + ", node='" + node + '\'' + ", checkId='"
-				+ checkId + '\'' + ", serviceId='" + serviceId + '\'' + ", writeRequest=" + writeRequest + '}';
+				+ checkId + '\'' + ", serviceId='" + serviceId + "'}";
 	}
 }

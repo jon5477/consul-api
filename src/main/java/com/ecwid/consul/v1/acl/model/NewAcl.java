@@ -3,6 +3,7 @@ package com.ecwid.consul.v1.acl.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,7 +16,7 @@ public final class NewAcl {
 	@JsonProperty("AccessorID")
 	private String accessorId;
 	@JsonProperty("SecretID")
-	private String secretId;
+	private CharSequence secretId;
 	@JsonProperty("Description")
 	private String description;
 	@JsonProperty("Policies")
@@ -43,11 +44,11 @@ public final class NewAcl {
 		this.accessorId = accessorId;
 	}
 
-	public final String getSecretId() {
+	public final CharSequence getSecretId() {
 		return secretId;
 	}
 
-	public final void setSecretId(String secretId) {
+	public final void setSecretId(CharSequence secretId) {
 		this.secretId = secretId;
 	}
 
@@ -142,16 +143,16 @@ public final class NewAcl {
 				&& Objects.equals(expirationTime, other.expirationTime)
 				&& Objects.equals(expirationTtl, other.expirationTtl) && local == other.local
 				&& Objects.equals(nodeIdentities, other.nodeIdentities) && Objects.equals(policies, other.policies)
-				&& Objects.equals(roles, other.roles) && Objects.equals(secretId, other.secretId)
+				&& Objects.equals(roles, other.roles) && Utils.charSequenceEquals(secretId, other.secretId)
 				&& Objects.equals(serviceIdentities, other.serviceIdentities)
 				&& Objects.equals(templatedPolicies, other.templatedPolicies);
 	}
 
 	@Override
 	public final String toString() {
-		return "NewAcl [accessorId=" + accessorId + ", secretId=" + secretId + ", description=" + description
-				+ ", policies=" + policies + ", roles=" + roles + ", templatedPolicies=" + templatedPolicies
-				+ ", serviceIdentities=" + serviceIdentities + ", nodeIdentities=" + nodeIdentities + ", local=" + local
-				+ ", expirationTime=" + expirationTime + ", expirationTtl=" + expirationTtl + "]";
+		return "NewAcl [accessorId=" + accessorId + ", description=" + description + ", policies=" + policies
+				+ ", roles=" + roles + ", templatedPolicies=" + templatedPolicies + ", serviceIdentities="
+				+ serviceIdentities + ", nodeIdentities=" + nodeIdentities + ", local=" + local + ", expirationTime="
+				+ expirationTime + ", expirationTtl=" + expirationTtl + "]";
 	}
 }

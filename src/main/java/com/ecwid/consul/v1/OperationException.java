@@ -1,46 +1,43 @@
 package com.ecwid.consul.v1;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import com.ecwid.consul.ConsulException;
-import com.ecwid.consul.transport.HttpResponse;
+import com.ecwid.consul.transport.ConsulHttpResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ *
  */
 public final class OperationException extends ConsulException {
 	private static final long serialVersionUID = 7189026270432209391L;
 	private final int statusCode;
-	private final String statusMessage;
-	private final String statusContent;
+	private final transient JsonNode statusContent;
 
-	public OperationException(int statusCode, String statusMessage, String statusContent) {
-		super("OperationException(statusCode=" + statusCode + ", statusMessage='" + statusMessage + "', statusContent='" + statusContent + "')");
+	public OperationException(int statusCode, @Nullable JsonNode statusContent) {
+		super("Consul operation exception; HTTP Status: " + statusCode);
 		this.statusCode = statusCode;
-		this.statusMessage = statusMessage;
 		this.statusContent = statusContent;
 	}
 
-	public OperationException(HttpResponse httpResponse) {
-		this(httpResponse.getStatusCode(), httpResponse.getStatusMessage(), httpResponse.getContent());
+	public OperationException(@NonNull ConsulHttpResponse httpResponse) {
+		this(httpResponse.getStatusCode(), httpResponse.getContent());
 	}
 
-	public int getStatusCode() {
+	public final int getStatusCode() {
 		return statusCode;
 	}
 
-	public String getStatusMessage() {
-		return statusMessage;
-	}
-
-	public String getStatusContent() {
+	@Nullable
+	public final JsonNode getStatusContent() {
 		return statusContent;
 	}
 
 	@Override
-	public String toString() {
-		return "OperationException{" +
-				"statusCode=" + statusCode +
-				", statusMessage='" + statusMessage + '\'' +
-				", statusContent='" + statusContent + '\'' +
-				'}';
+	public final String toString() {
+		return "OperationException [statusCode=" + statusCode + ", statusContent=" + statusContent + "]";
 	}
 }

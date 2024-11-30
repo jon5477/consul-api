@@ -2,14 +2,17 @@ package com.ecwid.consul.v1.agent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import com.ecwid.consul.SingleUrlParameters;
-import com.ecwid.consul.UrlParameters;
-import com.ecwid.consul.json.JsonFactory;
-import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.SingleQueryParameters;
+import com.ecwid.consul.json.JsonUtil;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
+import com.ecwid.consul.v1.Request;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.agent.model.Check;
 import com.ecwid.consul.v1.agent.model.Member;
@@ -23,43 +26,23 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class AgentConsulClient implements AgentClient {
+	private static final TypeReference<Map<String, Check>> CHECK_MAP_TYPE_REF = new TypeReference<Map<String, Check>>() {
+	};
+	private static final TypeReference<Map<String, Service>> SERVICE_MAP_TYPE_REF = new TypeReference<Map<String, Service>>() {
+	};
+	private static final TypeReference<List<Member>> MEMBER_LIST_TYPE_REF = new TypeReference<List<Member>>() {
+	};
 	private final ConsulRawClient rawClient;
 
-	public AgentConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public AgentConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public AgentConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public AgentConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public AgentConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public AgentConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
-	}
-
-	public AgentConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public AgentConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override
 	public Response<Map<String, Check>> getAgentChecks() {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/checks");
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/checks");
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, Check> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, Check>>() {
-					});
+			Map<String, Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_MAP_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -68,11 +51,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Map<String, Service>> getAgentServices() {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/services");
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/services");
 		if (httpResponse.getStatusCode() == 200) {
-			Map<String, Service> agentServices = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<Map<String, Service>>() {
-					});
+			Map<String, Service> agentServices = JsonUtil.toPOJO(httpResponse.getContent(), SERVICE_MAP_TYPE_REF);
 			return new Response<>(agentServices, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -81,11 +62,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<List<Member>> getAgentMembers() {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/members");
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/members");
 		if (httpResponse.getStatusCode() == 200) {
-			List<Member> members = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<Member>>() {
-					});
+			List<Member> members = JsonUtil.toPOJO(httpResponse.getContent(), MEMBER_LIST_TYPE_REF);
 			return new Response<>(members, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -94,15 +73,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Self> getAgentSelf() {
-		return getAgentSelf(null);
-	}
-
-	@Override
-	public Response<Self> getAgentSelf(String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/self", tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/self");
 		if (httpResponse.getStatusCode() == 200) {
-			Self self = JsonFactory.fromJson(httpResponse.getContent(), Self.class);
+			Self self = JsonUtil.toPOJO(httpResponse.getContent(), Self.class);
 			return new Response<>(self, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -116,10 +89,11 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentSetMaintenance(boolean maintenanceEnabled, String reason) {
-		UrlParameters maintenanceParameter = new SingleUrlParameters("enable", Boolean.toString(maintenanceEnabled));
-		UrlParameters reasonParamenter = reason != null ? new SingleUrlParameters("reason", reason) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/maintenance", "", maintenanceParameter,
-				reasonParamenter);
+		QueryParameters maintenanceParameter = new SingleQueryParameters("enable",
+				Boolean.toString(maintenanceEnabled));
+		QueryParameters reasonParameter = reason != null ? new SingleQueryParameters("reason", reason) : null;
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/maintenance", null, maintenanceParameter,
+				reasonParameter);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -129,8 +103,8 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentJoin(String address, boolean wan) {
-		UrlParameters wanParams = wan ? new SingleUrlParameters("wan", "1") : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/join/" + address, "", wanParams);
+		QueryParameters wanParams = wan ? new SingleQueryParameters("wan", "1") : null;
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/join/" + address, null, wanParams);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -140,7 +114,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentForceLeave(String node) {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/force-leave/" + node, "");
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/force-leave/" + node, null);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -150,14 +124,8 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckRegister(NewCheck newCheck) {
-		return agentCheckRegister(newCheck, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckRegister(NewCheck newCheck, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		String json = JsonFactory.toJson(newCheck);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register", json, tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/register",
+				JsonUtil.toBytes(newCheck));
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -167,14 +135,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckDeregister(String checkId) {
-		return agentCheckDeregister(checkId, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckDeregister(String checkId, String token) {
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/deregister/" + checkId, "",
-				tokenParameter);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/deregister/" + checkId, null);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -189,15 +150,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckPass(String checkId, String note) {
-		return agentCheckPass(checkId, note, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckPass(String checkId, String note, String token) {
-		UrlParameters noteParameter = note != null ? new SingleUrlParameters("note", note) : null;
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/pass/" + checkId, "", noteParameter,
-				tokenParameter);
+		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/pass/" + checkId, null,
+				noteParameter);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -212,15 +167,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckWarn(String checkId, String note) {
-		return agentCheckWarn(checkId, note, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckWarn(String checkId, String note, String token) {
-		UrlParameters noteParameter = note != null ? new SingleUrlParameters("note", note) : null;
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/warn/" + checkId, "", noteParameter,
-				tokenParameter);
+		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/warn/" + checkId, null,
+				noteParameter);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -235,15 +184,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentCheckFail(String checkId, String note) {
-		return agentCheckFail(checkId, note, null);
-	}
-
-	@Override
-	public Response<Void> agentCheckFail(String checkId, String note, String token) {
-		UrlParameters noteParameter = note != null ? new SingleUrlParameters("note", note) : null;
-		UrlParameters tokenParameter = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/fail/" + checkId, "", noteParameter,
-				tokenParameter);
+		QueryParameters noteParameter = note != null ? new SingleQueryParameters("note", note) : null;
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/check/fail/" + checkId, null,
+				noteParameter);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -253,14 +196,9 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceRegister(NewService newService) {
-		return agentServiceRegister(newService, null);
-	}
-
-	@Override
-	public Response<Void> agentServiceRegister(NewService newService, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		String json = JsonFactory.toJson(newService);
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/register", json, tokenParam);
+		Request.Builder request = new Request.Builder("/v1/agent/service/register")
+				.setContent(JsonUtil.toBytes(newService));
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest(request.build());
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -270,14 +208,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceDeregister(String serviceId) {
-		return agentServiceDeregister(serviceId, null);
-	}
-
-	@Override
-	public Response<Void> agentServiceDeregister(String serviceId, String token) {
-		UrlParameters tokenParam = token != null ? new SingleUrlParameters("token", token) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/deregister/" + serviceId, "",
-				tokenParam);
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/deregister/" + serviceId, null);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {
@@ -292,9 +223,10 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentServiceSetMaintenance(String serviceId, boolean maintenanceEnabled, String reason) {
-		UrlParameters maintenanceParameter = new SingleUrlParameters("enable", Boolean.toString(maintenanceEnabled));
-		UrlParameters reasonParameter = reason != null ? new SingleUrlParameters("reason", reason) : null;
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/maintenance/" + serviceId, "",
+		QueryParameters maintenanceParameter = new SingleQueryParameters("enable",
+				Boolean.toString(maintenanceEnabled));
+		QueryParameters reasonParameter = reason != null ? new SingleQueryParameters("reason", reason) : null;
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/service/maintenance/" + serviceId, null,
 				maintenanceParameter, reasonParameter);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
@@ -305,7 +237,7 @@ public final class AgentConsulClient implements AgentClient {
 
 	@Override
 	public Response<Void> agentReload() {
-		HttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/reload", "");
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest("/v1/agent/reload", null);
 		if (httpResponse.getStatusCode() == 200) {
 			return new Response<>(null, httpResponse);
 		} else {

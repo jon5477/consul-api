@@ -1,10 +1,13 @@
 package com.ecwid.consul.v1.health;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
-import com.ecwid.consul.json.JsonFactory;
-import com.ecwid.consul.transport.HttpResponse;
-import com.ecwid.consul.transport.TLSConfig;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import com.ecwid.consul.json.JsonUtil;
+import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.QueryParams;
@@ -17,116 +20,47 @@ import com.fasterxml.jackson.core.type.TypeReference;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class HealthConsulClient implements HealthClient {
+	private static final TypeReference<List<Check>> CHECK_LIST_TYPE_REF = new TypeReference<List<Check>>() {
+	};
+	private static final TypeReference<List<HealthService>> HEALTH_SERVICE_LIST_TYPE_REF = new TypeReference<List<HealthService>>() {
+	};
 	private final ConsulRawClient rawClient;
 
-	public HealthConsulClient(ConsulRawClient rawClient) {
-		this.rawClient = rawClient;
-	}
-
-	public HealthConsulClient() {
-		this(new ConsulRawClient());
-	}
-
-	public HealthConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient(tlsConfig));
-	}
-
-	public HealthConsulClient(String agentHost) {
-		this(new ConsulRawClient(agentHost));
-	}
-
-	public HealthConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, tlsConfig));
-	}
-
-	public HealthConsulClient(String agentHost, int agentPort) {
-		this(new ConsulRawClient(agentHost, agentPort));
-	}
-
-	public HealthConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient(agentHost, agentPort, tlsConfig));
+	public HealthConsulClient(@NonNull ConsulRawClient rawClient) {
+		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
 	}
 
 	@Override
 	public Response<List<Check>> getHealthChecksForNode(String nodeName, QueryParams queryParams) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/node/" + nodeName, queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/node/" + nodeName, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
-			});
+			List<Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
-	}
-
-	@Deprecated(since = "1.4.7", forRemoval = true)
-	@Override
-	public Response<List<Check>> getHealthChecksForService(String serviceName, QueryParams queryParams) {
-		HealthChecksForServiceRequest request = HealthChecksForServiceRequest.newBuilder().setQueryParams(queryParams)
-				.build();
-		return getHealthChecksForService(serviceName, request);
 	}
 
 	@Override
 	public Response<List<Check>> getHealthChecksForService(String serviceName,
 			HealthChecksForServiceRequest healthChecksForServiceRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
-				healthChecksForServiceRequest.asUrlParameters());
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/checks/" + serviceName,
+				healthChecksForServiceRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
-			});
+			List<Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
 	}
 
-	@Deprecated(since = "1.4.7", forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			boolean onlyPassing, QueryParams queryParams) {
-		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, null);
-	}
-
-	@Deprecated(since = "1.4.7", forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			boolean onlyPassing, QueryParams queryParams, String token) {
-		return getHealthServices(serviceName, (String) null, onlyPassing, queryParams, token);
-	}
-
-	@Deprecated(since = "1.4.7", forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			String tag, boolean onlyPassing, QueryParams queryParams) {
-		return getHealthServices(serviceName, tag, onlyPassing, queryParams, null);
-	}
-
-	@Deprecated(since = "1.4.7", forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			String tag, boolean onlyPassing, QueryParams queryParams, String token) {
-		return getHealthServices(serviceName, new String[] { tag }, onlyPassing, queryParams, token);
-	}
-
-	@Deprecated(since = "1.4.7", forRemoval = true)
-	@Override
-	public Response<List<HealthService>> getHealthServices(String serviceName,
-			String[] tags, boolean onlyPassing, QueryParams queryParams, String token) {
-		HealthServicesRequest request = HealthServicesRequest.newBuilder().setTags(tags).setPassing(onlyPassing)
-				.setQueryParams(queryParams).setToken(token).build();
-		return getHealthServices(serviceName, request);
-	}
-
 	@Override
 	public Response<List<HealthService>> getHealthServices(String serviceName,
 			HealthServicesRequest healthServicesRequest) {
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/service/" + serviceName,
-				healthServicesRequest.asUrlParameters());
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/service/" + serviceName,
+				healthServicesRequest);
 		if (httpResponse.getStatusCode() == 200) {
-			List<HealthService> value = JsonFactory.fromJson(httpResponse.getContent(),
-					new TypeReference<List<HealthService>>() {
-					});
+			List<HealthService> value = JsonUtil.toPOJO(httpResponse.getContent(), HEALTH_SERVICE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
@@ -140,11 +74,10 @@ public final class HealthConsulClient implements HealthClient {
 
 	@Override
 	public Response<List<Check>> getHealthChecksState(Check.CheckStatus checkStatus, QueryParams queryParams) {
-		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase();
-		HttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/state/" + status, queryParams);
+		String status = checkStatus == null ? "any" : checkStatus.name().toLowerCase(Locale.ROOT);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/health/state/" + status, queryParams);
 		if (httpResponse.getStatusCode() == 200) {
-			List<Check> value = JsonFactory.fromJson(httpResponse.getContent(), new TypeReference<List<Check>>() {
-			});
+			List<Check> value = JsonUtil.toPOJO(httpResponse.getContent(), CHECK_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
