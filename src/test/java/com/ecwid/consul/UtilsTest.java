@@ -12,6 +12,7 @@ import java.time.Duration;
 import org.junit.jupiter.api.Test;
 
 class UtilsTest {
+	@SuppressWarnings("UnnecessaryStringBuilder")
 	@Test
 	void testCharSequenceToArray() {
 		char[] expected = new char[] { 't', 'e', 's', 't' };
@@ -22,6 +23,7 @@ class UtilsTest {
 		assertArrayEquals(expected, Utils.charSequenceToArray("test"));
 	}
 
+	@SuppressWarnings("UnnecessaryStringBuilder")
 	@Test
 	void testCharSequenceEquals() {
 		char[] expected = new char[] { 't', 'e', 's', 't' };

@@ -84,13 +84,13 @@ final class HttpUtils {
 		Objects.requireNonNull(request, "request builder cannot be null");
 		Objects.requireNonNull(headers, "headers cannot be null");
 		if (token != null) {
-			request.setHeader("X-Consul-Token", new String(token));
+			request.header("X-Consul-Token", new String(token));
 		}
 		if (!headers.isEmpty()) {
 			for (Map.Entry<String, String> headerValue : headers.entrySet()) {
 				String name = headerValue.getKey();
 				String value = headerValue.getValue();
-				request.setHeader(name, value);
+				request.header(name, value);
 			}
 		}
 	}

@@ -15,7 +15,7 @@ import com.ecwid.consul.Utils;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class QueryParams implements QueryParameters {
-	private static final Duration MAX_WAIT_TIME = Duration.ofMinutes(10);
+	public static final Duration MAX_WAIT_TIME = Duration.ofMinutes(10);
 
 	public static final class Builder {
 		private String datacenter;

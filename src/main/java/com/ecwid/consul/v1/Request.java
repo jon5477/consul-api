@@ -1,7 +1,9 @@
 package com.ecwid.consul.v1;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,9 +12,31 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.QueryParameters;
 
-public final class Request implements QueryParameters {
+/**
+ * Represents a HTTP request to be made to Consul. Contains all the relevant and
+ * necessary fields for making an HTTP request.
+ * 
+ * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
+ *
+ */
+public final class Request {
+	/**
+	 * The Consul API endpoint to call.
+	 */
 	private final String endpoint;
-	private final Map<String, String> queryParameters;
+	/**
+	 * The HTTP headers to add.
+	 */
+	private final Map<String, String> headers;
+	/**
+	 * The HTTP query parameters to apply.
+	 */
+	private final List<QueryParameters> queryParameters;
+	/**
+	 * The extra HTTP query parameters to apply.
+	 */
+	private final Map<String, String> extraQueryParameters;
 	/**
 	 * The HTTP request content as a {@code byte[]}.
 	 */
@@ -24,11 +48,13 @@ public final class Request implements QueryParameters {
 	/**
 	 * The Consul token to use, specified as a char[] to prevent string pooling.
 	 */
-	private final char[] token;
+	private char[] token;
 
 	private Request(Builder b) {
 		this.endpoint = b.endpoint;
+		this.headers = b.headers;
 		this.queryParameters = b.queryParameters;
+		this.extraQueryParameters = b.extraQueryParameters;
 		this.content = b.content;
 		this.contentType = b.contentType;
 		this.token = b.token;
@@ -38,9 +64,16 @@ public final class Request implements QueryParameters {
 		return endpoint;
 	}
 
-	@Override
-	public final Map<String, String> getQueryParameters() {
-		return Collections.unmodifiableMap(queryParameters);
+	public final Map<String, String> getHeaders() {
+		return Collections.unmodifiableMap(headers);
+	}
+
+	public final List<QueryParameters> getQueryParameters() {
+		return Collections.unmodifiableList(queryParameters);
+	}
+
+	public final Map<String, String> getExtraQueryParameters() {
+		return Collections.unmodifiableMap(extraQueryParameters);
 	}
 
 	public final byte[] getContent() {
@@ -55,9 +88,15 @@ public final class Request implements QueryParameters {
 		return token;
 	}
 
+	public final void setToken(char[] token) {
+		this.token = token;
+	}
+
 	public static final class Builder {
 		private final String endpoint;
-		private final Map<String, String> queryParameters = new HashMap<>();
+		private final Map<String, String> headers = new HashMap<>();
+		private final List<QueryParameters> queryParameters = new ArrayList<>();
+		private final Map<String, String> extraQueryParameters = new HashMap<>();
 		private byte[] content;
 		private String contentType;
 		private char[] token;
@@ -67,22 +106,32 @@ public final class Request implements QueryParameters {
 			this.endpoint = endpoint;
 		}
 
-		public Builder addQueryParameter(@NonNull String key, @Nullable String value) {
-			this.queryParameters.put(key, value);
-			return this;
+		public Builder addHeader(@NonNull String key, @NonNull String value) {
+			this.headers.put(key, value);
+			return null;
 		}
 
-		public Builder addQueryParameters(@NonNull Map<String, String> queryParameters) {
-			this.queryParameters.putAll(queryParameters);
+		public Builder addHeaders(@NonNull Map<String, String> headers) {
+			this.headers.putAll(headers);
 			return this;
 		}
 
 		public Builder addQueryParameters(QueryParameters... queryParameters) {
 			for (QueryParameters params : queryParameters) {
 				if (params != null) {
-					this.queryParameters.putAll(params.getQueryParameters());
+					this.queryParameters.add(params);
 				}
 			}
+			return this;
+		}
+
+		public Builder addQueryParameter(@NonNull String key, @Nullable String value) {
+			this.extraQueryParameters.put(key, value);
+			return this;
+		}
+
+		public Builder addQueryParameters(@NonNull Map<String, String> queryParameters) {
+			this.extraQueryParameters.putAll(queryParameters);
 			return this;
 		}
 
