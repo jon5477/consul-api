@@ -3,6 +3,7 @@
 name: Maven Package and Deploy to GitHub Packages
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
