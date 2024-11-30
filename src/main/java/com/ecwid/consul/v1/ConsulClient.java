@@ -308,7 +308,7 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	}
 
 	@Override
-	public Response<Void> aclDelete(String accessorId) {
+	public Response<Boolean> aclDelete(String accessorId) {
 		return aclClient.aclDelete(accessorId);
 	}
 

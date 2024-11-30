@@ -66,7 +66,8 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	private ConsulHttpResponse executeRequest(@NonNull HttpRequest req) {
 		logRequest(req);
 		// Determine if this HTTP request will block
-		boolean blockingQuery = req.uri().getQuery().contains("index");
+		String query = req.uri().getQuery();
+		boolean blockingQuery = query != null && query.contains("index");
 		try {
 			HttpResponse<InputStream> response = getHttpClient().send(req, BodyHandlers.ofInputStream());
 			return HttpUtils.parseResponse(response);

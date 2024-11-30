@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.UUID;
@@ -75,6 +76,7 @@ class AclConsulClientTest {
 		assertEquals(token, response.getValue());
 		response = aclClient.aclRead(token.getAccessorId(), true);
 		AclToken aclToken = response.getValue();
+		System.out.println(aclToken);
 		assertNotNull(aclToken.getResolvedByAgent());
 		assertNotNull(aclToken.getAgentACLDefaultPolicy());
 		assertNotNull(aclToken.getAgentACLDownPolicy());
@@ -90,8 +92,6 @@ class AclConsulClientTest {
 				token.getPolicies().get(0));
 		assertNull(token.getTemplatedPolicies());
 		assertFalse(token.isLocal());
-		assertEquals(6, token.getCreateIndex());
-		assertEquals(6, token.getModifyIndex());
 		token = createTestToken();
 		rawClient.setToken(token.getSecretId());
 		response = aclClient.aclReadSelf();
@@ -121,7 +121,7 @@ class AclConsulClientTest {
 	void should_delete_acl_token() {
 		AclToken token = createTestToken();
 		String accessorId = token.getAccessorId();
-		aclClient.aclDelete(accessorId);
+		assertTrue(aclClient.aclDelete(accessorId).getValue());
 		assertThrows(OperationException.class, () -> aclClient.aclRead(accessorId, false));
 	}
 

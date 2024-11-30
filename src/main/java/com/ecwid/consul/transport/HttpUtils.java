@@ -38,13 +38,14 @@ final class HttpUtils {
 	 * @param token   The Consul API token to add as a header, can be {@code null}.
 	 * @param headers The key-value {@link Map} of headers to add.
 	 */
-	static void addHeadersToRequest(@NonNull HttpRequest.Builder request, char[] token,
+	static void addHeadersToRequest(HttpRequest.@NonNull Builder request, char[] token,
 			@NonNull Map<String, String> headers) {
 		Objects.requireNonNull(request, "request builder cannot be null");
+		Objects.requireNonNull(headers, "headers cannot be null");
 		if (token != null) {
 			request.setHeader("X-Consul-Token", new String(token));
 		}
-		if (headers != null && !headers.isEmpty()) {
+		if (!headers.isEmpty()) {
 			for (Map.Entry<String, String> headerValue : headers.entrySet()) {
 				String name = headerValue.getKey();
 				String value = headerValue.getValue();
@@ -86,7 +87,7 @@ final class HttpUtils {
 	@Nullable
 	static Boolean parseBoolean(@NonNull HttpHeaders headers, @NonNull String headerName) {
 		Optional<String> opt = headers.firstValue(headerName);
-		if (opt != null) {
+		if (opt.isPresent()) {
 			if ("true".equals(opt.get())) {
 				return true;
 			}
@@ -106,7 +107,8 @@ final class HttpUtils {
 	 * @throws IOException If an {@link IOException} occurs when reading the HTTP
 	 *                     response body.
 	 */
-	static ConsulHttpResponse parseResponse(HttpResponse<InputStream> response) throws IOException {
+	@NonNull
+	static ConsulHttpResponse parseResponse(@NonNull HttpResponse<InputStream> response) throws IOException {
 		int statusCode = response.statusCode();
 		HttpHeaders headers = response.headers();
 		// Headers for Consistency Modes
@@ -115,10 +117,15 @@ final class HttpUtils {
 		Long consulLastContact = parseUnsignedLong(headers, "X-Consul-LastContact");
 		// Headers for Blocking Queries
 		Long consulIndex = parseUnsignedLong(headers, "X-Consul-Index");
-		try (InputStream is = response.body()) {
-			JsonNode content = JsonUtil.toJsonNode(is);
-			return new ConsulHttpResponse(statusCode, content, consulEffectiveConsistency, consulKnownLeader,
-					consulLastContact, consulIndex);
+		String contentType = headers.firstValue("Content-Type").orElse(null);
+		if ("application/json".equals(contentType)) {
+			try (InputStream is = response.body()) {
+				JsonNode content = JsonUtil.toJsonNode(is);
+				return new ConsulHttpResponse(statusCode, content, consulEffectiveConsistency, consulKnownLeader,
+						consulLastContact, consulIndex);
+			}
 		}
+		return new ConsulHttpResponse(statusCode, null, consulEffectiveConsistency, consulKnownLeader,
+				consulLastContact, consulIndex);
 	}
 }

@@ -34,8 +34,8 @@ public final class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclCreate(NewAcl newAcl) {
-		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token")
-				.setContent(JsonUtil.toBytes(newAcl)).build();
+		Request request = Request.Builder.newBuilder().setEndpoint("/v1/acl/token").setContent(JsonUtil.toBytes(newAcl))
+				.build();
 		ConsulHttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
@@ -113,11 +113,12 @@ public final class AclConsulClient implements AclClient {
 	}
 
 	@Override
-	public Response<Void> aclDelete(String accessorId) {
+	public Response<Boolean> aclDelete(String accessorId) {
 		Request request = Request.Builder.newBuilder().setEndpoint(API_TOKEN_PREFIX + accessorId).build();
 		ConsulHttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
-			return new Response<>(null, httpResponse);
+			boolean result = JsonUtil.toPOJO(httpResponse.getContent(), boolean.class);
+			return new Response<>(result, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}

@@ -31,7 +31,7 @@ public interface AclClient {
 
 	Response<AclToken> aclClone(@NonNull String accessorId, @Nullable String description);
 
-	Response<Void> aclDelete(String accessorId);
+	Response<Boolean> aclDelete(String accessorId);
 
 	Response<List<AclToken>> aclList(AclTokensRequest request);
 }

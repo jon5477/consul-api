@@ -6,8 +6,10 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +21,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
@@ -322,14 +325,14 @@ public final class ConsulRawClient {
 	private URI buildURI(@NonNull String endpoint, QueryParameters... queryParams) {
 		Objects.requireNonNull(endpoint, ENDPOINT_NOT_NULL_MSG);
 		try {
-//			List<NameValuePair> nvps = Arrays.stream(queryParams)
-//					.flatMap(e -> e.getQueryParameters().entrySet().stream())
-//					.map(e -> new BasicNameValuePair(e.getKey(), e.getValue())).collect(Collectors.toList());
-			return new URIBuilder().setScheme(agentAddress.getProtocol()).setUserInfo(agentAddress.getUserInfo())
-					.setHost(agentAddress.getHost()).setPort(agentAddress.getPort())
-					.setPath(agentAddress.getPath() + endpoint).addParameters(nvps).build();
+			URLEncoder.encode(endpoint, StandardCharsets.UTF_8);
+			String queryStr = Arrays.stream(queryParams).flatMap(e -> e.getQueryParameters().entrySet().stream())
+					.map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
+			String query = !queryStr.isEmpty() ? queryStr : null;
+			return new URI(agentAddress.getProtocol(), agentAddress.getUserInfo(), agentAddress.getHost(),
+					agentAddress.getPort(), agentAddress.getPath() + endpoint, query, null);
 		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
+			throw new ConsulException(e);
 		}
 	}
 }

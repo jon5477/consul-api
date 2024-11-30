@@ -14,6 +14,9 @@ import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -92,10 +95,10 @@ public final class ClientUtils {
 		}
 		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		tmf.init(trustStore);
-		TrustManager[] tms = tmf.getTrustManagers();
-		@SuppressWarnings("deprecation")
-		SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE).build();
-		sslContext.init(kms, tms, new SecureRandom());
+		List<TrustManager> tms = new ArrayList<>(Arrays.asList(tmf.getTrustManagers()));
+		tms.add(InsecureTrustManager.INSTANCE);
+		SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+		sslContext.init(kms, tms.toArray(TrustManager[]::new), new SecureRandom());
 		return sslContext;
 	}
 
