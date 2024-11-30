@@ -1,16 +1,18 @@
 package com.ecwid.consul;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandler;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.QueryParams;
@@ -25,14 +27,27 @@ class ConsulRawClientTest {
 	private static final String EXPECTED_AGENT_ADDRESS = "http://" + HOST + ":" + PORT + "/" + PATH + ENDPOINT;
 
 	@SuppressWarnings("unchecked")
-	private static <T> BodyHandler<T> anyBodyHandler() {
-		return (BodyHandler<T>) any(BodyHandler.class);
+	private static BodyHandler<InputStream> anyBodyHandler() {
+		return Mockito.any(BodyHandler.class);
+	}
+
+	@SuppressWarnings({ "unchecked", "resource" })
+	private static HttpResponse<InputStream> createMockResponse() {
+		ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
+		HttpResponse<InputStream> resp = Mockito.mock(HttpResponse.class);
+		HttpHeaders headers = Mockito.mock(HttpHeaders.class);
+		Mockito.when(resp.statusCode()).thenReturn(200);
+		Mockito.when(resp.headers()).thenReturn(headers);
+		Mockito.when(resp.body()).thenReturn(bais);
+		return resp;
 	}
 
 	@Test
 	void verifyDefaultUrl() throws Exception {
 		// Given
-		HttpClient httpClient = mock(HttpClient.class);
+		HttpClient httpClient = Mockito.mock(HttpClient.class);
+		HttpResponse<InputStream> mockResponse = createMockResponse();
+		Mockito.when(httpClient.send(Mockito.any(HttpRequest.class), anyBodyHandler())).thenReturn(mockResponse);
 		ConsulRawClient client = new ConsulRawClient.Builder().setHttpClient(httpClient).setHost(HOST).setPort(PORT)
 				.build();
 		// When
@@ -40,14 +55,16 @@ class ConsulRawClientTest {
 
 		// Then
 		ArgumentCaptor<HttpRequest> calledUri = ArgumentCaptor.forClass(HttpRequest.class);
-		verify(httpClient).send(calledUri.capture(), anyBodyHandler());
+		Mockito.verify(httpClient).send(calledUri.capture(), anyBodyHandler());
 		assertEquals(EXPECTED_AGENT_ADDRESS_NO_PATH, calledUri.getValue().uri().toString());
 	}
 
 	@Test
 	void verifyUrlWithPath() throws Exception {
 		// Given
-		HttpClient httpClient = mock(HttpClient.class);
+		HttpClient httpClient = Mockito.mock(HttpClient.class);
+		HttpResponse<InputStream> mockResponse = createMockResponse();
+		Mockito.when(httpClient.send(Mockito.any(HttpRequest.class), anyBodyHandler())).thenReturn(mockResponse);
 		ConsulRawClient client = new ConsulRawClient.Builder().setHttpClient(httpClient).setHost(HOST).setPort(PORT)
 				.setPath(PATH).build();
 
@@ -56,7 +73,7 @@ class ConsulRawClientTest {
 
 		// Then
 		ArgumentCaptor<HttpRequest> calledUri = ArgumentCaptor.forClass(HttpRequest.class);
-		verify(httpClient).send(calledUri.capture(), anyBodyHandler());
+		Mockito.verify(httpClient).send(calledUri.capture(), anyBodyHandler());
 		assertEquals(EXPECTED_AGENT_ADDRESS, calledUri.getValue().uri().toString());
 	}
 }
