@@ -76,7 +76,6 @@ class AclConsulClientTest {
 		assertEquals(token, response.getValue());
 		response = aclClient.aclRead(token.getAccessorId(), true);
 		AclToken aclToken = response.getValue();
-		System.out.println(aclToken);
 		assertNotNull(aclToken.getResolvedByAgent());
 		assertNotNull(aclToken.getAgentACLDefaultPolicy());
 		assertNotNull(aclToken.getAgentACLDownPolicy());
