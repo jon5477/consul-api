@@ -36,32 +36,40 @@ class KeyValueConsulClientTest {
 	}
 
 	@Test
+	void testSetKVValue() {
+		String testKey = "test_kv";
+		String testValue = "test_value";
+		// Make sure there is no such key before test running
+		assertNull(consulClient.getKVValue(testKey).getValue());
+		// Set the key
+		consulClient.setKVValue(testKey, testValue);
+		// Make sure test key exists
+		assertEquals(testValue, consulClient.getKVValue(testKey).getValue().getDecodedValue());
+	}
+
+	@Test
 	void testSetKVBinaryValue() {
-		String testKey = "test_key";
+		String testKey = "test_binary";
 		byte[] testValue = new byte[100];
 		rnd.nextBytes(testValue);
-
 		// Make sure there is no such key before test running
 		assertNull(consulClient.getKVValue(testKey).getValue());
 		// Set the key
 		consulClient.setKVBinaryValue(testKey, testValue);
 		// Make sure test key exists
-		assertArrayEquals(consulClient.getKVBinaryValue(testKey).getValue().getValue(), testValue);
+		assertArrayEquals(testValue, consulClient.getKVBinaryValue(testKey).getValue().getValue());
 	}
 
 	@Test
 	void testDeleteKvValue() {
 		String testKey = "test_key";
 		String testValue = "test_value";
-
 		// Make sure there is no such key before test running
 		assertNull(consulClient.getKVValue(testKey).getValue());
-
 		// Set the key
 		consulClient.setKVValue(testKey, testValue);
 		// Make sure test key exists
-		assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
-
+		assertEquals(testValue, consulClient.getKVValue(testKey).getValue().getDecodedValue());
 		// Delete key
 		assertTrue(consulClient.deleteKVValue(testKey).getValue());
 		// Make sure there is no such key before test running
@@ -72,23 +80,18 @@ class KeyValueConsulClientTest {
 	void testDeleteKvValues() {
 		String testKeyPrefix = "test_key";
 		String testValue = "test_value";
-
 		// Prepare test keys under testKeyPrefix prefix
 		for (int i = 0; i < 10; i++) {
 			String testKey = testKeyPrefix + "/" + i;
 			// Make sure there is no such key before test running
 			assertNull(consulClient.getKVValue(testKey).getValue());
-
 			// Set the key
 			consulClient.setKVValue(testKey, testValue);
-
 			// Make sure test key exists
-			assertEquals(consulClient.getKVValue(testKey).getValue().getDecodedValue(), testValue);
+			assertEquals(testValue, consulClient.getKVValue(testKey).getValue().getDecodedValue());
 		}
-
 		// Delete all keys in single shot
 		assertTrue(consulClient.deleteKVValues(testKeyPrefix).getValue());
-
 		// Make sure all keys have been deleted
 		assertNull(consulClient.getKVKeysOnly(testKeyPrefix).getValue());
 	}

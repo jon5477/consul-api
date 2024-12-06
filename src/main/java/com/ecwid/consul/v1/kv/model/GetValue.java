@@ -3,6 +3,9 @@ package com.ecwid.consul.v1.kv.model;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -87,7 +90,7 @@ public class GetValue {
 		this.value = value;
 	}
 
-	public String getDecodedValue(Charset charset) {
+	public String getDecodedValue(@Nullable Charset charset) {
 		if (value == null) {
 			return null;
 		}
@@ -102,15 +105,27 @@ public class GetValue {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(createIndex, flags, key, lockIndex, modifyIndex, session, value);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof GetValue)) {
+			return false;
+		}
+		GetValue other = (GetValue) obj;
+		return createIndex == other.createIndex && flags == other.flags && Objects.equals(key, other.key)
+				&& Objects.equals(lockIndex, other.lockIndex) && modifyIndex == other.modifyIndex
+				&& Objects.equals(session, other.session) && Objects.equals(value, other.value);
+	}
+
+	@Override
 	public String toString() {
-		return "GetValue{" +
-				"createIndex=" + createIndex +
-				", modifyIndex=" + modifyIndex +
-				", lockIndex=" + lockIndex +
-				", flags=" + flags +
-				", session='" + session + '\'' +
-				", key='" + key + '\'' +
-				", value='" + value + '\'' +
-				'}';
+		return "GetValue [createIndex=" + createIndex + ", modifyIndex=" + modifyIndex + ", lockIndex=" + lockIndex
+				+ ", flags=" + flags + ", session=" + session + ", key=" + key + ", value=" + value + "]";
 	}
 }
