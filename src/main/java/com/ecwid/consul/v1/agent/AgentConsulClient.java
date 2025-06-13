@@ -21,6 +21,7 @@ import com.ecwid.consul.v1.agent.model.NewService;
 import com.ecwid.consul.v1.agent.model.Self;
 import com.ecwid.consul.v1.agent.model.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -36,6 +37,17 @@ public final class AgentConsulClient implements AgentClient {
 
 	public AgentConsulClient(@NonNull ConsulRawClient rawClient) {
 		this.rawClient = Objects.requireNonNull(rawClient, "consul raw client cannot be null");
+	}
+
+	@Override
+	public Response<JsonNode> getAgentHost() {
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/agent/host");
+		if (httpResponse.getStatusCode() == 200) {
+			JsonNode content = httpResponse.getContent();
+			return new Response<>(content, httpResponse);
+		} else {
+			throw new OperationException(httpResponse);
+		}
 	}
 
 	@Override

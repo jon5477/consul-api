@@ -1,5 +1,5 @@
 /*********************************************************************
-* Copyright (c) 2024 Jon Huang
+* Copyright (c) 2025 Jon Huang
 *
 * This program and the accompanying materials are made
 * available under the terms of the Eclipse Public License 2.0
@@ -13,7 +13,10 @@ package com.ecwid.consul.v1.agent.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author Jon Huang
+ * 
+ * 
+ * @author Jon Huang (jon5477)
+ *
  */
 public enum CheckStatus {
 	/**

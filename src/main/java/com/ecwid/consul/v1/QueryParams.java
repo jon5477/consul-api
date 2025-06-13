@@ -2,6 +2,7 @@ package com.ecwid.consul.v1;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -144,23 +145,23 @@ public final class QueryParams implements QueryParameters {
 	}
 
 	@Override
-	public Map<String, String> getQueryParameters() {
-		Map<String, String> params = new HashMap<>();
+	public Map<String, List<CharSequence>> getQueryParameters() {
+		Map<String, List<CharSequence>> params = new HashMap<>();
 		// add basic params
 		if (datacenter != null) {
-			params.put("dc", datacenter);
+			params.put("dc", Utils.asList(datacenter));
 		}
 		if (consistencyMode != ConsistencyMode.DEFAULT) {
-			params.put(consistencyMode.name().toLowerCase(Locale.ROOT), null);
+			params.put(consistencyMode.name().toLowerCase(Locale.ROOT), Utils.asList());
 		}
 		if (waitTime != null) {
-			params.put("wait", Utils.toConsulDuration(waitTime));
+			params.put("wait", Utils.asList(Utils.toConsulDuration(waitTime)));
 		}
 		if (index != -1) {
-			params.put("index", Long.toUnsignedString(index));
+			params.put("index", Utils.asList(Long.toUnsignedString(index)));
 		}
 		if (near != null) {
-			params.put("near", near);
+			params.put("near", Utils.asList(near));
 		}
 		return params;
 	}

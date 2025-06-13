@@ -10,11 +10,14 @@ import com.ecwid.consul.v1.agent.model.NewCheck;
 import com.ecwid.consul.v1.agent.model.NewService;
 import com.ecwid.consul.v1.agent.model.Self;
 import com.ecwid.consul.v1.agent.model.Service;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface AgentClient {
+	Response<JsonNode> getAgentHost();
+
 	Response<Map<String, Check>> getAgentChecks();
 
 	Response<Map<String, Service>> getAgentServices();

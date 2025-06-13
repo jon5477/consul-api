@@ -1,10 +1,12 @@
 package com.ecwid.consul.v1.catalog;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.v1.Filter;
 import com.ecwid.consul.v1.QueryParams;
 
@@ -69,16 +71,16 @@ public final class CatalogServiceRequest implements QueryParameters {
 	}
 
 	@Override
-	public Map<String, String> getQueryParameters() {
-		Map<String, String> params = new HashMap<>();
+	public Map<String, List<CharSequence>> getQueryParameters() {
+		Map<String, List<CharSequence>> params = new HashMap<>();
 		if (datacenter != null) {
-			params.put("dc", datacenter);
+			params.put("dc", Utils.asList(datacenter));
 		}
 		if (near != null) {
-			params.put("near", near);
+			params.put("near", Utils.asList(near));
 		}
 		if (filter != null) {
-			params.put("filter", filter.toString());
+			params.put("filter", Utils.asList(filter.toString()));
 		}
 		if (queryParams != null) {
 			params.putAll(queryParams.getQueryParameters());

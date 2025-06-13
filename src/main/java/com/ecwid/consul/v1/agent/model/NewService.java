@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Spencer Gibb (spencer@gibb.us)
- * @author Jon Huang
+ * @author Jon Huang (jon5477)
  */
 public class NewService {
 	public static class Check {

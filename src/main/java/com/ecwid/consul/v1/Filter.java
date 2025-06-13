@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.Utils;
 
 /**
  * Implements the Consul query filter parameter.
@@ -177,8 +178,8 @@ public class Filter implements QueryParameters {
 	}
 
 	@Override
-	public final Map<String, String> getQueryParameters() {
-		return Collections.singletonMap("filter", toString());
+	public final Map<String, List<CharSequence>> getQueryParameters() {
+		return Collections.singletonMap("filter", Utils.asList(toString()));
 	}
 
 	@Override

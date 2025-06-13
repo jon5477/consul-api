@@ -1,5 +1,5 @@
 /*********************************************************************
-* Copyright (c) 2024 Jon Huang
+* Copyright (c) 2025 Jon Huang
 *
 * This program and the accompanying materials are made
 * available under the terms of the Eclipse Public License 2.0
@@ -19,7 +19,7 @@ package com.ecwid.consul;
  *
  */
 public class TimedOutException extends ConsulException {
-	private static final long serialVersionUID = 2128231335344581714L;
+	private static final long serialVersionUID = 88223376208753185L;
 
 	public TimedOutException() {
 		super();
@@ -29,11 +29,15 @@ public class TimedOutException extends ConsulException {
 		super(e);
 	}
 
-	public TimedOutException(Throwable cause) {
-		super(cause);
-	}
-
 	public TimedOutException(String message) {
 		super(message);
+	}
+
+	public TimedOutException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public TimedOutException(Throwable cause) {
+		super(cause);
 	}
 }

@@ -1,6 +1,8 @@
 package com.ecwid.consul;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -11,20 +13,20 @@ import java.util.Objects;
  */
 public final class SingleQueryParameters implements QueryParameters {
 	private final String key;
-	private final String value;
+	private final CharSequence value;
 
 	public SingleQueryParameters(String key) {
 		this(key, null);
 	}
 
-	public SingleQueryParameters(String key, String value) {
+	public SingleQueryParameters(String key, CharSequence value) {
 		this.key = Objects.requireNonNull(key, "key cannot be null");
 		this.value = value;
 	}
 
 	@Override
-	public Map<String, String> getQueryParameters() {
-		return Collections.singletonMap(key, value);
+	public Map<String, List<CharSequence>> getQueryParameters() {
+		return Collections.singletonMap(key, value != null ? Utils.asList(value) : new ArrayList<>());
 	}
 
 	@Override

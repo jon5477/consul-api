@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * 
  * 
- * @author Jon Huang
+ * @author Jon Huang (jon5477)
  *
  */
 public final class ServiceIdentity {

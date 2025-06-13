@@ -1,6 +1,7 @@
 package com.ecwid.consul;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,6 +21,16 @@ import com.ecwid.consul.v1.event.model.Event;
 public final class Utils {
 	private Utils() {
 		// static utility class
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static <T> ArrayList<T> asList(T... a) {
+		ArrayList<T> list = new ArrayList<T>(a.length);
+		for (int i = 0; i < a.length; i++) {
+			list.add(a[i]);
+		}
+		return list;
 	}
 
 	/**

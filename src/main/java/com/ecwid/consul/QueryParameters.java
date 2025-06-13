@@ -1,5 +1,5 @@
 /*********************************************************************
-* Copyright (c) 2024 Jon Huang
+* Copyright (c) 2025 Jon Huang
 *
 * This program and the accompanying materials are made
 * available under the terms of the Eclipse Public License 2.0
@@ -10,6 +10,7 @@
 
 package com.ecwid.consul;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,5 @@ import java.util.Map;
  *
  */
 public interface QueryParameters {
-	Map<String, String> getQueryParameters();
+	Map<String, List<CharSequence>> getQueryParameters();
 }

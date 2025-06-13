@@ -1,10 +1,12 @@
 package com.ecwid.consul.v1.kv.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.Utils;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -48,19 +50,19 @@ public class PutParams implements QueryParameters {
 	}
 
 	@Override
-	public Map<String, String> getQueryParameters() {
-		Map<String, String> params = new HashMap<>();
+	public Map<String, List<CharSequence>> getQueryParameters() {
+		Map<String, List<CharSequence>> params = new HashMap<>();
 		if (flags != 0) {
-			params.put("flags", String.valueOf(flags));
+			params.put("flags", Utils.asList(String.valueOf(flags)));
 		}
 		if (cas != null) {
-			params.put("cas", String.valueOf(cas));
+			params.put("cas", Utils.asList(String.valueOf(cas)));
 		}
 		if (acquireSession != null) {
-			params.put("acquire", acquireSession);
+			params.put("acquire", Utils.asList(acquireSession));
 		}
 		if (releaseSession != null) {
-			params.put("release", releaseSession);
+			params.put("release", Utils.asList(releaseSession));
 		}
 		return params;
 	}

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
- * @author Jon Huang
+ * @author Jon Huang (jon5477)
  */
 public class NewCheck {
 	@JsonProperty("Name")

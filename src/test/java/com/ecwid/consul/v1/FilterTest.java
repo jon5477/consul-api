@@ -1,10 +1,13 @@
 package com.ecwid.consul.v1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
@@ -153,8 +156,9 @@ class FilterTest {
 	@Test
 	void getQueryParameters() {
 		final Filter subject = Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo"), "bar");
-		final Map<String, String> actual = subject.getQueryParameters();
-		assertEquals(Collections.singletonMap("filter", "foo = \"bar\""), actual);
+		final Map<String, List<CharSequence>> actual = subject.getQueryParameters();
+		assertEquals(Collections.singletonMap("filter", Arrays.asList("foo = \"bar\"")), actual);
+		assertInstanceOf(ArrayList.class, actual.get("filter"));
 	}
 
 	private void assertFilter(String expected, Filter subject) {

@@ -62,6 +62,7 @@ import com.ecwid.consul.v1.session.model.NewSession;
 import com.ecwid.consul.v1.session.model.Session;
 import com.ecwid.consul.v1.status.StatusClient;
 import com.ecwid.consul.v1.status.StatusConsulClient;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Full consul-api client with all supported methods. If you like to use more
@@ -320,6 +321,11 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 
 	// -------------------------------------------------------------------------------------------
 	// Agent
+
+	@Override
+	public Response<JsonNode> getAgentHost() {
+		return agentClient.getAgentHost();
+	}
 
 	@Override
 	public Response<Map<String, Check>> getAgentChecks() {

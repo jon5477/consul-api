@@ -1,9 +1,14 @@
 package com.ecwid.consul.v1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -65,16 +70,20 @@ class QueryParamsTest {
 		String expectedNear = "_agent";
 
 		// When
-		Map<String, String> queryParams = new QueryParams.Builder().setDatacenter(expectedDatacenter)
+		Map<String, List<CharSequence>> queryParams = new QueryParams.Builder().setDatacenter(expectedDatacenter)
 				.setConsistencyMode(expectedMode).setWaitTime(expectedWaitTime).setIndex(expectedIndex)
 				.setNear(expectedNear).build().getQueryParameters();
 
 		// Then
-		assertEquals(expectedDatacenter, queryParams.get("dc"));
-		assertNull(queryParams.get(expectedMode.name().toLowerCase(Locale.ROOT)));
-		assertEquals(Utils.toConsulDuration(expectedWaitTime), queryParams.get("wait"));
-		assertEquals(String.valueOf(expectedIndex), queryParams.get("index"));
-		assertEquals(expectedNear, queryParams.get("near"));
+		assertEquals(Arrays.asList(expectedDatacenter), queryParams.get("dc"));
+		assertInstanceOf(ArrayList.class, queryParams.get("dc"));
+		assertEquals(Collections.emptyList(), queryParams.get(expectedMode.name().toLowerCase(Locale.ROOT)));
+		assertEquals(Arrays.asList(Utils.toConsulDuration(expectedWaitTime)), queryParams.get("wait"));
+		assertInstanceOf(ArrayList.class, queryParams.get("wait"));
+		assertEquals(Arrays.asList(String.valueOf(expectedIndex)), queryParams.get("index"));
+		assertInstanceOf(ArrayList.class, queryParams.get("index"));
+		assertEquals(Arrays.asList(expectedNear), queryParams.get("near"));
+		assertInstanceOf(ArrayList.class, queryParams.get("near"));
 	}
 
 	@Nested

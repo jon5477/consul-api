@@ -1,5 +1,5 @@
 /*********************************************************************
-* Copyright (c) 2024 Jon Huang
+* Copyright (c) 2025 Jon Huang
 *
 * This program and the accompanying materials are made
 * available under the terms of the Eclipse Public License 2.0
@@ -19,11 +19,12 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -31,14 +32,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ecwid.consul.ConsulException;
-import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Provides various HTTP related utility functions.
  * 
- * @author Jon Huang
+ * @author Jon Huang (jon5477)
  *
  */
 final class HttpUtils {
@@ -53,21 +53,29 @@ final class HttpUtils {
 	 * 
 	 * @param agentUri    The {@link URI} to the Consul agent.
 	 * @param endpoint    The Consul API endpoint to use.
-	 * @param queryParams The query parameters to include.
+	 * @param queryParams The {@link Map} of key-value query parameters to include.
 	 * @return The {@link URI} to the Consul API endpoint including query
 	 *         parameters.
 	 */
-	static URI buildURI(@NonNull URI agentUri, @NonNull String endpoint, QueryParameters... queryParams) {
-		Objects.requireNonNull(endpoint, "endpoint cannot be null");
+	public static URI buildURI(@NonNull URI agentUri, @NonNull String endpoint,
+			@NonNull Map<String, List<CharSequence>> queryParams) {
+		Objects.requireNonNull(agentUri, "agent URI cannot be null");
+		Objects.requireNonNull(endpoint, "API endpoint cannot be null");
 		try {
 			URLEncoder.encode(endpoint, StandardCharsets.UTF_8);
-			String queryStr = Arrays.stream(queryParams).flatMap(e -> e.getQueryParameters().entrySet().stream())
-					.map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
+			String queryStr = queryParams.entrySet().stream().flatMap(e -> {
+				String key = URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8);
+				List<CharSequence> values = e.getValue();
+				if (values.isEmpty()) {
+					return Stream.of(key);
+				}
+				return values.stream().map(v -> key + "=" + URLEncoder.encode(v.toString(), StandardCharsets.UTF_8));
+			}).collect(Collectors.joining("&"));
 			String query = !queryStr.isEmpty() ? queryStr : null;
 			return new URI(agentUri.getScheme(), agentUri.getUserInfo(), agentUri.getHost(), agentUri.getPort(),
 					agentUri.getPath() + endpoint, query, null);
 		} catch (URISyntaxException e) {
-			throw new ConsulException(e);
+			throw new ConsulException(e.getLocalizedMessage(), e);
 		}
 	}
 

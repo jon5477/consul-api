@@ -1,10 +1,12 @@
 package com.ecwid.consul.v1.acl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.Utils;
 
 /**
  * @author Jon Huang (jon5477)
@@ -77,25 +79,25 @@ public class AclTokensRequest implements QueryParameters {
 	}
 
 	@Override
-	public final Map<String, String> getQueryParameters() {
-		Map<String, String> params = new HashMap<>();
+	public final Map<String, List<CharSequence>> getQueryParameters() {
+		Map<String, List<CharSequence>> params = new HashMap<>();
 		if (policy != null) {
-			params.put("policy", policy);
+			params.put("policy", Utils.asList(policy));
 		}
 		if (role != null) {
-			params.put("role", role);
+			params.put("role", Utils.asList(role));
 		}
 		if (serviceName != null) {
-			params.put("servicename", serviceName);
+			params.put("servicename", Utils.asList(serviceName));
 		}
 		if (authMethod != null) {
-			params.put("authmethod", authMethod);
+			params.put("authmethod", Utils.asList(authMethod));
 		}
 		if (authMethodNs != null) {
-			params.put("authmethod-ns", authMethodNs);
+			params.put("authmethod-ns", Utils.asList(authMethodNs));
 		}
 		if (ns != null) {
-			params.put("ns", ns);
+			params.put("ns", Utils.asList(ns));
 		}
 		return params;
 	}

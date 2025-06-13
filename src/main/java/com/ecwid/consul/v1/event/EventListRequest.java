@@ -1,10 +1,12 @@
 package com.ecwid.consul.v1.event;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.v1.QueryParams;
 
 public final class EventListRequest implements QueryParameters {
@@ -84,19 +86,19 @@ public final class EventListRequest implements QueryParameters {
 	}
 
 	@Override
-	public Map<String, String> getQueryParameters() {
-		Map<String, String> params = new HashMap<>();
+	public Map<String, List<CharSequence>> getQueryParameters() {
+		Map<String, List<CharSequence>> params = new HashMap<>();
 		if (name != null) {
-			params.put("name", name);
+			params.put("name", Utils.asList(name));
 		}
 		if (node != null) {
-			params.put("node", node);
+			params.put("node", Utils.asList(node));
 		}
 		if (service != null) {
-			params.put("service", service);
+			params.put("service", Utils.asList(service));
 		}
 		if (tag != null) {
-			params.put("tag", tag);
+			params.put("tag", Utils.asList(tag));
 		}
 		if (queryParams != null) {
 			params.putAll(queryParams.getQueryParameters());

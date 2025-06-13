@@ -36,7 +36,7 @@ public final class Request {
 	/**
 	 * The extra HTTP query parameters to apply.
 	 */
-	private final Map<String, String> extraQueryParameters;
+	private final Map<String, List<CharSequence>> extraQueryParameters;
 	/**
 	 * The HTTP request content as a {@code byte[]}.
 	 */
@@ -72,7 +72,7 @@ public final class Request {
 		return Collections.unmodifiableList(queryParameters);
 	}
 
-	public final Map<String, String> getExtraQueryParameters() {
+	public final Map<String, List<CharSequence>> getExtraQueryParameters() {
 		return Collections.unmodifiableMap(extraQueryParameters);
 	}
 
@@ -96,7 +96,7 @@ public final class Request {
 		private final String endpoint;
 		private final Map<String, String> headers = new HashMap<>();
 		private final List<QueryParameters> queryParameters = new ArrayList<>();
-		private final Map<String, String> extraQueryParameters = new HashMap<>();
+		private final Map<String, List<CharSequence>> extraQueryParameters = new HashMap<>();
 		private byte[] content;
 		private String contentType;
 		private char[] token;
@@ -125,12 +125,14 @@ public final class Request {
 			return this;
 		}
 
-		public Builder addQueryParameter(@NonNull String key, @Nullable String value) {
-			this.extraQueryParameters.put(key, value);
+		public Builder addQueryParameter(@NonNull String key, @Nullable CharSequence value) {
+			List<CharSequence> queryParams = this.extraQueryParameters.computeIfAbsent(key,
+					k -> new ArrayList<CharSequence>());
+			queryParams.add(value);
 			return this;
 		}
 
-		public Builder addQueryParameters(@NonNull Map<String, String> queryParameters) {
+		public Builder addQueryParameters(@NonNull Map<String, List<CharSequence>> queryParameters) {
 			this.extraQueryParameters.putAll(queryParameters);
 			return this;
 		}

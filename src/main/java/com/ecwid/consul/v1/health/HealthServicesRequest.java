@@ -1,10 +1,13 @@
 package com.ecwid.consul.v1.health;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.ecwid.consul.QueryParameters;
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.v1.Filter;
 import com.ecwid.consul.v1.QueryParams;
 
@@ -100,23 +103,23 @@ public final class HealthServicesRequest implements QueryParameters {
 	}
 
 	@Override
-	public Map<String, String> getQueryParameters() {
-		Map<String, String> params = new HashMap<>();
+	public Map<String, List<CharSequence>> getQueryParameters() {
+		Map<String, List<CharSequence>> params = new HashMap<>();
 		if (datacenter != null) {
-			params.put("dc", datacenter);
+			params.put("dc", Utils.asList(datacenter));
 		}
 		if (near != null) {
-			params.put("near", near);
+			params.put("near", Utils.asList(near));
 		}
 		if (filter != null) {
-			params.put("filter", filter.toString());
+			params.put("filter", Utils.asList(filter.toString()));
 		}
-		params.put("passing", String.valueOf(passing));
+		params.put("passing", Utils.asList(String.valueOf(passing)));
 		if (queryParams != null) {
 			params.putAll(queryParams.getQueryParameters());
 		}
 		if (cached) {
-			params.put("cached", null);
+			params.put("cached", new ArrayList<>());
 		}
 		return params;
 	}

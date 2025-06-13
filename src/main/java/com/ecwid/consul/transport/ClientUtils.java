@@ -1,5 +1,5 @@
 /*********************************************************************
-* Copyright (c) 2024 Jon Huang
+* Copyright (c) 2025 Jon Huang
 *
 * This program and the accompanying materials are made
 * available under the terms of the Eclipse Public License 2.0
@@ -24,8 +24,6 @@ import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -40,6 +38,7 @@ import javax.net.ssl.TrustManagerFactory;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.TLSConfig.KeyStoreInstanceType;
 import com.ecwid.consul.v1.ConsulRawClient;
 
@@ -50,7 +49,7 @@ import com.ecwid.consul.v1.ConsulRawClient;
  * <li>Creating {@link HttpTransport}s</li>
  * </ul>
  * 
- * @author Jon Huang
+ * @author Jon Huang (jon5477)
  *
  */
 public final class ClientUtils {
@@ -107,7 +106,7 @@ public final class ClientUtils {
 		}
 		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		tmf.init(trustStore);
-		List<TrustManager> tms = new ArrayList<>(Arrays.asList(tmf.getTrustManagers()));
+		List<TrustManager> tms = Utils.asList(tmf.getTrustManagers());
 		tms.add(InsecureTrustManager.INSTANCE);
 		SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
 		sslContext.init(kms, tms.toArray(TrustManager[]::new), new SecureRandom());

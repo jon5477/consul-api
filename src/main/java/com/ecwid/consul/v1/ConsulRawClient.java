@@ -158,8 +158,8 @@ public final class ConsulRawClient {
 		}
 	}
 
-	private ConsulRawClient(Builder b, HttpTransport httpTransport) {
-		this.httpTransport = httpTransport;
+	private ConsulRawClient(@NonNull Builder b, @NonNull HttpTransport httpTransport) {
+		this.httpTransport = Objects.requireNonNull(httpTransport);
 		// check if the agentHost has a scheme or not
 		String agentHostLc = b.agentHost.toLowerCase(Locale.ROOT);
 		String agentHostUrl;

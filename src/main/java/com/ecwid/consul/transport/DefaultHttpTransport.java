@@ -1,6 +1,7 @@
 package com.ecwid.consul.transport;
 
 import java.net.http.HttpClient;
+import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -15,7 +16,7 @@ public final class DefaultHttpTransport extends AbstractHttpTransport {
 	private final HttpClient httpClient;
 
 	public DefaultHttpTransport(@NonNull HttpClient httpClient) {
-		this.httpClient = httpClient;
+		this.httpClient = Objects.requireNonNull(httpClient, "http client cannot be null");
 	}
 
 	@Override

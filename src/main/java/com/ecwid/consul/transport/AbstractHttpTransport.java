@@ -3,15 +3,12 @@ package com.ecwid.consul.transport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,13 +16,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ecwid.consul.ConsulException;
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.TimedOutException;
 import com.ecwid.consul.v1.QueryParams;
@@ -66,9 +61,9 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		Objects.requireNonNull(agentUri, "agent URI cannot be null");
 		Objects.requireNonNull(method, "HTTP method cannot be null");
 		Objects.requireNonNull(request, "request cannot be null");
-		Map<String, String> allQueryParams = getAllQueryParameters(request);
+		Map<String, List<CharSequence>> allQueryParams = getAllQueryParameters(request);
 		// Grab the full URI that the HTTP client will make a request to
-		URI reqUri = buildURI(agentUri, request.getEndpoint(), allQueryParams);
+		URI reqUri = HttpUtils.buildURI(agentUri, request.getEndpoint(), allQueryParams);
 		HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(reqUri);
 		// Set the timeout on this request - dependent on the "wait" query parameter
 		if (allQueryParams.containsKey("wait")) {
@@ -125,13 +120,13 @@ abstract class AbstractHttpTransport implements HttpTransport {
 			// throw this custom exception so clients can handle it
 			throw new TimedOutException(e);
 		} catch (IOException e) {
-			throw new TransportException(e);
+			throw new TransportException(e.getLocalizedMessage(), e);
 		}
 	}
 
 	@NonNull
-	private Map<String, String> getAllQueryParameters(@NonNull Request request) {
-		Map<String, String> queryParams = new HashMap<>();
+	private Map<String, List<CharSequence>> getAllQueryParameters(@NonNull Request request) {
+		Map<String, List<CharSequence>> queryParams = new HashMap<>();
 		// read the normal query parameters
 		for (QueryParameters params : request.getQueryParameters()) {
 			queryParams.putAll(params.getQueryParameters());
@@ -139,30 +134,6 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		// read the extra query parameters (these take precedence)
 		queryParams.putAll(request.getExtraQueryParameters());
 		return queryParams;
-	}
-
-	/**
-	 * Creates a full {@link URI} to the Consul API endpoint.
-	 * 
-	 * @param agentUri    The {@link URI} to the Consul agent.
-	 * @param endpoint    The Consul API endpoint to use.
-	 * @param queryParams The {@link Map} of key-value query parameters to include.
-	 * @return The {@link URI} to the Consul API endpoint including query
-	 *         parameters.
-	 */
-	private URI buildURI(@NonNull URI agentUri, @NonNull String endpoint, @NonNull Map<String, String> queryParams) {
-		Objects.requireNonNull(agentUri, "agent URI cannot be null");
-		Objects.requireNonNull(endpoint, "API endpoint cannot be null");
-		try {
-			URLEncoder.encode(endpoint, StandardCharsets.UTF_8);
-			String queryStr = queryParams.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
-					.collect(Collectors.joining("&"));
-			String query = !queryStr.isEmpty() ? queryStr : null;
-			return new URI(agentUri.getScheme(), agentUri.getUserInfo(), agentUri.getHost(), agentUri.getPort(),
-					agentUri.getPath() + endpoint, query, null);
-		} catch (URISyntaxException e) {
-			throw new ConsulException(e);
-		}
 	}
 
 	private void logRequest(@NonNull HttpRequest request) {
