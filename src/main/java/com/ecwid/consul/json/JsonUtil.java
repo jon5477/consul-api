@@ -153,6 +153,7 @@ public final class JsonUtil {
 	 * @param <T>  The POJO type.
 	 * @param node The {@link JsonNode} to convert.
 	 * @param type The {@link TypeReference} to use.
+	 * @return The parsed POJO
 	 * @throws JsonException If an error occurs while deserializing the JSON.
 	 */
 	public static <T> T toPOJO(@NonNull JsonNode node, @NonNull TypeReference<T> type) {
@@ -171,6 +172,7 @@ public final class JsonUtil {
 	 * @param <T>  The POJO type.
 	 * @param node The {@link JsonNode} to convert.
 	 * @param type The {@link Class} type to use.
+	 * @return The parsed POJO
 	 * @throws JsonException If an error occurs while deserializing the JSON.
 	 */
 	public static <T> T toPOJO(@NonNull JsonNode node, @NonNull Class<T> type) {
@@ -189,6 +191,7 @@ public final class JsonUtil {
 	 * @param <T>     The POJO type.
 	 * @param content The JSON {@link String} to parse.
 	 * @param type    The {@link TypeReference} to use.
+	 * @return The parsed POJO
 	 * @throws JsonException If an error occurs while deserializing the JSON.
 	 */
 	public static <T> T toPOJO(@NonNull String content, @NonNull TypeReference<T> type) {
@@ -201,12 +204,13 @@ public final class JsonUtil {
 	}
 
 	/**
-	 * Converts the given {@link JsonNode} into a POJO type using the provided
+	 * Converts the given JSON {@link String} into a POJO type using the provided
 	 * {@link Class} type.
 	 * 
 	 * @param <T>     The POJO type.
 	 * @param content The JSON {@link String} to parse.
 	 * @param type    The {@link Class} type to use.
+	 * @return The parsed POJO
 	 * @throws JsonException If an error occurs while deserializing the JSON.
 	 */
 	public static <T> T toPOJO(@NonNull String content, @NonNull Class<T> type) {
@@ -214,6 +218,25 @@ public final class JsonUtil {
 		try {
 			return OBJ_MAPPER.readValue(content, type);
 		} catch (JsonProcessingException e) {
+			throw new JsonException(DESERIALIZE_ERROR, e);
+		}
+	}
+
+	/**
+	 * Converts the given JSON {@code byte[]} into a POJO type using the provided
+	 * {@link Class} type.
+	 * 
+	 * @param <T>     The POJO type.
+	 * @param content The {@code byte[]} to read.
+	 * @param type    The {@link Class} type to use.
+	 * @return The parsed POJO
+	 * @throws JsonException If an error occurs while deserializing the JSON.
+	 */
+	public static <T> T toPOJO(byte[] content, @NonNull Class<T> type) {
+		Objects.requireNonNull(content, CONTENT_NOT_NULL_MSG);
+		try {
+			return OBJ_MAPPER.readValue(content, type);
+		} catch (IOException e) {
 			throw new JsonException(DESERIALIZE_ERROR, e);
 		}
 	}
