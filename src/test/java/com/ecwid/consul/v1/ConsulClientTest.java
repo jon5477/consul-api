@@ -23,7 +23,7 @@ class ConsulClientTest {
 	private int randomHttpsPort = Ports.nextAvailable();
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		String path = "src/test/resources/ssl";
 		String certRootPath = new File(path).getAbsolutePath().replace('\\', '/');
 		String customConfiguration = "{\n" + "  \"datacenter\": \"dc-test\",\n" + "  \"log_level\": \"info\",\n"
@@ -36,7 +36,7 @@ class ConsulClientTest {
 	}
 
 	@AfterEach
-	public void cleanup() {
+	void cleanup() {
 		consul.close();
 	}
 

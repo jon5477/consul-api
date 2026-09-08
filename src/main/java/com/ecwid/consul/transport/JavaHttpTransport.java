@@ -40,8 +40,13 @@ import com.ecwid.consul.v1.Request;
  * @author Jon Huang (jon5477)
  * 
  */
-abstract class AbstractHttpTransport implements HttpTransport {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpTransport.class);
+public final class JavaHttpTransport implements HttpTransport {
+	private static final Logger LOGGER = LoggerFactory.getLogger(JavaHttpTransport.class);
+	private final HttpClient httpClient;
+
+	public JavaHttpTransport(@NonNull HttpClient httpClient) {
+		this.httpClient = Objects.requireNonNull(httpClient, "http client cannot be null");
+	}
 
 	/**
 	 * Makes a HTTP request to the given Consul Agent {@link URI} with the specified
@@ -112,7 +117,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	private ConsulHttpResponse executeRequest(@NonNull HttpRequest request) {
 		logRequest(request);
 		try {
-			HttpResponse<InputStream> response = getHttpClient().send(request, BodyHandlers.ofInputStream());
+			HttpResponse<InputStream> response = httpClient.send(request, BodyHandlers.ofInputStream());
 			return HttpUtils.parseResponse(response);
 		} catch (InterruptedException e) {
 			// propagate the interrupt signal

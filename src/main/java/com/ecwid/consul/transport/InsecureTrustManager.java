@@ -21,8 +21,8 @@ import javax.net.ssl.X509TrustManager;
  * 
  * @deprecated This is only kept as a compatibility layer for {@link TLSConfig}.
  *             You should never use this in a production environment because it
- *             will never validate certificates or hostnames thus exposing
- *             yourself to MITM attacks.
+ *             will never validate certificates or hostnames and is vulnerable
+ *             to MITM attacks.
  * 
  * @author Jon Huang (jon5477)
  *

@@ -11,9 +11,9 @@
 package com.ecwid.consul;
 
 /**
- * Represents when a Consul request has timed out. This is usually due to an
- * {@link InterruptedException}. This exception can be used to determine if a
- * Consul request has timed out due to Thread interruption.
+ * Exception for when a Consul request has timed out. This is usually due to an
+ * {@link InterruptedException}. This exception can also be used to determine if
+ * a Consul request has timed out due to a {@link Thread#interrupt()}.
  * 
  * @author Jon Huang (jon5477)
  *

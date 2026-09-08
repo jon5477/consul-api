@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public final class AclConsulClient implements AclClient {
 	private static final TypeReference<List<AclToken>> TOKEN_LIST_TYPE_REF = new TypeReference<List<AclToken>>() {
 	};
-	private static final String API_TOKEN_PREFIX = "/v1/acl/token/";
+	private static final String ACL_TOKEN_API_PREFIX = "/v1/acl/token/";
 	private final ConsulRawClient rawClient;
 
 	public AclConsulClient(@NonNull ConsulRawClient rawClient) {
@@ -51,7 +51,7 @@ public final class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclRead(String accessorId, boolean expanded) {
-		Request.Builder request = new Request.Builder(API_TOKEN_PREFIX + accessorId);
+		Request.Builder request = new Request.Builder(ACL_TOKEN_API_PREFIX + accessorId);
 		if (expanded) {
 			request.addQueryParameter("expanded", String.valueOf(expanded));
 		}
@@ -66,7 +66,7 @@ public final class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclReadSelf() {
-		Request request = new Request.Builder(API_TOKEN_PREFIX + "self").build();
+		Request request = new Request.Builder(ACL_TOKEN_API_PREFIX + "self").build();
 		ConsulHttpResponse httpResponse = rawClient.makeGetRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			AclToken aclToken = JsonUtil.toPOJO(httpResponse.getContent(), AclToken.class);
@@ -78,7 +78,7 @@ public final class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<AclToken> aclUpdate(UpdateAcl updateAcl, String accessorId) {
-		Request request = new Request.Builder(API_TOKEN_PREFIX + accessorId).setContent(JsonUtil.toBytes(updateAcl))
+		Request request = new Request.Builder(ACL_TOKEN_API_PREFIX + accessorId).setContent(JsonUtil.toBytes(updateAcl))
 				.build();
 		ConsulHttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
@@ -100,7 +100,7 @@ public final class AclConsulClient implements AclClient {
 		if (description != null) {
 			objNode.put("Description", description);
 		}
-		Request request = new Request.Builder(API_TOKEN_PREFIX + accessorId + "/clone")
+		Request request = new Request.Builder(ACL_TOKEN_API_PREFIX + accessorId + "/clone")
 				.setContent(JsonUtil.toBytes(objNode)).build();
 		ConsulHttpResponse httpResponse = rawClient.makePutRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
@@ -113,7 +113,7 @@ public final class AclConsulClient implements AclClient {
 
 	@Override
 	public Response<Boolean> aclDelete(String accessorId) {
-		Request request = new Request.Builder(API_TOKEN_PREFIX + accessorId).build();
+		Request request = new Request.Builder(ACL_TOKEN_API_PREFIX + accessorId).build();
 		ConsulHttpResponse httpResponse = rawClient.makeDeleteRequest(request);
 		if (httpResponse.getStatusCode() == 200) {
 			boolean result = JsonUtil.toPOJO(httpResponse.getContent(), boolean.class);

@@ -10,18 +10,22 @@ import java.util.stream.Collectors;
 
 import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
+import com.ecwid.consul.v1.Filter;
 import com.ecwid.consul.v1.QueryParams;
 
 public final class CatalogNodesRequest implements QueryParameters {
 	private final String datacenter;
 	private final String near;
 	private final Map<String, String> nodeMeta;
+	private final Filter filter;
 	private final QueryParams queryParams;
 
-	private CatalogNodesRequest(String datacenter, String near, Map<String, String> nodeMeta, QueryParams queryParams) {
+	private CatalogNodesRequest(String datacenter, String near, Map<String, String> nodeMeta, Filter filter,
+			QueryParams queryParams) {
 		this.datacenter = datacenter;
 		this.near = near;
 		this.nodeMeta = nodeMeta;
+		this.filter = filter;
 		this.queryParams = queryParams;
 	}
 
@@ -37,6 +41,10 @@ public final class CatalogNodesRequest implements QueryParameters {
 		return nodeMeta;
 	}
 
+	public Filter getFilter() {
+		return filter;
+	}
+
 	public QueryParams getQueryParams() {
 		return queryParams;
 	}
@@ -45,6 +53,7 @@ public final class CatalogNodesRequest implements QueryParameters {
 		private String datacenter;
 		private String near;
 		private Map<String, String> nodeMeta;
+		private Filter filter;
 		private QueryParams queryParams;
 
 		private Builder() {
@@ -64,16 +73,17 @@ public final class CatalogNodesRequest implements QueryParameters {
 		 * Specifies a desired node metadata key/value pair of the form key:value and
 		 * will filter the results to nodes with the specified key/value pairs.
 		 * 
-		 * @param nodeMeta
+		 * @param nodeMeta Desired node metadata key/value pairs to filter the node
+		 *                 results.
 		 * @deprecated Use filter with the NodeMeta selector instead. This parameter
 		 *             will be removed in a future version of Consul. Specifies a
 		 *             desired node metadata key/value pair of the form key:value. This
 		 *             parameter can be specified multiple times, and filters the
 		 *             results to nodes with the specified key/value pairs. (Deprecated
 		 *             since Consul 1.9)
-		 * @return
+		 * @return This instance for chaining
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public Builder setNodeMeta(Map<String, String> nodeMeta) {
 			if (nodeMeta == null) {
 				this.nodeMeta = null;
@@ -84,13 +94,18 @@ public final class CatalogNodesRequest implements QueryParameters {
 			return this;
 		}
 
+		public Builder setFilter(Filter filter) {
+			this.filter = filter;
+			return this;
+		}
+
 		public Builder setQueryParams(QueryParams queryParams) {
 			this.queryParams = queryParams;
 			return this;
 		}
 
 		public CatalogNodesRequest build() {
-			return new CatalogNodesRequest(datacenter, near, nodeMeta, queryParams);
+			return new CatalogNodesRequest(datacenter, near, nodeMeta, filter, queryParams);
 		}
 	}
 
@@ -112,6 +127,9 @@ public final class CatalogNodesRequest implements QueryParameters {
 					.collect(Collectors.toCollection(ArrayList::new));
 			params.put("node-meta", nodeMetaList);
 		}
+		if (filter != null) {
+			params.putAll(filter.getQueryParameters());
+		}
 		if (queryParams != null) {
 			params.putAll(queryParams.getQueryParameters());
 		}
@@ -128,11 +146,12 @@ public final class CatalogNodesRequest implements QueryParameters {
 		}
 		CatalogNodesRequest that = (CatalogNodesRequest) o;
 		return Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
-				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(queryParams, that.queryParams);
+				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(filter, that.filter)
+				&& Objects.equals(queryParams, that.queryParams);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(datacenter, near, nodeMeta, queryParams);
+		return Objects.hash(datacenter, near, nodeMeta, filter, queryParams);
 	}
 }

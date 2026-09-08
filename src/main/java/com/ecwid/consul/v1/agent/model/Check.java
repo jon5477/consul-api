@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Check {
-	public static enum CheckStatus {
+	public enum CheckStatus {
 		@JsonProperty("unknown")
 		UNKNOWN, @JsonProperty("passing")
 		PASSING, @JsonProperty("warning")

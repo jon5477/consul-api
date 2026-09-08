@@ -13,10 +13,15 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public final class ConsulHttpResponse {
 	private final int statusCode;
+	@Nullable
 	private final JsonNode content;
+	@Nullable
 	private final String consulEffectiveConsistency;
+	@Nullable
 	private final Boolean consulKnownLeader;
+	@Nullable
 	private final Long consulLastContact;
+	@Nullable
 	private final Long consulIndex;
 
 	public ConsulHttpResponse(int statusCode, @Nullable JsonNode content, @Nullable String consulEffectiveConsistency,

@@ -29,9 +29,9 @@ import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 import com.ecwid.consul.transport.ClientUtils;
 import com.ecwid.consul.transport.ConsulHttpResponse;
-import com.ecwid.consul.transport.DefaultHttpTransport;
 import com.ecwid.consul.transport.HttpMethod;
 import com.ecwid.consul.transport.HttpTransport;
+import com.ecwid.consul.transport.JavaHttpTransport;
 import com.ecwid.consul.transport.TLSConfig;
 
 /**
@@ -125,6 +125,13 @@ public final class ConsulRawClient {
 			return this;
 		}
 
+		/**
+		 * Sets the executor that will be used by the {@link HttpClient} for
+		 * asynchronous and dependent tasks.
+		 * 
+		 * @param executor The {@link Executor} instance to use.
+		 * @return This instance for chaining
+		 */
 		public Builder setExecutor(Executor executor) {
 			this.executor = executor;
 			return this;
@@ -150,9 +157,9 @@ public final class ConsulRawClient {
 		public ConsulRawClient build() {
 			HttpTransport httpTransport;
 			if (httpClient != null) {
-				httpTransport = new DefaultHttpTransport(httpClient);
+				httpTransport = new JavaHttpTransport(httpClient);
 			} else {
-				httpTransport = ClientUtils.createDefaultHttpTransport(proxy, sslCtx, sslParams, executor);
+				httpTransport = ClientUtils.createJavaHttpTransport(proxy, sslCtx, sslParams, executor);
 			}
 			return new ConsulRawClient(this, httpTransport);
 		}
@@ -175,6 +182,17 @@ public final class ConsulRawClient {
 			throw new ConsulException(e);
 		}
 		this.token.set(b.token);
+	}
+
+	/**
+	 * Constructor used for unit testing only.
+	 * 
+	 * @param httpTransport The HTTP transport.
+	 * @param agentUri      The agent URI
+	 */
+	ConsulRawClient(@NonNull HttpTransport httpTransport, @NonNull URI agentUri) {
+		this.httpTransport = Objects.requireNonNull(httpTransport, "http transport cannot be null");
+		this.agentUri = Objects.requireNonNull(agentUri, "agent URI cannot be null");
 	}
 
 	/**

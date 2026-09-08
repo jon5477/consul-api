@@ -113,7 +113,7 @@ public final class ClientUtils {
 		return sslContext;
 	}
 
-	public static DefaultHttpTransport createDefaultHttpTransport(@Nullable ProxySelector proxy,
+	public static JavaHttpTransport createJavaHttpTransport(@Nullable ProxySelector proxy,
 			@Nullable SSLContext sslCtx, @Nullable SSLParameters sslParams, @Nullable Executor executor) {
 		HttpClient.Builder builder = HttpClient.newBuilder().version(Version.HTTP_1_1) // consul supports HTTP 1.1
 				.followRedirects(Redirect.NORMAL).connectTimeout(DEFAULT_CONNECT_TIMEOUT);
@@ -129,6 +129,6 @@ public final class ClientUtils {
 		if (executor != null) {
 			builder.executor(executor);
 		}
-		return new DefaultHttpTransport(builder.build());
+		return new JavaHttpTransport(builder.build());
 	}
 }

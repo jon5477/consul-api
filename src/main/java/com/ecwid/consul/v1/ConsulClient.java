@@ -484,6 +484,16 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 		return coordinateClient.getNodes(queryParams);
 	}
 
+	@Override
+	public Response<List<com.ecwid.consul.v1.coordinate.model.Node>> getNode(String nodeName, QueryParams queryParams) {
+		return coordinateClient.getNode(nodeName, queryParams);
+	}
+
+	@Override
+	public Response<Void> updateNode(com.ecwid.consul.v1.coordinate.model.Node node, QueryParams queryParams) {
+		return coordinateClient.updateNode(node, queryParams);
+	}
+
 	// -------------------------------------------------------------------------------------------
 	// Event
 

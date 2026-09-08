@@ -1,11 +1,13 @@
 package com.ecwid.consul.v1.coordinate.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
+ * @author Jon Huang (jon5477)
  */
 public class Coord {
 	@JsonProperty("Error")
@@ -50,7 +52,25 @@ public class Coord {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(adjustment, error, height, vec);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Coord)) {
+			return false;
+		}
+		Coord other = (Coord) obj;
+		return Objects.equals(adjustment, other.adjustment) && Objects.equals(error, other.error)
+				&& Objects.equals(height, other.height) && Objects.equals(vec, other.vec);
+	}
+
+	@Override
 	public String toString() {
-		return "Coord{" + "error=" + error + ", height=" + height + ", adjustment=" + adjustment + ", vec=" + vec + '}';
+		return "Coord [error=" + error + ", height=" + height + ", adjustment=" + adjustment + ", vec=" + vec + "]";
 	}
 }

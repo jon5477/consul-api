@@ -2,6 +2,7 @@ package com.ecwid.consul;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,9 +28,7 @@ public final class Utils {
 	@SafeVarargs
 	public static <T> List<T> asList(T... a) {
 		List<T> list = new ArrayList<>(a.length);
-		for (int i = 0; i < a.length; i++) {
-			list.add(a[i]);
-		}
+		Collections.addAll(list, a);
 		return list;
 	}
 

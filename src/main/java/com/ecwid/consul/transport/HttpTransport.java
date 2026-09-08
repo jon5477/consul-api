@@ -1,7 +1,6 @@
 package com.ecwid.consul.transport;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -9,12 +8,12 @@ import com.ecwid.consul.TimedOutException;
 import com.ecwid.consul.v1.Request;
 
 /**
+ * Interface for making HTTP requests.
+ * 
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
  */
 public interface HttpTransport {
-	HttpClient getHttpClient();
-
 	/**
 	 * Makes a HTTP request to the given Consul Agent {@link URI} with the specified
 	 * {@link HttpMethod} and {@link Request}.

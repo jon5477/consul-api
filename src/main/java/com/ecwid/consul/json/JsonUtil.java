@@ -42,7 +42,7 @@ public final class JsonUtil {
 		// do not fail if the property does not exist
 		OBJ_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		// do not include null fields in the serialized output
-		OBJ_MAPPER.setSerializationInclusion(Include.NON_NULL);
+		OBJ_MAPPER.setDefaultPropertyInclusion(Include.NON_NULL);
 	}
 
 	private JsonUtil() {

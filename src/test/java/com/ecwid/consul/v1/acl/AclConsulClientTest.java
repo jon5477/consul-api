@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.json.JsonUtil;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Response;
@@ -23,6 +24,8 @@ import com.ecwid.consul.v1.acl.model.AclPolicy;
 import com.ecwid.consul.v1.acl.model.AclToken;
 import com.ecwid.consul.v1.acl.model.NewAcl;
 import com.ecwid.consul.v1.acl.model.UpdateAcl;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pszymczyk.consul.ConsulProcess;
 import com.pszymczyk.consul.ConsulStarterBuilder;
 import com.pszymczyk.consul.infrastructure.Ports;
@@ -35,18 +38,36 @@ class AclConsulClientTest {
 			.build();
 	private AclClient aclClient = new AclConsulClient(rawClient);
 
+	/**
+	 * Performs set up of the embedded Consul service. This will set ACL
+	 * configuration, refer to:
+	 * https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/general#config_entries_bootstrap
+	 * https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/acl
+	 */
 	@BeforeEach
-	public void setup() {
-		String customConfiguration = "{\n" + "  \"acl\": {\n" + "    \"enabled\": true,\n"
-				+ "    \"enable_token_persistence\": true,\n" + "    \"tokens\": {\n"
-				+ "      \"initial_management\": \"" + ACL_MASTER_TOKEN + "\"\n" + "    }\n" + "  },\n"
-				+ "  \"primary_datacenter\": \"dc-test\",\n" + "  \"datacenter\": \"dc-test\"\n" + "}";
+	void setup() {
+		ObjectNode customConfig = JsonNodeFactory.instance.objectNode();
+		ObjectNode acl = customConfig.putObject("acl");
+		// https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/acl#acl_enabled
+		acl.put("enabled", true);
+		// https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/acl#acl_enable_token_replication
+		acl.put("enable_token_persistence", true);
+		// https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/acl#acl_tokens
+		ObjectNode tokens = acl.putObject("tokens");
+		// https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/acl#acl_tokens_initial_management
+		tokens.put("initial_management", ACL_MASTER_TOKEN);
+		// https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/general#primary_datacenter
+		customConfig.put("primary_datacenter", "dc-test");
+		// https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/general#_datacenter
+		customConfig.put("datacenter", "dc-test");
+		String customConfigStr = JsonUtil.toJsonString(customConfig);
+		System.out.println(customConfigStr);
 		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withHttpPort(port).withCustomConfig(customConfiguration).withWaitTimeout(90).build().start();
+				.withHttpPort(port).withCustomConfig(customConfigStr).withWaitTimeout(90).build().start();
 	}
 
 	@AfterEach
-	public void cleanup() {
+	void cleanup() {
 		consul.close();
 	}
 

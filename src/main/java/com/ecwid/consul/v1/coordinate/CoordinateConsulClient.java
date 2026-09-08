@@ -20,6 +20,7 @@ public class CoordinateConsulClient implements CoordinateClient {
 	};
 	private static final TypeReference<List<Node>> NODE_LIST_TYPE_REF = new TypeReference<List<Node>>() {
 	};
+	private static final String COORDINATE_API_PREFIX = "/v1/coordinate/";
 	private final ConsulRawClient rawClient;
 
 	public CoordinateConsulClient(ConsulRawClient rawClient) {
@@ -28,7 +29,7 @@ public class CoordinateConsulClient implements CoordinateClient {
 
 	@Override
 	public Response<List<Datacenter>> getDatacenters() {
-		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/coordinate/datacenters");
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest(COORDINATE_API_PREFIX + "datacenters");
 		if (httpResponse.getStatusCode() == 200) {
 			List<Datacenter> value = JsonUtil.toPOJO(httpResponse.getContent(), DATACENTER_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
@@ -39,10 +40,33 @@ public class CoordinateConsulClient implements CoordinateClient {
 
 	@Override
 	public Response<List<Node>> getNodes(QueryParams queryParams) {
-		ConsulHttpResponse httpResponse = rawClient.makeGetRequest("/v1/coordinate/nodes", queryParams);
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest(COORDINATE_API_PREFIX + "nodes", queryParams);
 		if (httpResponse.getStatusCode() == 200) {
 			List<Node> value = JsonUtil.toPOJO(httpResponse.getContent(), NODE_LIST_TYPE_REF);
 			return new Response<>(value, httpResponse);
+		} else {
+			throw new OperationException(httpResponse);
+		}
+	}
+
+	@Override
+	public Response<List<Node>> getNode(String nodeName, QueryParams queryParams) {
+		ConsulHttpResponse httpResponse = rawClient.makeGetRequest(COORDINATE_API_PREFIX + "node/" + nodeName,
+				queryParams);
+		if (httpResponse.getStatusCode() == 200) {
+			List<Node> value = JsonUtil.toPOJO(httpResponse.getContent(), NODE_LIST_TYPE_REF);
+			return new Response<>(value, httpResponse);
+		} else {
+			throw new OperationException(httpResponse);
+		}
+	}
+
+	@Override
+	public Response<Void> updateNode(Node node, QueryParams queryParams) {
+		ConsulHttpResponse httpResponse = rawClient.makePutRequest(COORDINATE_API_PREFIX + "update",
+				JsonUtil.toBytes(node), queryParams);
+		if (httpResponse.getStatusCode() == 200) {
+			return new Response<>(null, httpResponse);
 		} else {
 			throw new OperationException(httpResponse);
 		}
